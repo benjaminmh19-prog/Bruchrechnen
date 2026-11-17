@@ -2,11 +2,27 @@
 
 Interaktive Lern-App zum Rechnen mit Brüchen für Schülerinnen und Schüler der 6. Klasse.
 
-- Vier Reiter für Addieren, Subtrahieren, Multiplizieren und Dividieren, jeweils mit Merksatz, Alltagsbeispiel, Rechenweg, Ausprobieren und Übungsaufgaben in drei Stufen
+- Vier Reiter für Addieren, Subtrahieren, Multiplizieren und Dividieren, jeweils mit Merksatz, Alltagsbeispiel, Rechenweg und Übungsaufgaben in drei Stufen
+- **Grafische Bruch-Werkstatt:** Brüche durch Antippen von Balken- oder Kreisstücken einstellen und die Rechnung Schritt für Schritt mit Bildern bearbeiten
 - Zufällige Sachaufgaben mit Tipp-Funktion bei jeder Rechenart
 - Reiter „Spiele“: Memory, Größer oder kleiner, Zeitjagd, Ganzes füllen
 - Läuft im Browser ohne Server und ohne Anmeldung. Ergebnisse und Rekorde werden nur im jeweiligen Browser (localStorage) gespeichert
 - Installierbar als App (PWA) und nach dem ersten Laden offline nutzbar
+
+## Grafisch rechnen
+
+In „Deine Bruch-Werkstatt“ lassen sich die beiden Brüche über die Plus-/Minus-Tasten oder direkt im Bild einstellen. Ein Balken beziehungsweise ein Kreis ist immer ein Ganzes. Ein Stück antippen, um den Bruch bis dorthin zu färben; das letzte gefärbte Stück erneut antippen, um ein Stück weniger zu wählen. „Leeren“ setzt den Zähler auf 0. Beim zweiten Bruch einer Division ist das gesperrt, denn durch 0 darf man nicht teilen.
+
+- **Addieren:** Beide Brüche gleich fein unterteilen und die Stücke zusammenlegen. Ergebnisse über 1 werden auf mehrere gleich große Ganze verteilt. Die beiden Ausgangsmengen bleiben durch unterschiedliche Farben erkennbar.
+- **Subtrahieren:** Nach dem Gleichnamigmachen die abzuziehenden Stücke einzeln antippen oder „Ein Stück wegnehmen“ benutzen. Gestreifte Stücke sind weggenommen; erneut antippen legt sie zurück. Sobald die geforderte Anzahl entfernt ist, lässt sich der Rest ansehen.
+- **Multiplizieren:** Spalten und Zeilen eines Rechtecks markieren oder eine Zelle als gegenüberliegende Ecke auswählen. Die mit × markierte Überschneidung zeigt das Produkt. Das gesamte Rechteck ist ein Ganzes.
+- **Dividieren:** Gleich große Portionen abmessen und zählen. Eine Restmenge wird als Bruchteil einer weiteren Portion dargestellt. Beispiel: 3/4 : 1/2 ergibt 1 volle Portion und 1/2 einer weiteren Portion, also 1 1/2.
+
+„Schritt zurück“ und „Neu starten“ helfen beim Ausprobieren. Die letzten Schritte zeigen das Kürzen und beim Dividieren den Zusammenhang mit dem Kehrwert. „Vollständigen Rechenweg ansehen“ enthält weiterhin den schriftlichen Rechenweg.
+
+Mit **„Mit Bild lösen“** unter einer Übungsaufgabe werden deren Brüche in die Werkstatt übernommen. Das Ergebnis wird danach wie gewohnt bei „Du bist dran“ eingegeben; die Übernahme zählt nicht als Versuch und füllt keine Antwort automatisch aus.
+
+Die Werkstatt unterstützt Brüche von 0 bis 1 mit Nennern von 2 bis 12 sowie Ergebnisse über 1. Negative Differenzen werden im Klasse-6-Grundmodus mit einem Hinweis abgefangen; die Brüche können dann getauscht werden. Alle Aktionen funktionieren ohne Ziehen, per Antippen oder Tastatur. Sehr feine Subtraktionsbalken und breite Multiplikationsraster lassen sich seitlich scrollen.
 
 ## Dateien
 
@@ -15,22 +31,21 @@ Interaktive Lern-App zum Rechnen mit Brüchen für Schülerinnen und Schüler de
 | `index.html` | Die komplette App (HTML, CSS, JavaScript) |
 | `manifest.webmanifest` | App-Name, Farben und Icons für die Installation |
 | `sw.js` | Service Worker für den Offline-Betrieb |
-| `icons/` | App-Icons |
+| `favicon.svg`, `icon-*.png` | App-Icons im Repository-Hauptverzeichnis |
 
 ## Lokal starten
 
 Ein Service Worker läuft nur über `http://localhost` oder `https`, nicht über `file://`.
 
-```
+```sh
 python3 -m http.server 8080
 ```
 
-Danach `http://localhost:8080` öffnen.
+Danach `http://localhost:8080` öffnen. Die Lernfunktionen von `index.html` funktionieren auch ohne Service Worker.
 
 ## Veröffentlichen mit GitHub Pages
 
-Der Workflow `.github/workflows/pages.yml` veröffentlicht die App bei jedem Push auf `main`.
-Einmalig im Repository unter **Settings → Pages → Source** den Eintrag **GitHub Actions** wählen.
+Das Repository verwendet GitHub Pages mit **Deploy from a branch**, Branch **main**, Ordner **/ (root)**. Änderungen auf anderen Branches ändern die veröffentlichte Seite nicht. Nach dem Zusammenführen eines Pull Requests in `main` wird die neue Version durch GitHub Pages ausgeliefert.
 
 ## Installieren
 
@@ -40,7 +55,7 @@ Einmalig im Repository unter **Settings → Pages → Source** den Eintrag **Git
 
 ## Neue Version ausliefern
 
-In `sw.js` die Zahl bei `CACHE = 'bruchrechnen-v1'` erhöhen, damit der alte Offline-Cache ersetzt wird.
+In `sw.js` den Versionsnamen bei `CACHE` erhöhen, damit der alte Offline-Cache dieser App ersetzt wird. Die Bruch-Werkstatt verwendet `bruchrechnen-v2`. Caches anderer Apps derselben Domain bleiben unangetastet.
 
 ## Schriften
 
