@@ -41,6 +41,14 @@ Im Reiter **„Grafisch üben“** werden zufällige Aufgaben zu den vier Rechen
 
 Während eines Lernchecks sind die Einstellungen gesperrt; „Lerncheck abbrechen“ beendet ihn ohne gespeicherte Gesamtpunktzahl. Ein Reiterwechsel erhält die laufende Aufgabe im geöffneten Browserfenster. Nur zusammengefasste Trainingszahlen und Lerncheck-Bestwerte werden lokal im eigenen Schlüssel `bruch-visual-training-v1` gespeichert. Keine Anmeldung, persönlichen Schülerdaten oder Server erforderlich. Die Werte dienen der Selbsteinschätzung, nicht als manipulationssichere Prüfungsnoten.
 
+## Fehlerdetektiv
+
+Der neue Modus ist über den Reiter **„Fehlerdetektiv“**, den Button in der Bruch-Werkstatt und die Modusauswahl unter „Grafisch üben“ erreichbar. Er erzeugt absichtlich falsche Rechenwege zu allen vier Rechenarten sowie zum Erweitern und Kürzen, einzeln oder gemischt in zwei Schwierigkeitsstufen.
+
+Der Ablauf lautet **finden → reparieren → begründen**: Zuerst den verdächtigen Rechenweg untersuchen, dann das voreingestellte falsche Bruchbild durch Antippen von Stücken oder Ändern von Zähler und Nenner korrigieren und schließlich eine von drei Begründungen wählen. Ein Fall gilt nur als gelöst, wenn das Ergebnis und die Begründung gemeinsam stimmen. Gleichwertige Rechenantworten sind erlaubt; beim Erweitern zählt der verlangte Faktor und beim Kürzen die vollständig gekürzte Form.
+
+Tipps und eine Auflösung helfen beim Lernen. Eine aufgedeckte Lösung zählt nicht als gelöster Fall; ein Fall nach Tipp oder Fehlversuch zählt nicht als „im ersten Versuch ohne Hilfe“. Leere Eingaben, Nenner 0 und unvollständige Antworten werden nicht gewertet; identische Prüfungen zählen nicht mehrfach. Der laufende Fall bleibt beim Reiterwechsel erhalten, ebenso ein pausierter Grafik-Lerncheck. Zusammengefasste Detektivzahlen liegen ausschließlich lokal im separaten Schlüssel `bruch-detective-v1`.
+
 ## Dateien
 
 | Datei | Zweck |
@@ -83,7 +91,7 @@ Das Repository verwendet GitHub Pages mit **Deploy from a branch**, Branch **mai
 
 ## Neue Version ausliefern
 
-In `sw.js` den Versionsnamen bei `CACHE` erhöhen, damit der alte Offline-Cache dieser App ersetzt wird. Die erweiterte Bruch-Werkstatt verwendet `bruchrechnen-v3`. Caches anderer Apps derselben Domain bleiben unangetastet.
+In `sw.js` den Versionsnamen bei `CACHE` erhöhen, damit der alte Offline-Cache dieser App ersetzt wird. Die Bruch-Werkstatt mit Fehlerdetektiv verwendet `bruchrechnen-v4`. Caches anderer Apps derselben Domain bleiben unangetastet.
 
 ## Schriften
 

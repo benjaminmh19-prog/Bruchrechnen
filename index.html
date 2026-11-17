@@ -301,6 +301,23 @@ button.vt-piece{cursor:pointer;touch-action:manipulation}
 @media(max-width:560px){.vt-config{grid-template-columns:1fr}.vt-trainer{padding:14px}.vt-controls{gap:10px}.vt-board{padding:10px}.vt-actions .btn{padding:9px 12px}}
 @media(max-width:360px){.vt-controls{grid-template-columns:1fr}}
 @media print{.vt-config,.vt-actions,.vt-controls,.vt-caption{display:none}.vt-unit-row{break-inside:avoid}}
+
+[data-op="detective"]{--op:var(--game)}
+.tab[data-op="detective"]{grid-column:1/-1}
+.dt-config{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}
+.dt-suspect{border:2px dashed var(--bad);background:var(--bad-soft);border-radius:12px;padding:12px;margin:12px 0}
+.dt-suspect .label{color:var(--bad)}
+.dt-suspect .eq{font-size:1.35rem;gap:6px}
+.dt-reasons{border:0;padding:0;margin:18px 0 0;min-width:0}
+.dt-reasons legend{font-family:var(--f-display);font-size:1.15rem;font-weight:800;margin-bottom:10px}
+.dt-reason{display:flex!important;gap:12px;align-items:flex-start;padding:12px;border:2px solid var(--line);border-radius:12px;margin:8px 0;cursor:pointer;min-height:48px}
+.dt-reason input{flex:none;width:20px!important;height:20px!important;min-height:20px!important;margin:3px 0 0!important;padding:0!important;accent-color:var(--op)}
+.dt-reason.selected{border-color:var(--op);background:color-mix(in srgb,var(--op) 10%,var(--surface))}
+.dt-reason span{min-width:0;font-weight:700;font-size:.95rem}
+.dt-solution{margin-top:18px;border-top:2px solid var(--ok);padding-top:8px}
+.dt-solution h3{color:var(--ok)}
+@media(max-width:440px){.dt-config{grid-template-columns:1fr}.dt-suspect{padding:10px}.dt-suspect .eq{font-size:1.12rem}}
+@media print{.dt-config,.dt-reasons{display:none}.dt-suspect,.dt-solution{break-inside:avoid}}
 </style>
 
 </head>
@@ -353,7 +370,8 @@ var OPS={
 OPS.games={name:'Spiele',sym:'★',sub:'4 Minispiele',sy:''};
 OPS.equiv={name:'Erweitern & Kürzen',sym:'↔',sub:'gleicher Wert, neue Stücke',sy:''};
 OPS.visual={name:'Grafisch üben',sym:'▦',sub:'Training & Lerncheck',sy:''};
-var ORDER=['add','sub','mul','div','equiv','visual','games'];
+OPS.detective={name:'Fehlerdetektiv',sym:'?',sub:'finden · reparieren · begründen',sy:''};
+var ORDER=['add','sub','mul','div','equiv','visual','detective','games'];
 var STORY={
   add:{a:1,b:2,c:1,d:4,q:'Lena trinkt morgens ½ Liter Saft und mittags ¼ Liter. Wie viel hat sie zusammen getrunken?'},
   sub:{a:3,b:4,c:1,d:8,q:'Tom hat ¾ einer Tafel Schokolade. Er isst ⅛ der Tafel auf. Wie viel bleibt übrig?'},
@@ -459,6 +477,7 @@ function storyCard(op){
 }
 function renderPanel(){
   stopTimers();
+  if(cur==='detective'){renderDetective();return;}
   if(cur==='equiv'){renderEquivalence();return;}
   if(cur==='visual'){renderVisualTraining();return;}
   if(cur==='games'){document.getElementById('panel').setAttribute('data-op','games');renderGames();return;}
@@ -479,7 +498,7 @@ function renderPanel(){
       '<p id="wk-source" class="wk-source" hidden></p>'+
       '<div class="pick"><div class="pickcol"><h3>1. Bruch</h3>'+stepper('Zähler','a',dm.a)+stepper('Nenner','b',dm.b)+'<div class="wk-edit" id="wk-edit-a"></div></div><div class="pickcol"><h3>2. Bruch</h3>'+stepper('Zähler','c',dm.c)+stepper('Nenner','d',dm.d)+'<div class="wk-edit" id="wk-edit-c"></div></div></div>'+
       '<div class="wk-board" id="wk-board"></div><p class="wk-sr-only" id="wk-status" role="status" aria-live="polite" aria-atomic="true"></p>'+
-      '<details class="how"><summary>Vollständigen Rechenweg ansehen</summary><div id="demo-out" style="margin-top:14px"></div></details></div>'+
+      '<details class="how"><summary>Vollständigen Rechenweg ansehen</summary><div id="demo-out" style="margin-top:14px"></div></details><div class="btns"><button class="btn" data-dt="open">Fehlerdetektiv starten</button></div></div>'+
     '<div class="card"><div class="prac-top"><h2 style="margin:0">Du bist dran</h2><div class="lvl" role="group" aria-label="Schwierigkeit">'+
       [1,2,3].map(function(l){return '<button class="chip" data-act="lvl" data-l="'+l+'" aria-pressed="'+(l===level)+'">'+['Leicht','Mittel','Schwer'][l-1]+'</button>';}).join('')+
       '</div></div><div class="stats" id="stats"></div><div id="prac"></div></div>'+
@@ -1207,7 +1226,7 @@ function vtRender(focusId){
   if(!vtEl('root'))return;
   var previous=document.activeElement;focusId=focusId||(previous&&vtEl('root').contains(previous)?previous.id:'');
   var active=vtS.mode==='check'&&vtS.run&&!vtS.run.finished,locked=active?' disabled':'';
-  vtEl('config').innerHTML='<label for="vt-mode">Modus<select id="vt-mode" data-vt="mode"'+locked+'><option value="training"'+(vtS.mode==='training'?' selected':'')+'>Training</option><option value="check"'+(vtS.mode==='check'?' selected':'')+'>Lerncheck</option></select></label><label for="vt-type">Aufgabentyp<select id="vt-type" data-vt="type"'+locked+'>'+['mixed'].concat(VT_TYPES).map(function(k){return '<option value="'+k+'"'+(k===vtS.type?' selected':'')+'>'+VT_NAMES[k]+'</option>';}).join('')+'</select></label><label for="vt-level">Schwierigkeit<select id="vt-level" data-vt="level"'+locked+'><option value="1"'+(vtS.lvl===1?' selected':'')+'>1 · Einstieg</option><option value="2"'+(vtS.lvl===2?' selected':'')+'>2 · Kniffliger</option></select></label>';
+  vtEl('config').innerHTML='<label for="vt-mode">Modus<select id="vt-mode" data-vt="mode"'+locked+'><option value="training"'+(vtS.mode==='training'?' selected':'')+'>Training</option><option value="check"'+(vtS.mode==='check'?' selected':'')+'>Lerncheck</option><option value="detective">Fehlerdetektiv</option></select></label><label for="vt-type">Aufgabentyp<select id="vt-type" data-vt="type"'+locked+'>'+['mixed'].concat(VT_TYPES).map(function(k){return '<option value="'+k+'"'+(k===vtS.type?' selected':'')+'>'+VT_NAMES[k]+'</option>';}).join('')+'</select></label><label for="vt-level">Schwierigkeit<select id="vt-level" data-vt="level"'+locked+'><option value="1"'+(vtS.lvl===1?' selected':'')+'>1 · Einstieg</option><option value="2"'+(vtS.lvl===2?' selected':'')+'>2 · Kniffliger</option></select></label>';
   var t=vtS.task,r=vtS.run,h='';
   if(vtS.mode==='check'&&r&&r.finished){
     h='<h3 id="vt-summary-title" tabindex="-1">Dein Lerncheck: '+r.score+' von 8 richtig</h3><p>'+VT_NAMES[r.type]+' · Schwierigkeit '+r.lvl+'. Jede Aufgabe wurde genau einmal gewertet.</p><ol class="vt-results">'+r.results.map(function(x,i){return '<li><strong>'+VT_NAMES[x.task.type]+': '+(x.ok?'richtig':'noch üben')+'</strong><p>'+x.task.instruction+'</p><div class="eq">'+vtEquation(x.task)+'</div><p>Deine Antwort: '+fr(x.n,x.d)+' · Richtig: '+fr(x.task.answer[0],x.task.answer[1])+'</p></li>';}).join('')+'</ol>'+vtButton('start','Neuen Lerncheck starten',true);
@@ -1292,6 +1311,7 @@ document.addEventListener('input',function(e){
 document.addEventListener('change',function(e){
   var t=e.target;if(!t.closest||!t.closest('#vt-root')||['vt-mode','vt-type','vt-level'].indexOf(t.id)<0)return;
   if(vtS.mode==='check'&&vtS.run&&!vtS.run.finished){vtRender(t.id);return;}
+  if(t.id==='vt-mode'&&t.value==='detective'){openDetective();return;}
   if(t.id==='vt-mode')vtS.mode=t.value==='check'?'check':'training';
   else if(t.id==='vt-type')vtS.type=VT_TYPES.indexOf(t.value)>=0?t.value:'mixed';
   else vtS.lvl=Number(t.value)===2?2:1;
@@ -1307,6 +1327,116 @@ document.addEventListener('keydown',function(e){
     n=e.key==='Home'?0:e.key==='End'?max:Math.max(0,Math.min(max,n+(e.key==='ArrowRight'||e.key==='ArrowUp'?1:-1)));
     vtSetNumerator(n,'vt-piece-'+Math.max(1,n));
   }
+});
+
+/* ---------- Fehlerdetektiv: finden, reparieren, begründen ---------- */
+var DT_RULES={
+  add:{good:'Die Nenner wurden mitaddiert. Erst gleichnamig machen, dann nur die Zähler addieren.',wrong:['Beim Addieren wird nur der erste Bruch umgedreht.','Verschiedene Nenner darf man unverändert zusammenzählen.']},
+  sub:{good:'Die ursprünglichen Zähler wurden ohne Gleichnamigmachen abgezogen. Auch der zweite Zähler muss erweitert werden.',wrong:['Bei der Subtraktion müssen die Nenner addiert werden.','Beim Subtrahieren wird der erste Bruch durch den zweiten ersetzt.']},
+  mul:{good:'Hier wurde addiert statt multipliziert. Richtig ist: Zähler mal Zähler und Nenner mal Nenner.',wrong:['Beim Multiplizieren werden die Nenner addiert.','Beim Multiplizieren muss nur der zweite Zähler verdoppelt werden.']},
+  div:{good:'Der Kehrwert wurde vergessen. Durch einen Bruch teilen heißt mit dem Kehrwert des zweiten Bruchs multiplizieren.',wrong:['Bei der Division werden beide Brüche umgedreht.','Durch einen Bruch teilen heißt mit dem unveränderten zweiten Bruch multiplizieren.']},
+  expand:{good:'Nur der Zähler wurde erweitert. Zähler und Nenner müssen mit demselben Faktor multipliziert werden.',wrong:['Beim Erweitern verändert man nur den Nenner.','Beim Erweitern addiert man den Faktor zu beiden Zahlen.']},
+  reduce:{good:'Hier wurde die Kürzungszahl abgezogen. Zähler und Nenner müssen durch denselben gemeinsamen Teiler geteilt werden.',wrong:['Beim Kürzen reicht es, nur den Zähler zu teilen.','Beim Kürzen darf der Nenner unverändert bleiben.']}
+};
+var dtS={type:'mixed',lvl:1,task:null,n:'',d:'',reason:null,done:false,revealed:false,help:false,tries:0,seen:[],feedback:'',kind:'info',lastKey:''};
+var dtTotals={v:1,attempts:0,solved:0,independent:0},dtStorage=true;
+try{var dtSaved=JSON.parse(localStorage.getItem('bruch-detective-v1')||'null');if(dtSaved&&dtSaved.v===1&&['attempts','solved','independent'].every(function(k){return Number.isSafeInteger(dtSaved[k])&&dtSaved[k]>=0&&dtSaved[k]<=1000000000;})&&dtSaved.independent<=dtSaved.solved&&dtSaved.solved<=dtSaved.attempts){dtTotals.attempts=dtSaved.attempts;dtTotals.solved=dtSaved.solved;dtTotals.independent=dtSaved.independent;}}catch(e){if(e.name!=='SyntaxError')dtStorage=false;}
+function dtSave(){try{localStorage.setItem('bruch-detective-v1',JSON.stringify(dtTotals));dtStorage=true;}catch(e){dtStorage=false;}}
+function generateDetectiveTask(type,lvl){
+  type=VT_TYPES.indexOf(type)>=0?type:VT_TYPES[R(0,5)];lvl=lvl===2?2:1;
+  var t=generateVisualTask(type,lvl),N,D,wrongCalc;
+  if(type==='sub'){
+    t.b=2*R(2,lvl===1?3:6);t.d=t.b/2;t.c=R(1,t.d-1);t.a=R(2*t.c+1,t.b-1);t.answer=solve(type,t.a,t.b,t.c,t.d).res;
+    N=t.a-t.c;D=t.b;wrongCalc=fr(t.a+' − '+t.c,t.b);
+  }else if(type==='add'){N=t.a+t.c;D=t.b+t.d;wrongCalc=fr(t.a+' + '+t.c,t.b+' + '+t.d);}
+  else if(type==='mul'){N=t.a+t.c;D=t.b+t.d;wrongCalc=fr(t.a+' + '+t.c,t.b+' + '+t.d);}
+  else if(type==='div'){N=t.a*t.c;D=t.b*t.d;wrongCalc=fr(t.a,t.b)+o('·')+fr(t.c,t.d);}
+  else if(type==='expand'){N=t.a*t.factor;D=t.b;wrongCalc=fr(t.a+' · '+t.factor,t.b);}
+  else{N=t.a-t.factor;D=t.b-t.factor;wrongCalc=fr(t.a+' − '+t.factor,t.b+' − '+t.factor);}
+  t.wrong=[N,D];t.wrongCalc=wrongCalc;t.wholes=(type==='div'||type==='expand')?4:2;
+  t.instruction=type==='expand'?'Repariere das Erweitern genau mit '+t.factor+'.':type==='reduce'?'Repariere den Rechenweg und kürze vollständig.':'Finde den Denkfehler und repariere das Ergebnis.';
+  t.choices=sh([{id:'rule',text:DT_RULES[type].good},{id:'wrong-1',text:DT_RULES[type].wrong[0]},{id:'wrong-2',text:DT_RULES[type].wrong[1]}]);
+  t.key=[type,t.a,t.b,t.c,t.d,t.factor].join('-');return t;
+}
+function dtEl(id){return document.getElementById('dt-'+id);}
+function dtMessage(kind,text){dtS.kind=kind;dtS.feedback=text;var e=dtEl('feedback');if(e){e.className='vt-feedback '+kind;e.textContent=text;}}
+function dtNewCase(){
+  var t;for(var i=0;i<20;i++){t=generateDetectiveTask(dtS.type,dtS.lvl);if(t.key!==dtS.lastKey)break;}
+  dtS.task=t;dtS.lastKey=t.key;dtS.n=String(t.wrong[0]);dtS.d=String(t.wrong[1]);dtS.reason=null;dtS.done=false;dtS.revealed=false;dtS.help=false;dtS.tries=0;dtS.seen=[];
+  dtMessage('info','Ein neuer Fall: Der gezeigte Rechenweg ist falsch. Repariere das Bild und begründe die Korrektur.');
+}
+function openDetective(){cur='detective';try{history.replaceState(null,'','#detective');}catch(e){}save();renderTabs();renderPanel();var heading=dtEl('title');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}}
+function dtUnit(n,d,label,interactive,offset){
+  var h='',idx;offset=offset||0;
+  for(var i=1;i<=d;i++){idx=offset+i;var on=interactive?idx<=n:i<=n;
+    h+=interactive?'<button class="vt-piece'+(on?' on':'')+'" id="dt-piece-'+idx+'" data-dt="piece" data-index="'+idx+'" tabindex="'+(idx===Math.max(1,n)?0:-1)+'" aria-pressed="'+on+'" aria-label="Bis Stück '+idx+' markieren; jedes Stück ist ein '+d+'-tel"'+(dtS.done?' disabled':'')+'></button>':'<span class="vt-piece'+(on?' on':'')+'"></span>';
+  }
+  return '<div class="vt-unit-row"><p class="vt-unit-label">'+label+'</p><div class="vt-unit" style="--vt-d:'+d+'"'+(interactive?' role="group" aria-label="'+label+'"':' role="img" aria-label="'+n+' von '+d+' Stücken"')+'>'+h+'</div><div class="vt-scale"><span>0</span><span>1 Ganzes</span></div></div>';
+}
+function dtBars(n,d,interactive,wholes){var h='';for(var k=0;k<wholes;k++)h+=dtUnit(interactive?n:Math.min(d,Math.max(0,n-k*d)),d,'Ganzes '+(k+1),interactive,k*d);return h;}
+function dtButton(action,label,primary,disabled){return '<button class="btn'+(primary?' p':'')+'" id="dt-'+action+'" data-dt="'+action+'"'+(disabled?' disabled':'')+'>'+label+'</button>';}
+function renderDetective(){
+  var m=document.getElementById('panel');m.setAttribute('data-op','detective');
+  if(!dtS.task)dtNewCase();
+  m.innerHTML='<section class="card vt-trainer dt-trainer" id="dt-root"><div class="label">Fehlerdetektiv</div><h2 id="dt-title">Finden. Reparieren. Begründen.</h2><p>Hier ist jeder gezeigte Rechenweg absichtlich falsch. Nicht nur das Ergebnis zählt: Erkläre auch, wo der Denkfehler steckt.</p>'+
+    '<div id="dt-config" class="dt-config"></div><p id="dt-stats" class="vt-stats"></p><div id="dt-body"></div><p id="dt-feedback" class="vt-feedback" role="status" aria-live="polite" aria-atomic="true"></p><p class="vt-privacy">Fortschritt nur in diesem Browser. Keine Anmeldung oder persönlichen Schülerdaten; keine Prüfungsnoten.</p></section>';
+  dtRender();dtMessage(dtS.kind,dtS.feedback);
+}
+function dtRender(focusId){
+  var t=dtS.task;if(!dtEl('root')||!t)return;
+  var prev=document.activeElement;focusId=focusId||(prev&&dtEl('root').contains(prev)?prev.id:'');
+  dtEl('config').innerHTML='<label for="dt-type">Fehlerart<select id="dt-type">'+['mixed'].concat(VT_TYPES).map(function(k){return '<option value="'+k+'"'+(dtS.type===k?' selected':'')+'>'+VT_NAMES[k]+'</option>';}).join('')+'</select></label><label for="dt-level">Schwierigkeit<select id="dt-level"><option value="1"'+(dtS.lvl===1?' selected':'')+'>1 · Einstieg</option><option value="2"'+(dtS.lvl===2?' selected':'')+'>2 · Kniffliger</option></select></label>';
+  dtEl('stats').textContent='Fälle gelöst: '+dtTotals.solved+' · Davon im ersten Versuch ohne Hilfe: '+dtTotals.independent+' · Gewertete Versuche: '+dtTotals.attempts+(dtStorage?'':' · Speicherung nicht verfügbar.');
+  var expr=fr(t.a,t.b)+(t.c!==undefined?o({add:'+',sub:'−',mul:'·',div:':'}[t.type])+fr(t.c,t.d):'');
+  var h='<h3>1. Untersuche den verdächtigen Rechenweg</h3><p>'+t.instruction+'</p><div class="dt-suspect"><p class="label">Absichtlich falsch</p><div class="eq">'+expr+o('=')+t.wrongCalc+o('=')+fr(t.wrong[0],t.wrong[1])+'</div></div>'+
+    '<details class="how"><summary>Ausgangsbrüche als Bild ansehen</summary><div class="vt-board">'+dtUnit(t.a,t.b,'Erster Bruch',false)+(t.c!==undefined?dtUnit(t.c,t.d,'Zweiter Bruch',false):'')+'</div></details>'+
+    '<h3>2. Repariere das Bruchbild</h3><p class="vt-caption">Die falsche Antwort ist voreingestellt. Ändere Nenner und markierte Stücke. Alle Balken sind gleich breit: jeder ist ein Ganzes.</p>'+
+    '<div class="vt-controls"><label for="dt-denominator">Nenner (1–36)<input id="dt-denominator" type="number" min="1" max="36" step="1" inputmode="numeric" value="'+dtS.d+'"'+(dtS.done?' disabled':'')+'></label><div><label for="dt-numerator">Zähler (markierte Stücke)</label><div class="vt-counter">'+dtButton('minus','−',false,dtS.done)+'<input id="dt-numerator" type="number" min="0" step="1" inputmode="numeric" value="'+dtS.n+'"'+(dtS.done?' disabled':'')+'>'+dtButton('plus','+',false,dtS.done)+'</div></div></div>'+
+    '<p class="vt-caption">Stücke antippen, das letzte markierte Stück erneut antippen, um eines weniger zu wählen. Bei kleinen Stücken die großen −/+ Tasten oder das Zählerfeld nutzen. Im Balken funktionieren Pfeiltasten, Pos1 und Ende.</p><p id="dt-readout" class="vt-readout"></p><div id="dt-graph" class="vt-board"></div>'+
+    '<fieldset class="dt-reasons"><legend>3. Welche Begründung erklärt den Fehler?</legend>'+t.choices.map(function(c,i){return '<label class="dt-reason'+(dtS.reason===c.id?' selected':'')+'"><input type="radio" name="dt-reason" id="dt-reason-'+i+'" value="'+c.id+'"'+(dtS.reason===c.id?' checked':'')+(dtS.done?' disabled':'')+'><span>'+c.text+'</span></label>';}).join('')+'</fieldset><div class="vt-actions">';
+  if(!dtS.done)h+=dtButton('check','Fall prüfen',true)+dtButton('tip','Tipp',false)+dtButton('show','Lösung ansehen',false);
+  h+=dtButton('new',dtS.done?'Nächster Fall':'Anderer Fall',dtS.done)+'</div>';
+  if(dtS.done){h+='<div class="dt-solution"><h3>'+(dtS.revealed?'Auflösung':'Fall geknackt')+'</h3><div class="eq">'+expr+o('=')+fr(t.answer[0],t.answer[1])+'</div><div class="vt-board">'+dtBars(t.answer[0],t.answer[1],false,Math.max(1,Math.ceil(t.answer[0]/t.answer[1])))+'</div><p>'+DT_RULES[t.type].good+'</p></div>';}
+  dtEl('body').innerHTML=h;dtPaint();
+  ['minus','plus'].forEach(function(k){var e=dtEl(k);if(e)e.setAttribute('aria-label',k==='minus'?'Ein Stück weniger markieren':'Ein Stück mehr markieren');});
+  if(focusId){var target=document.getElementById(focusId);if(!target||target.disabled)target=dtEl('new');if(target)target.focus({preventScroll:true});}
+}
+function dtAnswer(){var t=dtS.task;if(!t||!vtValidInt(dtS.d,1,36))return {error:'Wähle einen ganzzahligen Nenner von 1 bis 36. Ein Nenner 0 ist nicht erlaubt.'};if(!vtValidInt(dtS.n,0,t.wholes*Number(dtS.d)))return {error:'Wähle einen ganzzahligen Zähler von 0 bis '+(t.wholes*Number(dtS.d))+'. Leere oder ungültige Eingaben werden nicht gewertet.'};return {n:Number(dtS.n),d:Number(dtS.d)};}
+function dtPaint(){
+  var x=dtAnswer(),valid=vtValidInt(dtS.d,1,36),d=valid?Number(dtS.d):0,n=!x.error?x.n:0;
+  dtEl('graph').innerHTML=valid?dtBars(n,d,true,dtS.task.wholes):'<p>Wähle einen gültigen Nenner, um Stücke zu sehen.</p>';
+  dtEl('readout').textContent=x.error?'Noch kein gültiges Bruchbild.':'Dein Bruchbild: '+x.n+'/'+x.d+' · '+x.n+' markierte Stücke';var inp=dtEl('numerator');if(inp){if(valid)inp.max=dtS.task.wholes*d;else inp.removeAttribute('max');}
+}
+function dtSetN(n,id){if(dtS.done)return;if(!vtValidInt(dtS.d,1,36)){dtMessage('info','Wähle zuerst einen Nenner von 1 bis 36.');dtEl('denominator').focus();return;}dtS.n=String(Math.max(0,Math.min(dtS.task.wholes*Number(dtS.d),n)));dtEl('numerator').value=dtS.n;dtPaint();if(id&&document.getElementById(id))document.getElementById(id).focus({preventScroll:true});}
+function dtCheck(){
+  if(dtS.done)return;var x=dtAnswer();if(x.error){dtMessage('info',x.error);dtEl(vtValidInt(dtS.d,1,36)?'numerator':'denominator').focus();return;}
+  if(!dtS.task.choices.some(function(c){return c.id===dtS.reason;})){dtMessage('info','Wähle auch eine Begründung. Ein Fall ist erst mit korrigiertem Bruchbild und Erklärung gelöst.');return;}
+  var signature=x.n+'/'+x.d+'/'+dtS.reason;if(dtS.seen.indexOf(signature)>=0){dtMessage('info','Diese Kombination wurde bereits geprüft. Verändere das Bild oder die Begründung.');return;}
+  dtS.seen.push(signature);var t=dtS.task,numberOK=vtIsCorrect(t,x.n,x.d),reasonOK=dtS.reason==='rule',first=dtS.tries===0&&!dtS.help;
+  dtS.tries++;dtTotals.attempts=Math.min(1000000000,dtTotals.attempts+1);
+  if(numberOK&&reasonOK){dtS.done=true;dtTotals.solved=Math.min(1000000000,dtTotals.solved+1);if(first)dtTotals.independent=Math.min(1000000000,dtTotals.independent+1);dtSave();dtMessage('ok','Fall geknackt! Dein Bruchbild und deine Begründung stimmen.'+(first?' Im ersten Versuch ohne Hilfe.':''));dtRender('dt-new');}
+  else{dtSave();dtMessage('bad',numberOK?'Dein Bruchbild stimmt. Die gewählte Begründung erklärt aber nicht den Fehler in diesem Rechenweg.':reasonOK?'Den Denkfehler hast du erkannt. Repariere noch das Ergebnis: '+(t.type==='expand'?'Erweitere beide Zahlen genau mit '+t.factor+'.':t.type==='reduce'?'Kürze vollständig; der Wert des Bruchs muss gleich bleiben.':'Prüfe die markierte Menge und den Rechenweg.'):'Hier passen weder Bruchbild noch Begründung. Schau auf die angegebene Rechenart oder nutze einen Tipp.');dtRender();}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest&&e.target.closest('[data-dt]');if(!t||t.disabled)return;var action=t.getAttribute('data-dt');if(action==='open'){openDetective();return;}if(!t.closest('#dt-root'))return;
+  var n=vtValidInt(dtS.n,0,144)?Number(dtS.n):0;
+  if(action==='piece'){var idx=+t.getAttribute('data-index');dtSetN(idx===n?idx-1:idx,t.id);}
+  else if(action==='plus'||action==='minus')dtSetN(n+(action==='plus'?1:-1));
+  else if(action==='check')dtCheck();
+  else if(action==='tip'&&!dtS.done){dtS.help=true;dtMessage('info',DT_RULES[dtS.task.type].good+' '+(dtS.task.type==='expand'?'Der Faktor ist '+dtS.task.factor+'.':dtS.task.type==='reduce'?'Suche einen gemeinsamen Teiler von Zähler und Nenner.':'Die Stücke stehen für Anteile desselben Ganzen.'));}
+  else if(action==='show'&&!dtS.done){dtS.help=true;dtS.done=true;dtS.revealed=true;dtMessage('info','Lösung aufgedeckt. Dieser Fall zählt nicht als gelöst.');dtRender('dt-new');}
+  else if(action==='new'){dtNewCase();dtRender('dt-denominator');}
+});
+document.addEventListener('input',function(e){var t=e.target;if(!t.closest||!t.closest('#dt-root')||dtS.done)return;if(t.id==='dt-denominator')dtS.d=t.value;else if(t.id==='dt-numerator')dtS.n=t.value;else return;dtPaint();});
+document.addEventListener('change',function(e){
+  var t=e.target;if(!t.closest||!t.closest('#dt-root'))return;
+  if(t.id==='dt-type'||t.id==='dt-level'){if(t.id==='dt-type')dtS.type=VT_TYPES.indexOf(t.value)>=0?t.value:'mixed';else dtS.lvl=Number(t.value)===2?2:1;dtNewCase();dtRender(t.id);return;}
+  if(t.name==='dt-reason'&&!dtS.done){dtS.reason=t.value;document.querySelectorAll('.dt-reason').forEach(function(l){l.classList.toggle('selected',l.querySelector('input').checked);});}
+});
+document.addEventListener('keydown',function(e){
+  var t=e.target;if(!t.closest||!t.closest('#dt-root'))return;
+  if(e.key==='Enter'&&(t.id==='dt-denominator'||t.id==='dt-numerator')){e.preventDefault();dtCheck();}
+  else if(t.getAttribute('data-dt')==='piece'&&!dtS.done&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].indexOf(e.key)>=0){e.preventDefault();var n=vtValidInt(dtS.n,0,144)?Number(dtS.n):0,max=dtS.task.wholes*Number(dtS.d);n=e.key==='Home'?0:e.key==='End'?max:Math.max(0,Math.min(max,n+(e.key==='ArrowLeft'||e.key==='ArrowDown'?-1:1)));dtSetN(n,'dt-piece-'+Math.max(1,n));}
 });
 
 /* ---------- Ereignisse ---------- */

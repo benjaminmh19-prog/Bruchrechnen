@@ -15,7 +15,7 @@ function board(){return $('#wk-board').textContent.replace(/\s+/g,' ');}
 function advance(){click('[data-wk="advance"]');}
 function eqFrac(n,dd){const fracs=[...$('#wk-board').querySelectorAll('.wk-result .fr')];assert(fracs.some(f=>f.querySelector('.n').textContent===String(n)&&f.querySelector('.d').textContent===String(dd)),`Expected fraction ${n}/${dd}: ${board()}`);}
 let count=0;function test(name,fn){fn();count++;console.log('PASS',name);}
-test('Initialisierung ohne Fehler',()=>{assert.equal(errors.length,0);assert.equal(d.querySelectorAll('.tab').length,7);assert.equal(d.querySelectorAll('#wk-edit-a .wk-piece').length,2);});
+test('Initialisierung ohne Fehler',()=>{assert.equal(errors.length,0);assert.equal(d.querySelectorAll('.tab').length,8);assert.equal(d.querySelectorAll('#wk-edit-a .wk-piece').length,2);});
 test('Stücke antippen, reduzieren, leeren',()=>{operands(1,4,1,3);click('#wk-edit-a [data-index="3"]');assert.equal(value('a'),3);click('#wk-edit-a [data-index="3"]');assert.equal(value('a'),2);click('#wk-edit-a [data-wk="clear"]');assert.equal(value('a'),0);});
 test('Kreisstücke mit Tastatur',()=>{click('[data-wk="view"][data-view="circle"]');const wedge=$('#wk-edit-a [data-index="2"]');wedge.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Enter',bubbles:true}));assert.equal(value('a'),2);assert.equal(d.querySelectorAll('#wk-edit-a .wk-wedge').length,4);click('[data-wk="view"][data-view="bar"]');});
 test('Addition 1/2+1/3=5/6 und Undo',()=>{operands(1,2,1,3);advance();assert(board().includes('3/6')&&board().includes('2/6'));advance();eqFrac(5,6);assert.equal(d.querySelectorAll('.wk-result').length,1);click('[data-wk="undo"]');assert(board().includes('Jetzt kannst du'));advance();advance();eqFrac(5,6);});
