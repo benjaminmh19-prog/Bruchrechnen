@@ -1,0 +1,12 @@
+{
+  "name": "bruchrechnen-klasse6-tests",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Automatische Funktionstests der eigenständigen Bruchrechnen-Lernseite",
+  "scripts": {
+    "test": "node tests/workshop.test.cjs && node tests/focus.test.cjs && node --test tests/learning.test.cjs"
+  },
+  "devDependencies": {
+    "jsdom": "26.1.0"
+  }
+}

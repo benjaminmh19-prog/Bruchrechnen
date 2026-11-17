@@ -24,6 +24,23 @@ Mit **„Mit Bild lösen“** unter einer Übungsaufgabe werden deren Brüche in
 
 Die Werkstatt unterstützt Brüche von 0 bis 1 mit Nennern von 2 bis 12 sowie Ergebnisse über 1. Negative Differenzen werden im Klasse-6-Grundmodus mit einem Hinweis abgefangen; die Brüche können dann getauscht werden. Alle Aktionen funktionieren ohne Ziehen, per Antippen oder Tastatur. Sehr feine Subtraktionsbalken und breite Multiplikationsraster lassen sich seitlich scrollen.
 
+## Erweitern und Kürzen
+
+Der neue Reiter **„Erweitern & Kürzen“** zeigt zwei gleich große Balken: den aktuellen Bruch und eine Vorschau der neuen Einteilung. Beim Erweitern entstehen kleinere Stücke; beim Kürzen werden kleine Stücke zu größeren Gruppen zusammengefasst. Die gefärbte Menge bleibt sichtbar gleich groß. Zähler und Nenner werden immer mit derselben ganzen Zahl verändert.
+
+Faktor beziehungsweise Kürzungszahl auswählen und die Umformung anwenden. Ungültige Kürzungen werden mit einer Erklärung gesperrt. Gemeinsame Teiler, „Ganz kürzen“, Rückgängig und ein Entdeckerweg helfen beim Ausprobieren. Auch 0/6 → 0/1 und 6/6 → 1/1 sind möglich. Für gut lesbare Bilder ist die Darstellung auf höchstens 72 Teile eines Ganzen begrenzt.
+
+## Grafisch üben und Lerncheck
+
+Im Reiter **„Grafisch üben“** werden zufällige Aufgaben zu den vier Rechenarten sowie zum Erweitern und Kürzen erzeugt. Es gibt zwei Schwierigkeitsstufen und eine gemischte Auswahl. Die Antwort wird selbst gebaut: Nenner von 1 bis 36 wählen, anschließend Stücke im Bild markieren oder die großen Plus-/Minus-Tasten und das Zählerfeld nutzen. Alle Ganzes-Balken haben dieselbe Breite. Bei Division können bis zu vier Ganze dargestellt werden.
+
+| Modus | Verhalten |
+| --- | --- |
+| Training | Beliebig viele Aufgaben, gezielte Rückmeldungen, Tipps und Lösung aufdecken. Gleichwertige Rechenantworten sind erlaubt; beim Erweitern zählt der vorgegebene Faktor, beim Kürzen die vollständig gekürzte Form. Leere oder ungültige Eingaben werden nicht gewertet. |
+| Lerncheck | Acht Aufgaben ohne Zeitdruck, vor Abgabe keine Tipps oder Lösung. Jede Aufgabe wird genau einmal gewertet. Die gemischte Auswahl enthält alle sechs Aufgabentypen und zwei zusätzliche Zufallsaufgaben. Nach Abgabe folgen Auswertung und Weiter; am Ende stehen Ergebnisübersicht und Bestwert. |
+
+Während eines Lernchecks sind die Einstellungen gesperrt; „Lerncheck abbrechen“ beendet ihn ohne gespeicherte Gesamtpunktzahl. Ein Reiterwechsel erhält die laufende Aufgabe im geöffneten Browserfenster. Nur zusammengefasste Trainingszahlen und Lerncheck-Bestwerte werden lokal im eigenen Schlüssel `bruch-visual-training-v1` gespeichert. Keine Anmeldung, persönlichen Schülerdaten oder Server erforderlich. Die Werte dienen der Selbsteinschätzung, nicht als manipulationssichere Prüfungsnoten.
+
 ## Dateien
 
 | Datei | Zweck |
@@ -43,6 +60,17 @@ python3 -m http.server 8080
 
 Danach `http://localhost:8080` öffnen. Die Lernfunktionen von `index.html` funktionieren auch ohne Service Worker.
 
+## Automatische technische Tests
+
+Die App selbst braucht weiterhin keine Installation und keinen Build-Schritt. Nur zum Testen ist Node.js 22 erforderlich:
+
+```sh
+npm ci --ignore-scripts
+npm test
+```
+
+Die Tests prüfen Bruchmodelle und Bedienung, Wertgleichheit bei Erweitern/Kürzen, ungültige Umformungen, Aufgabengeneratoren, grafische Antwortbewertung, Einmalwertung des Acht-Aufgaben-Lernchecks, Tastaturfokus sowie die bisherigen Übungen und Spiele. `.github/workflows/tests.yml` führt dieselben Tests automatisch bei jedem Push und Pull Request aus. Die Abhängigkeit `jsdom` wird ausschließlich für die Tests verwendet und nicht von der Lernseite geladen.
+
 ## Veröffentlichen mit GitHub Pages
 
 Das Repository verwendet GitHub Pages mit **Deploy from a branch**, Branch **main**, Ordner **/ (root)**. Änderungen auf anderen Branches ändern die veröffentlichte Seite nicht. Nach dem Zusammenführen eines Pull Requests in `main` wird die neue Version durch GitHub Pages ausgeliefert.
@@ -55,7 +83,7 @@ Das Repository verwendet GitHub Pages mit **Deploy from a branch**, Branch **mai
 
 ## Neue Version ausliefern
 
-In `sw.js` den Versionsnamen bei `CACHE` erhöhen, damit der alte Offline-Cache dieser App ersetzt wird. Die Bruch-Werkstatt verwendet `bruchrechnen-v2`. Caches anderer Apps derselben Domain bleiben unangetastet.
+In `sw.js` den Versionsnamen bei `CACHE` erhöhen, damit der alte Offline-Cache dieser App ersetzt wird. Die erweiterte Bruch-Werkstatt verwendet `bruchrechnen-v3`. Caches anderer Apps derselben Domain bleiben unangetastet.
 
 ## Schriften
 
