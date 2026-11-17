@@ -54,15 +54,15 @@ test('Grafiktraining: leere Antworten zählen nicht, Umformungen sind exakt',()=
  a.click('#vt-submit');assert.equal(tot.attempts,1);
  fill(a,'vt-denominator',s.task.answer[1]);fill(a,'vt-numerator',s.task.answer[0]);a.click('#vt-submit');assert.equal(tot.correct,1);assert(s.done);assert(!a.d.querySelector('#vt-submit'));assert.equal(a.d.activeElement.id,'vt-new');
  const stored=JSON.parse(a.dom.window.localStorage.getItem('bruch-visual-training-v1'));assert.equal(stored.correct,1);
- a.click('#vt-new');assert.equal(a.d.querySelector('#vt-numerator').value,'');assert.equal(a.d.querySelector('#vt-denominator').value,'');
+ a.click('#vt-new');assert.equal(a.d.querySelector('#vt-numerator').value,'');assert.equal(a.d.querySelector('#vt-denominator').value,String(s.task.b));
  a.click('#vt-show');assert(s.done);assert.equal(tot.correct,1);assert(!a.d.querySelector('#vt-submit'));
  assert.equal(a.errors.length,0);a.dom.window.close();
 });
 test('Grafische Stückwahl und Tastatur, Tabwechsel erhält Aufgabe',()=>{
  const a=boot('visual');choose(a,'vt-type','add');const task=a.api.vtS.task;
- fill(a,'vt-denominator',6);a.click('#vt-piece-4');assert.equal(a.api.vtS.n,'4');assert.equal(a.d.activeElement.id,'vt-piece-4');
- a.d.activeElement.dispatchEvent(new a.dom.window.KeyboardEvent('keydown',{key:'ArrowLeft',bubbles:true}));assert.equal(a.api.vtS.n,'3');assert.equal(a.d.activeElement.id,'vt-piece-3');
- a.click('[data-act="tab"][data-op="equiv"]');a.click('[data-act="tab"][data-op="visual"]');assert.equal(a.api.vtS.task,task);assert.equal(a.d.querySelector('#vt-numerator').value,'3');
+ fill(a,'vt-denominator',6);a.click('#vt-piece-4');assert.equal(a.api.vtS.n,'1');assert.equal(a.d.activeElement.id,'vt-piece-4');
+ a.d.activeElement.dispatchEvent(new a.dom.window.KeyboardEvent('keydown',{key:'ArrowLeft',bubbles:true}));assert.equal(a.api.vtS.n,'1');assert.equal(a.d.activeElement.id,'vt-piece-3');
+ a.click('[data-act="tab"][data-op="equiv"]');a.click('[data-act="tab"][data-op="visual"]');assert.equal(a.api.vtS.task,task);assert.equal(a.d.querySelector('#vt-numerator').value,'1');
  assert.equal(a.errors.length,0);a.dom.window.close();
 });
 test('Lerncheck: alle sechs Typen, acht Aufgaben, einmalige Abgabe und Bestwert',()=>{

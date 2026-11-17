@@ -318,6 +318,62 @@ button.vt-piece{cursor:pointer;touch-action:manipulation}
 .dt-solution h3{color:var(--ok)}
 @media(max-width:440px){.dt-config{grid-template-columns:1fr}.dt-suspect{padding:10px}.dt-suspect .eq{font-size:1.12rem}}
 @media print{.dt-config,.dt-reasons{display:none}.dt-suspect,.dt-solution{break-inside:avoid}}
+/* Klare Bilder: ein Ganzes, anklickbare Stücke, daneben die Bruchzahl. */
+.sp-picture{position:relative;width:100%;min-width:0;--piece:var(--op)}
+.sp-bar{display:grid;grid-template-columns:repeat(var(--parts),minmax(0,1fr));width:100%;height:64px;border:2px solid var(--ink);border-radius:6px;overflow:hidden;background:var(--surface)}
+.sp-bar .sp-piece{min-width:0;width:100%;height:100%;padding:0;margin:0;border:0;border-right:1px solid var(--ink);border-radius:0;background:var(--surface);appearance:none;touch-action:manipulation}
+.sp-bar .sp-piece:last-child{border-right:0}
+.sp-bar .sp-piece.selected{background:var(--piece)}
+.sp-bar button.sp-piece{cursor:pointer}
+.sp-bar .sp-piece:focus-visible{outline:3px solid var(--bad);outline-offset:-4px;position:relative;z-index:1}
+.sp-circle{display:block;width:min(100%,180px);height:auto;aspect-ratio:1;margin:0 auto;overflow:visible}
+.sp-wedge{fill:var(--surface);stroke:var(--ink);stroke-width:.8;touch-action:manipulation}
+.sp-wedge.selected{fill:var(--piece)}
+.sp-wedge[role="button"]{cursor:pointer}
+.sp-wedge:focus-visible{outline:none;stroke:var(--bad);stroke-width:3}
+.sp-outline{fill:none;stroke:var(--ink);stroke-width:2;pointer-events:none}
+.sp-picture[data-view="bar"]>.sp-old-boundary{pointer-events:none;position:absolute;top:0;bottom:0;width:3px;background:var(--ink);transform:translateX(-50%)}
+.sp-circle .sp-old-boundary{pointer-events:none;stroke:var(--ink);stroke-width:3}
+.sp-view{margin:10px 0}
+.sp-comparison{display:grid;grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);gap:8px;align-items:center;margin:16px 0}
+.sp-fraction-card{min-width:0;background:var(--surface);padding:12px;border:1px solid var(--line);border-radius:12px}
+.sp-fraction-card h3{margin:0;color:var(--muted);font:inherit;font-size:.88rem;font-weight:800}
+.sp-fraction-label{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;min-height:52px}
+.sp-fraction-label .fr{font-size:1.8rem}
+.sp-arrow{text-align:center;font-weight:800;font-family:var(--f-display);font-size:1.15rem;color:var(--op);line-height:1.4}
+.sp-arrow span{display:block;font-size:1.5rem}
+.sp-count{margin:8px 0 0;font-size:.82rem;color:var(--muted)}
+.sp-factor-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0}
+.sp-factor-row label{font-weight:800}
+.sp-factor-row input{width:74px;min-height:44px;border:2px solid var(--line);border-radius:10px;font:inherit;font-size:1.2rem;text-align:center;background:var(--surface);color:var(--ink)}
+.sp-factor-row .eq-factors{gap:6px}
+.sp-number-details{margin:12px 0}
+.sp-number-details summary{font-weight:700;cursor:pointer;color:var(--op);min-height:40px;display:flex;align-items:center}
+.sp-number-details .pick{margin-top:10px}
+.sp-help{margin:10px 0;font-weight:700;font-size:.95rem}
+.sp-equation{justify-content:center;margin:14px 0;font-size:1.6rem}
+.sp-workspace .pick{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.sp-workspace .pickcol{padding:12px}
+.sp-workspace .wk-edit{margin-top:0}
+.sp-workspace .wk-readout{font-size:1.25rem}
+.sp-workspace .wk-readout .fr{font-size:1.8rem}
+.sp-workspace .stp{flex-wrap:wrap;font-size:.85rem}
+.sp-workspace .stp .ctl{width:100%;justify-content:space-between}
+.sp-workspace .pickcol h3{letter-spacing:0;text-transform:none;font-size:.95rem}
+.sp-workspace .wk-edit p{font-size:.82rem}
+.sp-workspace .sp-controls{margin-top:10px}
+.sp-more{margin-top:10px}
+.sp-more summary{font-weight:800;color:var(--op);cursor:pointer;min-height:44px;display:flex;align-items:center}
+.sp-more .wk-board{margin-top:12px}
+.sp-hidden-value{display:none}
+.sp-inputs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.sp-inputs label{font-size:.9rem;font-weight:700}
+.sp-inputs input{width:100%;min-width:0;min-height:44px;border:2px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit;text-align:center}
+@media(max-width:440px){.sp-fraction-card{padding:8px}.sp-fraction-label{gap:4px;flex-wrap:wrap}.sp-fraction-label .fr{font-size:1.5rem}.sp-fraction-card h3{font-size:.78rem}.sp-comparison{gap:5px;grid-template-columns:minmax(0,1fr) 24px minmax(0,1fr)}.sp-count{font-size:.76rem}.sp-workspace .pick{gap:8px}.sp-workspace .pickcol{padding:8px}.sp-factor-row .eq-factors .chip{min-width:42px;padding:5px 8px}.sp-factor-row{gap:8px}}
+@media print{.sp-view,.sp-factor-row,.sp-number-details,.sp-more summary{display:none}}
+
+@media(max-width:440px){.sp-workspace .stp .ctl{gap:3px}.sp-workspace .rb{width:32px;height:44px;border-radius:9px}.sp-workspace .stp .val{min-width:1em;font-size:1.2rem}}
+
 </style>
 
 </head>
@@ -325,7 +381,7 @@ button.vt-piece{cursor:pointer;touch-action:manipulation}
 <div class="wrap">
   <header>
     <h1>Bruchrechnen</h1>
-    <p class="sub">Brüche anfassen und verstehen: rechnen, erweitern und kürzen. Im Grafiktraining baust du eigene Antworten; der Lerncheck zeigt dir, was schon sitzt.</p>
+    <p class="sub">Balken oder Kreise wählen. Stücke antippen. Brüche verstehen.</p>
   </header>
   <details class="pre" id="pre"><summary>Vorwissen auffrischen: Erweitern, Kürzen, gemischte Zahlen</summary>
     <div class="pre-grid">
@@ -483,25 +539,12 @@ function renderPanel(){
   if(cur==='games'){document.getElementById('panel').setAttribute('data-op','games');renderGames();return;}
   var op=cur,p=OPS[op],m=document.getElementById('panel'),dm=demo[op];
   m.setAttribute('data-op',op);
-  var why='';
-  if(op==='div'){
-    why='<div class="card"><h2>Warum der Kehrwert?</h2><div class="vis"><div class="vrow"><div class="lab">'+fr(1,1)+'</div><div class="stack"><div class="bar" style="--d:4"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div></div></div>'+
-      '<p>Wie oft passt ein Viertel in ein Ganzes? Viermal. Also ist 1 : '+fr(1,4)+' = 4. Und 4 ist dasselbe wie 1 · '+fr(4,1)+', also 1 mal der Kehrwert von '+fr(1,4)+'. Teilen durch einen Bruch fragt immer: Wie oft passt er hinein?</p></div>';
-  }
-  m.innerHTML=
-    '<div class="merke"><div class="label">Merke</div><p>'+p.merke+'</p></div>'+
-    storyCard(op)+
-    '<div class="card"><h2>So geht\'s</h2><ol class="steps">'+p.steps.map(function(t){return '<li><div>'+t+'</div></li>';}).join('')+'</ol>'+(p.hint?'<p class="hint">'+p.hint+'</p>':'')+'</div>'+
-    why+
-    '<div class="card workshop" id="workshop"><div class="wk-top"><div><div class="label">Anfassen &amp; verstehen</div><h2>Deine Bruch-Werkstatt</h2><p class="hint">Stücke antippen. Mengen verändern. Den Rechenweg selbst bauen.</p></div><div class="wk-mode" role="group" aria-label="Darstellung der Brüche">'+
-      '<button class="chip" data-wk="view" data-view="bar" aria-pressed="true">Balken</button><button class="chip" data-wk="view" data-view="circle" aria-pressed="false">Kreise</button></div></div>'+
-      '<p id="wk-source" class="wk-source" hidden></p>'+
-      '<div class="pick"><div class="pickcol"><h3>1. Bruch</h3>'+stepper('Zähler','a',dm.a)+stepper('Nenner','b',dm.b)+'<div class="wk-edit" id="wk-edit-a"></div></div><div class="pickcol"><h3>2. Bruch</h3>'+stepper('Zähler','c',dm.c)+stepper('Nenner','d',dm.d)+'<div class="wk-edit" id="wk-edit-c"></div></div></div>'+
-      '<div class="wk-board" id="wk-board"></div><p class="wk-sr-only" id="wk-status" role="status" aria-live="polite" aria-atomic="true"></p>'+
-      '<details class="how"><summary>Vollständigen Rechenweg ansehen</summary><div id="demo-out" style="margin-top:14px"></div></details><div class="btns"><button class="btn" data-dt="open">Fehlerdetektiv starten</button></div></div>'+
-    '<div class="card"><div class="prac-top"><h2 style="margin:0">Du bist dran</h2><div class="lvl" role="group" aria-label="Schwierigkeit">'+
-      [1,2,3].map(function(l){return '<button class="chip" data-act="lvl" data-l="'+l+'" aria-pressed="'+(l===level)+'">'+['Leicht','Mittel','Schwer'][l-1]+'</button>';}).join('')+
-      '</div></div><div class="stats" id="stats"></div><div id="prac"></div></div>'+
+  m.innerHTML='<section class="card workshop sp-workspace" id="workshop"><div class="wk-top"><div><div class="label">'+p.name+'</div><h2>Deine Bruch-Werkstatt</h2><p class="hint">Tippe Stücke an: färben oder entfernen.</p></div>'+spViewButtons('wk')+'</div>'+
+    '<p id="wk-source" class="wk-source" hidden></p><div class="pick">'+[['a','b','1. Bruch'],['c','d','2. Bruch']].map(function(keys){return '<div class="pickcol"><h3>'+keys[2]+'</h3><div class="wk-edit" id="wk-edit-'+keys[0]+'"></div><div class="sp-controls">'+stepper('Teile pro Ganzes',keys[1],dm[keys[1]])+'<details class="sp-number-details"><summary>Zähler mit Tasten ändern</summary>'+stepper('Zähler',keys[0],dm[keys[0]])+'</details></div></div>';}).join('')+'</div>'+
+    '<div class="wk-equation sp-equation" id="wk-simple-equation"></div><details class="sp-more" id="wk-detailed"><summary>Rechnung mit Bildern weiterführen</summary><div class="wk-board" id="wk-board"></div></details><p class="wk-sr-only" id="wk-status" role="status" aria-live="polite" aria-atomic="true"></p>'+
+    '<details class="how"><summary>Schriftlichen Rechenweg ansehen</summary><div id="demo-out" style="margin-top:14px"></div></details><div class="btns"><button class="btn" data-dt="open">Fehlerdetektiv starten</button></div></section>'+
+    '<details class="pre"><summary>Erklärung und Beispiel</summary><div class="panel" style="margin-top:14px"><div class="merke"><div class="label">Merke</div><p>'+p.merke+'</p></div>'+storyCard(op)+'<div class="card"><h2>So geht’s</h2><ol class="steps">'+p.steps.map(function(t){return '<li><div>'+t+'</div></li>';}).join('')+'</ol>'+(p.hint?'<p class="hint">'+p.hint+'</p>':'')+'</div></div></details>'+
+    '<div class="card"><div class="prac-top"><h2 style="margin:0">Du bist dran</h2><div class="lvl" role="group" aria-label="Schwierigkeit">'+[1,2,3].map(function(l){return '<button class="chip" data-act="lvl" data-l="'+l+'" aria-pressed="'+(l===level)+'">'+['Leicht','Mittel','Schwer'][l-1]+'</button>';}).join('')+'</div></div><div class="stats" id="stats"></div><div id="prac"></div></div>'+
     '<div class="card"><div class="prac-top"><h2 style="margin:0">Zufalls-Sachaufgabe</h2><button class="btn" data-act="wnew">Neue Sachaufgabe</button></div><div id="word"></div></div>';
   workshopSource='';resetWorkshop();updateWorkspace();newTask();updateStats();newWord();
 }
@@ -836,6 +879,114 @@ function whintShow(){
 }
 
 /* ---------- Grafisch handeln statt nur Bilder ansehen ---------- */
+/* Ein Stück anklicken heißt genau dieses Stück umschalten. */
+var spOperandStates = {};
+function spOperand(key) {
+  var state = spOperandStates[cur] || (spOperandStates[cur] = {});
+  return state[key] || (state[key] = {});
+}
+function spSelection(state, n, d, total) {
+  total = total || d;
+  var p = state.picture;
+  if (!p || p.n !== n || p.d !== d || p.total !== total) {
+    p = state.picture = {n:n, d:d, total:total, focus:Math.max(1,n), selected:[]};
+    for (var i=0; i<total; i++) p.selected.push(i<n);
+  }
+  return p.selected;
+}
+function spToggle(state, n, d, total, index, group, minimum) {
+  var selected = spSelection(state,n,d,total), size = group || 1;
+  var start = Math.floor((index-1)/size)*size, end = Math.min(total,start+size);
+  if (index<1 || index>total) return n;
+  var next = selected.slice(), on = !selected[index-1];
+  for (var i=start; i<end; i++) next[i]=on;
+  var count = next.filter(Boolean).length;
+  if (count<(minimum||0)) return n;
+  state.picture = {n:count,d:d,total:total,selected:next,focus:index};
+  return count;
+}
+function spGroupedSelection(state,n,d,group) {
+  var selected=spSelection(state,n,d,d), mixed=false;
+  for (var i=0; i<d; i+=group)
+    for (var j=i; j<i+group; j++) if (selected[j]!==selected[i]) mixed=true;
+  if (mixed) {state.picture=null;selected=spSelection(state,n,d,d);}
+  return selected;
+}
+function spTransformSelection(selected,mode,factor) {
+  var result=[];
+  if (mode==='expand') selected.forEach(function(on){for(var j=0;j<factor;j++)result.push(on);});
+  else for(var i=0;i<selected.length;i+=factor)result.push(selected[i]);
+  return result;
+}
+function spVisibleWholes(state,n,d,capacity) {
+  var selected=spSelection(state,n,d,capacity*d),last=0;
+  for(var i=0;i<selected.length;i++)if(selected[i])last=i+1;
+  return Math.min(capacity,Math.max(1,Math.floor(n/d)+1,Math.ceil(last/d),Math.ceil(state.picture.focus/d)));
+}
+function spId(ns,key,index) {return ns+'-'+(ns==='wk'?key+'-':'')+'piece-'+index;}
+function spAttributes(ns,key,index,on,focus,disabled,d) {
+  return ' id="'+spId(ns,key,index)+'" data-'+ns+'="piece" '+
+    (ns==='wk'?'data-key="'+key+'" ':'')+
+    (ns==='vt'?'data-vt-i="':'data-index="')+index+'" tabindex="'+(index===focus&&!disabled?0:-1)+
+    '" aria-pressed="'+on+'" aria-label="Stück '+index+' '+(on?'entfernen':'markieren')+'; jedes Stück ist 1 von '+d+' Teilen eines Ganzen"'+
+    (disabled?' aria-disabled="true"':'');
+}
+function spPoint(angle) {return [100+86*Math.cos(angle),100+86*Math.sin(angle)];}
+function spPicture(n,d,options) {
+  var opt=options||{}, view=opt.view||workshopView, group=opt.group||1, offset=opt.offset||0;
+  var interactive=!!opt.ns, total=opt.total||d, selected=opt.selected, h='', i;
+  var label=opt.label||n+' von '+d+' Stücken; ein Bild ist ein Ganzes';
+  var wrapper='<div class="sp-picture" data-parts="'+d+'" data-group="'+group+'" data-total="'+total+'" data-view="'+view+'" style="--piece:'+ (opt.color||'var(--op)')+'"'+(interactive?' role="group" aria-label="'+escapeText(label)+'"':'')+'>';
+  var focus=opt.focus||Math.max(1,n);
+  if(view==='circle') {
+    h='<svg class="sp-circle" viewBox="0 0 200 200"'+(interactive?' role="group"':' role="img"')+' aria-label="'+escapeText(label)+'">';
+    for(i=0;i<d;i++) {
+      var idx=offset+i+1, on=selected?!!selected[idx-1]:idx<=n;
+      var cls='sp-wedge'+(interactive&&opt.ns==='wk'?' wk-wedge':'')+' sp-piece'+(on?' selected on':'');
+      var attr=interactive?spAttributes(opt.ns,opt.key,idx,on,focus,opt.disabled,d)+' role="button"':' aria-hidden="true"';
+      if(on&&opt.secondFrom!==undefined&&idx>opt.secondFrom)attr+=' style="fill:var(--ink)"';
+      if(d===1) h+='<circle class="'+cls+'" cx="100" cy="100" r="86"'+attr+'></circle>';
+      else {
+        var start=spPoint(-Math.PI/2+2*Math.PI*i/d),end=spPoint(-Math.PI/2+2*Math.PI*(i+1)/d);
+        h+='<path class="'+cls+'" d="M 100 100 L '+start.join(' ')+' A 86 86 0 '+((2*Math.PI/d)>Math.PI?1:0)+' 1 '+end.join(' ')+' Z"'+attr+'></path>';
+      }
+    }
+    if(group>1)for(i=0;i<d;i+=group){var point=spPoint(-Math.PI/2+2*Math.PI*i/d);h+='<line class="sp-old-boundary" x1="100" y1="100" x2="'+point[0]+'" y2="'+point[1]+'" aria-hidden="true"/>';}
+    h+='<circle class="sp-outline" cx="100" cy="100" r="86" aria-hidden="true"/></svg>';
+  } else {
+    h='<div class="sp-bar" style="--parts:'+d+'"'+(!interactive?' role="img" aria-label="'+escapeText(label)+'"':'')+'>';
+    for(i=0;i<d;i++) {
+      var index=offset+i+1, active=selected?!!selected[index-1]:index<=n;
+      var classes='sp-piece'+(interactive&&opt.ns==='wk'?' wk-piece':'')+(interactive&&opt.ns!=='wk'?' vt-piece':'')+(active?' selected on':'');
+      h+=interactive?'<button type="button" class="'+classes+'"'+spAttributes(opt.ns,opt.key,index,active,focus,opt.disabled,d)+(opt.disabled?' disabled':'')+'></button>':'<span class="'+classes+'" aria-hidden="true"></span>';
+    }
+    h+='</div>';
+    if(group>1)for(i=group;i<d;i+=group)h+='<span class="sp-old-boundary" style="left:'+(100*i/d)+'%" aria-hidden="true"></span>';
+  }
+  return wrapper+h+'</div>';
+}
+function spViewButtons(ns) {
+  return '<div class="wk-mode sp-view" role="group" aria-label="Darstellung wählen">'+['bar','circle'].map(function(view){return '<button type="button" id="'+ns+'-view-'+view+'" class="chip" data-'+ns+'="view" data-view="'+view+'" aria-pressed="'+(workshopView===view)+'">'+(view==='bar'?'Balken':'Kreise')+'</button>';}).join('')+'</div>';
+}
+function spHandleKey(e,ns) {
+  var t=e.target.closest&&e.target.closest('[data-'+ns+'="piece"]');
+  if(!t||!t.closest('.sp-picture')||t.disabled||t.getAttribute('aria-disabled')==='true')return false;
+  if((e.key==='Enter'||e.key===' ')&&t.namespaceURI==='http://www.w3.org/2000/svg') {
+    e.preventDefault();t.dispatchEvent(new MouseEvent('click',{bubbles:true}));return true;
+  }
+  if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].indexOf(e.key)<0)return false;
+  e.preventDefault();var index=+(t.getAttribute(ns==='vt'?'data-vt-i':'data-index'));
+  var max=+t.closest('.sp-picture').getAttribute('data-total');
+  var next=e.key==='Home'?1:e.key==='End'?max:Math.max(1,Math.min(max,index+(e.key==='ArrowRight'||e.key==='ArrowDown'?1:-1)));
+  var target=document.getElementById(spId(ns,t.getAttribute('data-key'),next));
+  if(target){
+    var state=ns==='vt'?vtS:ns==='dt'?dtS:ns==='eq'?eqState:spOperand(t.getAttribute('data-key'));
+    if(state.picture)state.picture.focus=next;
+    t.tabIndex=-1;target.tabIndex=0;target.focus({preventScroll:true});
+  }
+  return true;
+}
+
 var workshopView='bar';
 var workshopStates={};
 var workshopSource='';
@@ -848,22 +999,9 @@ function escapeText(t){return String(t).replace(/[&<>"']/g,function(c){return {'
 function pieceAction(key,index,n){return index===n?index-1:index;}
 function circlePoint(angle){return [(90+76*Math.cos(angle)).toFixed(3),(90+76*Math.sin(angle)).toFixed(3)].join(' ');}
 function editableFraction(n,d,key){
-  var h='',i,active,min=cur==='div'&&key==='c'?1:0;
-  if(workshopView==='circle'){
-    h='<svg class="wk-circle" viewBox="0 0 180 180" aria-label="'+n+' von '+d+' Kreisstücken; ein Kreis ist ein Ganzes">';
-    for(i=0;i<d;i++){
-      active=i<n;
-      var start=-Math.PI/2+2*Math.PI*i/d,end=-Math.PI/2+2*Math.PI*(i+1)/d;
-      h+='<path class="wk-wedge'+(active?' selected':'')+'" d="M 90 90 L '+circlePoint(start)+' A 76 76 0 '+(d===1?1:0)+' 1 '+circlePoint(end)+' Z" role="button" tabindex="0" data-wk="piece" data-key="'+key+'" data-index="'+(i+1)+'" aria-pressed="'+active+'" aria-label="'+(i+1)+' von '+d+' Stücken einstellen"><title>Stück '+(i+1)+' von '+d+'</title></path>';
-    }
-    h+='</svg>';
-  }else{
-    h='<div class="wk-pieces" style="--parts:'+d+'" role="group" aria-label="'+n+' von '+d+' Balkenstücken; ein Balken ist ein Ganzes">';
-    for(i=0;i<d;i++)h+='<button class="wk-piece'+(i<n?' selected':'')+'" data-wk="piece" data-key="'+key+'" data-index="'+(i+1)+'" aria-pressed="'+(i<n)+'" aria-label="'+(i+1)+' von '+d+' Stücken einstellen">'+(i+1)+'</button>';
-    h+='</div>';
-  }
-  return h+'<div class="wk-readout"><span>'+fr(n,d)+' <span style="font-size:.85rem">des Ganzen</span></span><button class="wk-clear" data-wk="clear" data-key="'+key+'"'+(min===1?' disabled title="Durch 0 darfst du nicht teilen"':'')+'>Leeren</button></div>'+
-    '<p>Tippe bis zum gewünschten Stück. Das letzte gefärbte Stück erneut antippen: ein Stück weniger.</p>';
+  var state=spOperand(key),selected=spSelection(state,n,d,d),min=cur==='div'&&key==='c'?1:0;
+  return spPicture(n,d,{ns:'wk',key:key,selected:selected,focus:state.picture.focus,color:key==='a'?'var(--op)':'var(--ink)',label:n+' von '+d+' Stücken; ein Bild ist ein Ganzes'})+
+    '<div class="wk-readout"><span>'+fr(n,d)+'</span><button class="wk-clear" data-wk="clear" data-key="'+key+'"'+(min===1?' disabled title="Durch 0 darfst du nicht teilen"':'')+'>Leeren</button></div><p>'+n+' von '+d+' Stücken gefärbt.</p>';
 }
 function renderOperandEditors(){
   var dm=demo[cur];
@@ -879,12 +1017,11 @@ function renderOperandEditors(){
   if(source){source.hidden=!workshopSource;source.textContent=workshopSource;}
 }
 function wkRow(title,n,d,color){
-  var cells='',i;
-  for(i=0;i<d;i++)cells+='<span class="wk-cell'+(i<n?' '+color:'')+'"></span>';
-  return '<div class="wk-row"><div class="wk-rowhead"><span class="wk-swatch'+(color==='second'?' second':'')+'"></span>'+title+' '+fr(n,d)+'</div><div class="wk-bar" role="img" aria-label="'+n+' von '+d+' gleich großen Stücken">'+cells+'</div><div class="wk-scale"><span>0</span><span>1 Ganzes</span></div></div>';
+  return '<div class="wk-row"><div class="wk-rowhead">'+title+' '+fr(n,d)+'</div>'+spPicture(n,d,{color:color==='second'?'var(--ink)':'var(--op)'})+'<div class="wk-scale"><span>0</span><span>1 Ganzes</span></div></div>';
 }
 function resultBars(N,D,A){
   var total=Math.max(1,Math.ceil(N/D)),h='';
+  if(workshopView==='circle'){for(var unit=0;unit<total;unit++)h+='<div class="wk-row"><div class="wk-rowhead">Ganzes '+(unit+1)+'</div>'+spPicture(N,D,{offset:unit*D,total:total*D,secondFrom:A,label:Math.min(D,Math.max(0,N-unit*D))+' von '+D+' Stücken'})+'</div>';return h;}
   for(var k=0;k<total;k++){
     var cells='';
     for(var i=0;i<D;i++){var idx=k*D+i;cells+='<span class="wk-cell'+(idx<N?' '+(A!==undefined&&idx>=A?'second':'first'):'')+'"></span>';}
@@ -996,21 +1133,22 @@ function renderWorkshop(){
   out.innerHTML=h;
   var status=document.getElementById('wk-status');if(status)status.textContent=caption;
 }
-function updateWorkspace(){renderWorkshop();updateDemo();}
-function applyPiece(key,index){
-  var dm=demo[cur],min=cur==='div'&&key==='c'?1:0;
-  dm[key]=Math.max(min,pieceAction(key,index,dm[key]));
+function updateWorkspace(){renderWorkshop();updateDemo();var e=document.getElementById('wk-simple-equation');if(e){var dm=demo[cur];e.innerHTML=fr(dm.a,dm.b)+o(OPS[cur].sy)+fr(dm.c,dm.d)+o('=')+'?';}}
+function applyPiece(key,index,prefix){
+  var dm=demo[cur],d=dm[key==='a'?'b':'d'],state=spOperand(key),min=cur==='div'&&key==='c'?1:0;
+  if(prefix){dm[key]=Math.max(min,pieceAction(key,index,dm[key]));state.picture=null;}
+  else dm[key]=spToggle(state,dm[key],d,d,index,1,min);
   resetWorkshop();workshopSource='';updateWorkspace();
 }
 function handleWorkshopAction(t){
   var action=t.getAttribute('data-wk'),s=ws(),dm=demo[cur],idx=parseInt(t.getAttribute('data-index'),10),key=t.getAttribute('data-key');
-  if(action==='view'){workshopView=t.getAttribute('data-view');renderOperandEditors();return;}
-  if(action==='piece'){applyPiece(key,idx);return;}
+  if(action==='view'){workshopView=t.getAttribute('data-view');renderWorkshop();return;}
+  if(action==='piece'){applyPiece(key,idx,!!t.closest('.wk-grid'));return;}
   if(action==='area'){dm.a=+t.getAttribute('data-col');dm.c=+t.getAttribute('data-row');resetWorkshop();workshopSource='';updateWorkspace();return;}
-  if(action==='clear'){if(cur==='div'&&key==='c')return;dm[key]=0;resetWorkshop();workshopSource='';updateWorkspace();return;}
+  if(action==='clear'){if(cur==='div'&&key==='c')return;dm[key]=0;spOperand(key).picture=null;resetWorkshop();workshopSource='';updateWorkspace();return;}
   if(action==='loadtask'){
     if(!task)return;
-    demo[cur]={a:task.a,b:task.b,c:task.c,d:task.d};resetWorkshop();
+    demo[cur]={a:task.a,b:task.b,c:task.c,d:task.d};spOperandStates[cur]={};resetWorkshop();var detail=document.getElementById('wk-detailed');if(detail)detail.open=true;
     workshopSource='Die aktuelle Übungsaufgabe ist übernommen. Bearbeite sie oben grafisch und trage das Ergebnis danach bei „Du bist dran“ ein.';
     updateWorkspace();var el=document.getElementById('workshop');
     if(el.scrollIntoView)el.scrollIntoView({behavior:window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
@@ -1049,81 +1187,111 @@ document.addEventListener('click',function(e){
   if(!replacement||replacement.disabled)replacement=document.querySelector('#wk-board .wk-actions .btn:not(:disabled)');
   if(replacement)replacement.focus({preventScroll:true});
 });
-document.addEventListener('keydown',function(e){
-  var t=e.target.closest&&e.target.closest('.wk-wedge');
-  if(t&&(e.key==='Enter'||e.key===' ')){e.preventDefault();t.dispatchEvent(new MouseEvent('click',{bubbles:true}));}
-});
+document.addEventListener('keydown',function(e){spHandleKey(e,'wk');});
 
-/* ---------- Wertgleiche Brüche: Erweitern und Kürzen ---------- */
-var eqState={n:2,d:3,mode:'expand',factor:2,history:[],log:[],origin:[2,3]};
+/* ---------- Wertgleiche Brüche: Stücke teilen und bündeln ---------- */
+var eqState={n:2,d:3,mode:'expand',factor:2,history:[],log:[],origin:[2,3],last:null,picture:null};
 function transformFraction(n,d,mode,factor){
   if(!Number.isInteger(n)||!Number.isInteger(d)||d<1||d>72||n<0||n>d)return {ok:false,message:'Wähle einen Bruch zwischen 0 und 1 mit einem Nenner von 1 bis 72.'};
   if(!Number.isInteger(factor)||factor<2)return {ok:false,message:'Wähle eine ganze Zahl größer als 1. Mit 0 darfst du nicht rechnen; mit 1 ändert sich die Einteilung nicht.'};
   if(mode==='expand'){
-    if(d*factor>72)return {ok:false,message:'Für ein gut lesbares Bild sind höchstens 72 Teile möglich. Wähle einen kleineren Faktor oder kürze zuerst.'};
+    if(d*factor>72)return {ok:false,message:'Höchstens 72 Teile sind darstellbar. Wähle einen kleineren Faktor oder kürze zuerst.'};
     return {ok:true,n:n*factor,d:d*factor};
   }
   if(mode!=='reduce')return {ok:false,message:'Wähle Erweitern oder Kürzen.'};
-  if(n%factor!==0||d%factor!==0)return {ok:false,message:'Mit '+factor+' geht es nicht: '+(n%factor!==0?'Der Zähler '+n:'Der Nenner '+d)+' ist nicht ohne Rest durch '+factor+' teilbar. Die Zahl muss beide Zahlen teilen.'};
+  if(n%factor!==0||d%factor!==0)return {ok:false,message:'Mit '+factor+' geht es nicht: '+(n%factor!==0?'Der Zähler '+n:'Der Nenner '+d)+' ist nicht ohne Rest durch '+factor+' teilbar. Der Teiler muss zu beiden Zahlen passen.'};
   return {ok:true,n:n/factor,d:d/factor};
 }
 function commonDivisors(n,d){var arr=[];for(var k=2;k<=d;k++)if(n%k===0&&d%k===0)arr.push(k);return arr;}
-function eqDiagram(n,d,group){
-  var h='<svg class="eq-diagram" viewBox="0 0 600 72" role="img" aria-label="'+n+' von '+d+' gleich großen Teilen; ein Balken ist ein Ganzes"><rect x="1" y="7" width="598" height="54" rx="4" fill="var(--surface)" stroke="var(--line)" stroke-width="2"/><rect x="1" y="8" width="'+(598*n/d)+'" height="52" fill="var(--op)"/>';
-  for(var i=1;i<d;i++){var x=1+598*i/d;h+='<line x1="'+x+'" x2="'+x+'" y1="8" y2="60" stroke="var(--ink)" stroke-width="'+(group&&i%group===0?2.5:.55)+'"/>';}
-  return h+'</svg><div class="wk-scale"><span>0</span><span>1 Ganzes</span></div>';
-}
 function eqStepper(label,key,value,min,max){return '<div class="stp"><span class="k">'+label+'</span><span class="ctl"><button class="rb" data-eq="dec" data-key="'+key+'" aria-label="'+label+' kleiner"'+(value<=min?' disabled':'')+'>−</button><span class="val" id="eq-'+key+'">'+value+'</span><button class="rb" data-eq="inc" data-key="'+key+'" aria-label="'+label+' größer"'+(value>=max?' disabled':'')+'>+</button></span></div>';}
 function renderEquivalence(){
   var m=document.getElementById('panel');m.setAttribute('data-op','equiv');
-  m.innerHTML='<div class="merke"><div class="label">Erweitern &amp; Kürzen</div><p>Die Einteilung ändert sich, der Anteil bleibt gleich. Rechne immer mit derselben Zahl im Zähler und im Nenner.</p></div>'+
-    '<section class="card workshop"><div class="wk-top"><div><h2>Ein Bruch, viele Darstellungen</h2><p class="hint">Teile Stücke weiter auf oder fasse sie zu größeren Gruppen zusammen.</p></div></div>'+
-    '<div id="eq-controls"></div><div id="eq-preview" class="wk-board"></div><p id="eq-status" role="status" aria-live="polite" aria-atomic="true" class="wk-live"></p></section>'+
-    '<div class="card"><h2>Entdeckerfragen</h2><p>Erweitere '+fr(2,3)+' zweimal mit 2. Was fällt dir am gefärbten Anteil auf? Kürze anschließend wieder zurück.</p><p class="hint">Partneridee: Eine Person verändert die Einteilung. Die andere erklärt, warum der Wert gleich bleibt. Testet auch '+fr(0,6)+' und '+fr(6,6)+'.</p><div class="btns"><button class="btn p" data-eq="train">Dazu grafisch üben</button></div></div>';
+  m.innerHTML='<section class="card workshop" id="eq-root"><div class="label">Erweitern &amp; Kürzen</div><h2>Stücke teilen oder zusammenlegen</h2><p>Der gefärbte Anteil bleibt gleich. Nur die Größe und Anzahl der Stücke ändern sich.</p><div id="eq-controls"></div><div id="eq-preview"></div><p id="eq-status" role="status" aria-live="polite" aria-atomic="true" class="wk-live"></p></section>'+
+    '<details class="pre"><summary>Warum bleibt der Wert gleich?</summary><p class="hint">Beim Erweitern wird jedes Stück weiter geteilt. Beim Kürzen bilden mehrere kleine Stücke ein größeres Stück. Deshalb verändert sich die gefärbte Menge nicht.</p><p class="hint">Probiere '+fr(2,3)+' mit Faktor 2 oder '+fr(6,8)+' mit Teiler 2. Du veränderst immer Zähler und Nenner mit derselben Zahl.</p></details><div class="btns"><button class="btn" data-eq="train">Dazu grafisch üben</button></div>';
   renderEqState();
 }
 function renderEqState(message){
-  var s=eqState,divs=commonDivisors(s.n,s.d),factors=[2,3,4,5,6,8,10,12];
-  if(divs.length&&factors.indexOf(divs[divs.length-1])<0)factors.push(divs[divs.length-1]);
-  factors.sort(function(a,b){return a-b;});
-  document.getElementById('eq-controls').innerHTML='<div class="pick"><div class="pickcol"><h3>Dein Bruch</h3>'+eqStepper('Zähler','n',s.n,0,s.d)+eqStepper('Nenner','d',s.d,1,72)+'</div><div class="pickcol"><h3>Schnell ausprobieren</h3><div class="eq-presets">'+[[1,2],[2,3],[6,8],[0,6]].map(function(f){return '<button class="chip" data-eq="preset" data-n="'+f[0]+'" data-d="'+f[1]+'" aria-label="Bruch '+f[0]+' von '+f[1]+' einstellen">'+fr(f[0],f[1])+'</button>';}).join('')+'</div></div></div>'+
-    '<div class="wk-mode" role="group" aria-label="Bruch umformen"><button class="chip" data-eq="mode" data-mode="expand" aria-pressed="'+(s.mode==='expand')+'">Erweitern ·</button><button class="chip" data-eq="mode" data-mode="reduce" aria-pressed="'+(s.mode==='reduce')+'">Kürzen :</button></div>'+
-    '<p class="hint" style="margin:12px 0 6px">'+(s.mode==='expand'?'Jedes bisherige Stück wird in so viele neue Stücke geteilt:':'So viele kleine Stücke bilden eine neue Gruppe:')+'</p><div class="eq-factors" role="group" aria-label="Faktor oder Kürzungszahl wählen">'+factors.map(function(f){return '<button class="chip" data-eq="factor" data-factor="'+f+'" aria-pressed="'+(s.factor===f)+'">'+(s.mode==='expand'?'· ':': ')+f+'</button>';}).join('')+'</div>';
-  var res=transformFraction(s.n,s.d,s.mode,s.factor),g=gcd(s.n,s.d),h='<h3>Vorher und nachher: dasselbe Ganze</h3><div class="eq-comparison"><div><div class="wk-rowhead">Vorher '+fr(s.n,s.d)+'</div>'+eqDiagram(s.n,s.d,s.mode==='reduce'&&res.ok?s.factor:0)+'</div><div><div class="wk-rowhead">Vorschau '+(res.ok?fr(res.n,res.d):'–')+'</div>'+(res.ok?eqDiagram(res.n,res.d,s.mode==='expand'?s.factor:0):'<div class="note">'+res.message+'</div>')+'</div></div>';
-  if(res.ok){
-    var sym=s.mode==='expand'?' · ':' : ';
-    h+='<div class="eq">'+fr(s.n,s.d)+o('=')+fr(s.n+sym+s.factor,s.d+sym+s.factor)+o('=')+fr(res.n,res.d)+'</div>'+
-      '<p class="hint">'+(s.mode==='expand'?'Mehr Teile, kleinere Teile. Die dicken Linien zeigen die bisherigen Stückgrenzen.':'Weniger Teile, größere Teile. Die dicken Linien im ersten Balken markieren Gruppen von '+s.factor+' kleinen Stücken.')+' Der gefärbte Anteil ist in beiden Balken gleich groß.</p>';
-  }
-  h+='<p class="hint"><strong>Gemeinsame Teiler größer als 1:</strong> '+(divs.length?divs.join(', '):'keine – vollständig gekürzt!')+'</p>'+
-    '<div class="wk-actions"><button class="btn p" data-eq="apply"'+(!res.ok?' disabled':'')+'>'+(s.mode==='expand'?'Unterteilen anwenden':'Gruppen zusammenfassen')+'</button><button class="btn" data-eq="fully"'+(g<=1?' disabled':'')+'>Ganz kürzen</button><button class="btn" data-eq="undo"'+(!s.history.length?' disabled':'')+'>Schritt zurück</button><button class="btn" data-eq="reset">Zur Ausgangszahl</button></div>';
-  if(s.log.length)h+='<details class="how" open><summary>Dein Entdeckerweg</summary><div class="eq">'+fr(s.origin[0],s.origin[1])+s.log.map(function(x){return o('=')+fr(x.n,x.d);}).join('')+'</div><p class="hint">'+s.log.map(function(x){return (x.mode==='expand'?'Erweitert':'Gekürzt')+' mit '+x.factor;}).join(' → ')+'</p></details>';
+  var s=eqState, divs=commonDivisors(s.n,s.d), factors=s.mode==='expand'?[2,3,4]:divs.slice(0,4);
+  if(factors.indexOf(s.factor)<0&&Number.isInteger(s.factor)&&s.factor>=2)factors.push(s.factor);
+  document.getElementById('eq-controls').innerHTML=
+    '<div class="wk-mode sp-view" role="group" aria-label="Bruch umformen"><button class="chip" data-eq="mode" data-mode="expand" aria-pressed="'+(s.mode==='expand')+'">Erweitern</button><button class="chip" data-eq="mode" data-mode="reduce" aria-pressed="'+(s.mode==='reduce')+'">Kürzen</button></div>'+spViewButtons('eq')+
+    '<div class="sp-factor-row"><label for="eq-factor-input">'+(s.mode==='expand'?'Faktor ×':'Teiler :')+'</label><input id="eq-factor-input" type="number" min="2" max="72" step="1" inputmode="numeric" value="'+(Number.isInteger(s.factor)?s.factor:'')+'"><div class="eq-factors" role="group" aria-label="'+(s.mode==='expand'?'Faktor':'Teiler')+' wählen">'+factors.map(function(f){return '<button class="chip" data-eq="factor" data-factor="'+f+'" aria-pressed="'+(s.factor===f)+'">'+f+'</button>';}).join('')+'</div></div>'+
+    '<details class="sp-number-details" id="eq-number-details"><summary>Anderen Bruch einstellen</summary><div class="eq-presets">'+[[1,2],[2,3],[6,8],[0,6]].map(function(f){return '<button class="chip" data-eq="preset" data-n="'+f[0]+'" data-d="'+f[1]+'" aria-label="Bruch '+f[0]+' von '+f[1]+' einstellen">'+fr(f[0],f[1])+'</button>';}).join('')+'</div><div class="pick"><div class="pickcol">'+eqStepper('Zähler','n',s.n,0,s.d)+eqStepper('Nenner','d',s.d,1,72)+'</div></div></details>';
+  renderEqPicture(message);
+}
+function renderEqPicture(message){
+  var s=eqState, last=s.last, sourceN=last?last.n:s.n, sourceD=last?last.d:s.d;
+  var mode=last?last.mode:s.mode, factor=last?last.factor:s.factor;
+  var res=last?{ok:true,n:last.afterN,d:last.afterD}:transformFraction(s.n,s.d,s.mode,s.factor);
+  var before=last?last.before:(mode==='reduce'&&res.ok?spGroupedSelection(s,s.n,s.d,factor):spSelection(s,s.n,s.d,s.d));
+  var after=last?last.after:(res.ok?spTransformSelection(before,mode,factor):[]);
+  var verb=mode==='expand'?'unterteilen':'zusammenlegen';
+  var h='<p class="sp-help">'+(last?'So hast du die Stücke '+(mode==='expand'?'weiter geteilt.':'zusammengelegt.'):
+    mode==='expand'?'Jedes Stück wird in '+(Number.isInteger(factor)?factor:'?')+' kleine Stücke geteilt.':
+    res.ok?'Je '+factor+' kleine Stücke bilden ein großes Stück. Tippe eine Gruppe an, um sie zu markieren oder zu entfernen.':'Wähle einen Teiler, der Zähler und Nenner ohne Rest teilt.')+'</p>'+
+    '<div class="sp-comparison"><div id="eq-before" class="sp-fraction-card"><div class="sp-fraction-label"><h3>Vorher</h3>'+fr(sourceN,sourceD)+'</div>'+spPicture(sourceN,sourceD,{ns:last?null:'eq',selected:before,focus:s.picture?s.picture.focus:1,group:mode==='reduce'&&res.ok?factor:1,label:'Ausgangsbruch '+sourceN+' von '+sourceD+' Stücken'})+'<p class="sp-count">'+sourceN+' von '+sourceD+' Stücken</p></div>'+
+    '<div class="sp-arrow" aria-hidden="true">'+(mode==='expand'?'×':':')+' '+(Number.isInteger(factor)?factor:'?')+'<span>→</span></div>'+
+    '<div id="eq-after" class="sp-fraction-card"><div class="sp-fraction-label"><h3>'+(last?'Nachher':'Vorschau')+'</h3>'+(res.ok?fr(res.n,res.d):'<span>–</span>')+'</div>'+(res.ok?spPicture(res.n,res.d,{selected:after,group:mode==='expand'?factor:1,label:'Ergebnis '+res.n+' von '+res.d+' Stücken'}):'<p class="sp-count">Keine passende Einteilung.</p>')+'<p class="sp-count">'+(res.ok?res.n+' von '+res.d+' Stücken':'Umformung nicht möglich')+'</p></div></div>';
+  if(res.ok)h+='<div class="eq sp-equation">'+fr(sourceN,sourceD)+o('=')+fr(res.n,res.d)+'</div><p class="sp-count">'+(mode==='expand'?'Dicke Linien: die alten Stückgrenzen. Dünne Linien: die neuen Stücke.':'Dicke Linien: je '+factor+' kleine Stücke gehören zusammen.')+' Beide Bilder zeigen genau 1 Ganzes.</p>';
+  else h+='<div class="note">'+res.message+'</div>';
+  var g=gcd(s.n,s.d);
+  h+='<div class="wk-actions">'+(last?'<button class="btn p" data-eq="continue">Weiter umformen</button>':'<button class="btn p" data-eq="apply"'+(!res.ok?' disabled':'')+'>Mit '+(Number.isInteger(factor)?factor:'?')+' '+verb+'</button>')+
+    '<button class="btn" data-eq="undo"'+(!s.history.length?' disabled':'')+'>Zurück</button><button class="btn" data-eq="reset">Neu starten</button></div>'+
+    '<details class="sp-more"><summary>Weitere Möglichkeiten</summary><p class="hint">Gemeinsame Teiler: '+(commonDivisors(s.n,s.d).join(', ')||'keine – vollständig gekürzt')+'</p><div class="btns"><button class="btn" data-eq="fully"'+(g<=1?' disabled':'')+'>Ganz kürzen</button><button class="btn" data-eq="clear">Stücke leeren</button></div>'+
+    (s.log.length?'<div class="eq">'+fr(s.origin[0],s.origin[1])+s.log.map(function(x){return o('=')+fr(x.n,x.d);}).join('')+'</div>':'')+'</details>';
   document.getElementById('eq-preview').innerHTML=h;
-  document.getElementById('eq-status').textContent=message||(res.ok?'Vorschau: '+s.n+'/'+s.d+' = '+res.n+'/'+res.d+'. Der Wert bleibt gleich.':res.message);
+  document.getElementById('eq-status').textContent=message||(res.ok?sourceN+'/'+sourceD+' = '+res.n+'/'+res.d+'. Der gefärbte Anteil bleibt gleich.':res.message);
 }
 function applyEquivalent(mode,factor){
   var s=eqState,res=transformFraction(s.n,s.d,mode,factor);if(!res.ok){renderEqState(res.message);return false;}
-  s.history.push({n:s.n,d:s.d,mode:s.mode,factor:s.factor,log:s.log.slice()});
-  s.n=res.n;s.d=res.d;s.mode=mode;s.factor=factor;s.log.push({n:s.n,d:s.d,mode:mode,factor:factor});
-  renderEqState((mode==='expand'?'Unterteilt':'Zusammengefasst')+': jetzt '+s.n+'/'+s.d+'. Der Anteil ist unverändert.');return true;
+  var before=(mode==='reduce'?spGroupedSelection(s,s.n,s.d,factor):spSelection(s,s.n,s.d,s.d)).slice();
+  var after=spTransformSelection(before,mode,factor);
+  s.history.push({n:s.n,d:s.d,mode:s.mode,factor:s.factor,log:s.log.slice(),picture:s.picture,last:s.last});
+  s.last={n:s.n,d:s.d,afterN:res.n,afterD:res.d,mode:mode,factor:factor,before:before,after:after};
+  s.n=res.n;s.d=res.d;s.mode=mode;s.factor=factor;
+  s.picture={n:s.n,d:s.d,total:s.d,focus:1,selected:after};
+  s.log.push({n:s.n,d:s.d,mode:mode,factor:factor});
+  renderEqState((mode==='expand'?'Unterteilt':'Zusammengelegt')+': '+s.last.n+'/'+s.last.d+' = '+s.n+'/'+s.d+'. Der Anteil ist unverändert.');return true;
 }
+function eqEdited(){eqState.last=null;eqState.origin=[eqState.n,eqState.d];eqState.history=[];eqState.log=[];}
 document.addEventListener('click',function(e){
-  var t=e.target.closest('[data-eq]');if(!t||t.disabled)return;
+  var t=e.target.closest('[data-eq]');if(!t||t.disabled||t.getAttribute('aria-disabled')==='true')return;
   var action=t.getAttribute('data-eq'),s=eqState,key=t.getAttribute('data-key');
-  var identity=['data-eq','data-key','data-mode','data-factor','data-n','data-d'].map(function(a){var v=t.getAttribute(a);return v===null?'':'['+a+'="'+v+'"]';}).join('');
+  var identity=['data-eq','data-key','data-mode','data-factor','data-n','data-d','data-view','data-index'].map(function(a){var v=t.getAttribute(a);return v===null?'':'['+a+'="'+v+'"]';}).join('');
+  var numbers=document.getElementById('eq-number-details'),opened=numbers&&numbers.open;
   if(action==='inc'||action==='dec'){
-    s[key]=Math.max(key==='n'?0:1,Math.min(key==='n'?s.d:72,s[key]+(action==='inc'?1:-1)));if(s.n>s.d)s.n=s.d;s.origin=[s.n,s.d];s.history=[];s.log=[];
-  }else if(action==='preset'){s.n=+t.getAttribute('data-n');s.d=+t.getAttribute('data-d');s.origin=[s.n,s.d];s.history=[];s.log=[];}
-  else if(action==='mode'){s.mode=t.getAttribute('data-mode');s.factor=2;}
-  else if(action==='factor')s.factor=+t.getAttribute('data-factor');
-  else if(action==='apply'){applyEquivalent(s.mode,s.factor);}
-  else if(action==='fully'){applyEquivalent('reduce',gcd(s.n,s.d));}
-  else if(action==='undo'){var prev=s.history.pop();if(prev){s.n=prev.n;s.d=prev.d;s.mode=prev.mode;s.factor=prev.factor;s.log=prev.log;}}
-  else if(action==='reset'){s.n=s.origin[0];s.d=s.origin[1];s.history=[];s.log=[];}
+    s[key]=Math.max(key==='n'?0:1,Math.min(key==='n'?s.d:72,s[key]+(action==='inc'?1:-1)));if(s.n>s.d)s.n=s.d;s.picture=null;eqEdited();
+  }else if(action==='preset'){s.n=+t.getAttribute('data-n');s.d=+t.getAttribute('data-d');s.picture=null;eqEdited();}
+  else if(action==='view')workshopView=t.getAttribute('data-view')==='circle'?'circle':'bar';
+  else if(action==='mode'){s.mode=t.getAttribute('data-mode');s.factor=2;s.last=null;}
+  else if(action==='factor'){s.factor=+t.getAttribute('data-factor');s.last=null;}
+  else if(action==='piece'&&!s.last){var valid=transformFraction(s.n,s.d,s.mode,s.factor).ok;s.n=spToggle(s,s.n,s.d,s.d,+t.getAttribute('data-index'),s.mode==='reduce'&&valid?s.factor:1,0);eqEdited();}
+  else if(action==='apply')applyEquivalent(s.mode,s.factor);
+  else if(action==='fully')applyEquivalent('reduce',gcd(s.n,s.d));
+  else if(action==='continue')s.last=null;
+  else if(action==='undo'){var prev=s.history.pop();if(prev){s.n=prev.n;s.d=prev.d;s.mode=prev.mode;s.factor=prev.factor;s.log=prev.log;s.picture=prev.picture;s.last=prev.last;}}
+  else if(action==='reset'){s.n=s.origin[0];s.d=s.origin[1];s.history=[];s.log=[];s.picture=null;s.last=null;}
+  else if(action==='clear'){s.n=0;s.picture=null;eqEdited();}
   else if(action==='train'){cur='visual';try{history.replaceState(null,'','#visual');}catch(x){}save();renderTabs();renderPanel();var heading=document.querySelector('#panel h2');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}return;}
   if(action!=='apply'&&action!=='fully')renderEqState();
-  var replacement=document.querySelector(identity);if(!replacement||replacement.disabled)replacement=document.querySelector('[data-eq="mode"][data-mode="'+s.mode+'"]');if(replacement)replacement.focus({preventScroll:true});
+  if(opened&&document.getElementById('eq-number-details'))document.getElementById('eq-number-details').open=true;
+  var replacement=document.querySelector(identity);
+  if(!replacement||replacement.disabled)replacement=document.querySelector(s.last?'[data-eq="continue"]':'[data-eq="mode"][data-mode="'+s.mode+'"]');
+  if(replacement)replacement.focus({preventScroll:true});
 });
+document.addEventListener('input',function(e){
+  if(e.target.id!=='eq-factor-input')return;
+  eqState.factor=/^\d+$/.test(e.target.value)?Number(e.target.value):NaN;eqState.last=null;
+  document.querySelectorAll('[data-eq="factor"]').forEach(function(b){b.setAttribute('aria-pressed',String(+b.getAttribute('data-factor')===eqState.factor));});
+  renderEqPicture();
+});
+document.addEventListener('change',function(e){
+  if(e.target.id==='eq-factor-input'){
+    var next=/^\d+$/.test(e.target.value)?Number(e.target.value):NaN;
+    if(!Object.is(next,eqState.factor))e.target.dispatchEvent(new Event('input',{bubbles:true}));
+  }
+});
+document.addEventListener('keydown',function(e){spHandleKey(e,'eq');});
 
 /* Inside the existing IIFE, before its event section. No tab registration here. */
 var VT_TYPES=['add','sub','mul','div','expand','reduce'];
@@ -1177,7 +1345,7 @@ function vtMessage(kind,text){
   if(e){e.className='vt-feedback '+kind;e.textContent=text;}
 }
 function vtCount(k){vtTotals[k]=Math.min(1000000000,vtTotals[k]+1);}
-function vtLoadTask(t){vtS.task=t;vtS.n='';vtS.d='';vtS.done=false;vtS.seen=[];}
+function vtLoadTask(t){vtS.task=t;vtS.n='';vtS.d=String(t.b);vtS.done=false;vtS.seen=[];vtS.picture=null;}
 function vtValidInt(s,min,max){return /^\d+$/.test(String(s))&&Number.isSafeInteger(Number(s))&&Number(s)>=min&&Number(s)<=max;}
 function vtAnswer(){
   var t=vtS.task;
@@ -1201,13 +1369,9 @@ function vtWrong(t,n,d){
 function vtEquation(t){
   return fr(t.a,t.b)+(t.c!==undefined?o({add:'+',sub:'−',mul:'·',div:':'}[t.type])+fr(t.c,t.d):'')+o('=')+'<span aria-label="gesuchte Antwort">?</span>';
 }
-function vtUnit(n,d,label,interactive,offset){
-  var h='',idx;offset=offset||0;
-  for(var i=1;i<=d;i++){
-    idx=offset+i;var on=idx<=n;
-    h+=interactive?'<button type="button" id="vt-piece-'+idx+'" data-vt="piece" data-vt-i="'+idx+'" class="vt-piece'+(on?' on':'')+'" tabindex="'+(idx===Math.max(1,n)?'0':'-1')+'" aria-pressed="'+on+'" aria-label="Bis Stück '+idx+' markieren: '+idx+' Stücke, jedes ein '+d+'-tel eines Ganzen"'+(vtS.done?' disabled':'')+'></button>':'<span class="vt-piece'+(i<=n?' on':'')+'"></span>';
-  }
-  return '<div class="vt-unit-row"><p class="vt-unit-label">'+label+'</p><div class="vt-unit" style="--vt-d:'+d+'"'+(interactive?' role="group" aria-label="'+label+'"':' role="img" aria-label="'+n+' von '+d+' gleich großen Stücken"')+'>'+h+'</div><div class="vt-scale"><span>0</span><span>1 Ganzes</span></div></div>';
+function vtUnit(n,d,label,interactive,offset,total){
+  var selected=interactive?spSelection(vtS,n,d,vtS.task.wholes*d):null;
+  return '<div class="vt-unit-row"><p class="vt-unit-label">'+label+'</p>'+spPicture(n,d,{ns:interactive?'vt':null,selected:selected,offset:offset||0,total:total||d,focus:interactive?vtS.picture.focus:1,disabled:vtS.done,label:label.replace(/<[^>]*>/g,'')})+'<div class="vt-scale"><span>0</span><span>1 Ganzes</span></div></div>';
 }
 function vtButton(action,label,primary,disabled){return '<button type="button" class="btn'+(primary?' p':'')+'" id="vt-'+action+'" data-vt="'+action+'"'+(disabled?' disabled':'')+'>'+label+'</button>';}
 function vtStats(){
@@ -1216,7 +1380,7 @@ function vtStats(){
 function renderVisualTraining(){
   var m=document.getElementById('panel');m.setAttribute('data-op','visual');
   if(!vtEl('root')){
-    m.innerHTML='<section class="card vt-trainer" id="vt-root" aria-labelledby="vt-title"><h2 id="vt-title">Grafisch üben</h2><p>Baue deine Antwort aus gleich großen Stücken. Alle Balken sind gleich breit und stellen jeweils ein Ganzes dar.</p><div id="vt-config" class="vt-config"></div><p id="vt-stats" class="vt-stats"></p><div id="vt-body"></div><p id="vt-feedback" class="vt-feedback" role="status" aria-live="polite" aria-atomic="true"></p><p class="vt-privacy">Ohne Zeitdruck, Anmeldung oder persönliche Daten. Gespeichert werden nur zusammengefasste Übungszahlen und der beste Lerncheck.</p></section>';
+    m.innerHTML='<section class="card vt-trainer" id="vt-root" aria-labelledby="vt-title"><h2 id="vt-title">Grafisch üben</h2><p>Tippe Stücke an und baue deine Antwort. Jeder Balken und jeder Kreis zeigt genau ein Ganzes.</p><div id="vt-config" class="vt-config"></div><div id="vt-view"></div><p id="vt-stats" class="vt-stats"></p><div id="vt-body"></div><p id="vt-feedback" class="vt-feedback" role="status" aria-live="polite" aria-atomic="true"></p><p class="vt-privacy">Ohne Zeitdruck, Anmeldung oder persönliche Daten. Gespeichert werden nur zusammengefasste Übungszahlen und der beste Lerncheck.</p></section>';
     vtMessage(vtS.kind,vtS.feedback);
   }
   if(vtS.mode==='training'&&!vtS.task)vtLoadTask(generateVisualTask(vtS.type,vtS.lvl));
@@ -1227,13 +1391,14 @@ function vtRender(focusId){
   var previous=document.activeElement;focusId=focusId||(previous&&vtEl('root').contains(previous)?previous.id:'');
   var active=vtS.mode==='check'&&vtS.run&&!vtS.run.finished,locked=active?' disabled':'';
   vtEl('config').innerHTML='<label for="vt-mode">Modus<select id="vt-mode" data-vt="mode"'+locked+'><option value="training"'+(vtS.mode==='training'?' selected':'')+'>Training</option><option value="check"'+(vtS.mode==='check'?' selected':'')+'>Lerncheck</option><option value="detective">Fehlerdetektiv</option></select></label><label for="vt-type">Aufgabentyp<select id="vt-type" data-vt="type"'+locked+'>'+['mixed'].concat(VT_TYPES).map(function(k){return '<option value="'+k+'"'+(k===vtS.type?' selected':'')+'>'+VT_NAMES[k]+'</option>';}).join('')+'</select></label><label for="vt-level">Schwierigkeit<select id="vt-level" data-vt="level"'+locked+'><option value="1"'+(vtS.lvl===1?' selected':'')+'>1 · Einstieg</option><option value="2"'+(vtS.lvl===2?' selected':'')+'>2 · Kniffliger</option></select></label>';
+  vtEl('view').innerHTML=spViewButtons('vt');
   var t=vtS.task,r=vtS.run,h='';
   if(vtS.mode==='check'&&r&&r.finished){
     h='<h3 id="vt-summary-title" tabindex="-1">Dein Lerncheck: '+r.score+' von 8 richtig</h3><p>'+VT_NAMES[r.type]+' · Schwierigkeit '+r.lvl+'. Jede Aufgabe wurde genau einmal gewertet.</p><ol class="vt-results">'+r.results.map(function(x,i){return '<li><strong>'+VT_NAMES[x.task.type]+': '+(x.ok?'richtig':'noch üben')+'</strong><p>'+x.task.instruction+'</p><div class="eq">'+vtEquation(x.task)+'</div><p>Deine Antwort: '+fr(x.n,x.d)+' · Richtig: '+fr(x.task.answer[0],x.task.answer[1])+'</p></li>';}).join('')+'</ol>'+vtButton('start','Neuen Lerncheck starten',true);
   }else if(vtS.mode==='check'&&!r){
     h='<h3>Lerncheck · 8 Aufgaben</h3><p>'+(vtS.type==='mixed'?'Alle sechs Aufgabentypen plus zwei zufällige Zusatzaufgaben.':'Acht Aufgaben zum Typ „'+VT_NAMES[vtS.type]+'“.')+' Ohne Tipps oder Lösungen vor der Abgabe. Pro Aufgabe zählt nur eine Antwort. Erst danach kannst du die richtige Antwort aufdecken. Die Einstellungen bleiben bis zum Ende gesperrt.</p>'+vtButton('start','Lerncheck starten',true);
   }else if(t){
-    h=(active?'<div class="vt-progress">Aufgabe '+(r.index+1)+' von 8 · '+VT_NAMES[r.type]+' · Schwierigkeit '+r.lvl+'</div>':'')+'<h3>'+VT_NAMES[t.type]+'</h3><p id="vt-instruction">'+t.instruction+'</p><div class="eq vt-equation">'+vtEquation(t)+'</div><div class="vt-board">'+vtUnit(t.a,t.b,'Ausgangsbruch '+fr(t.a,t.b),false)+(t.c!==undefined?vtUnit(t.c,t.d,'Zweiter Bruch '+fr(t.c,t.d),false):'')+'</div><div class="vt-answer" aria-describedby="vt-instruction vt-access"><h3>Deine Antwort</h3><div class="vt-controls"><label for="vt-denominator">Nenner (1–36)<input type="number" id="vt-denominator" data-vt="denominator" min="1" max="36" step="1" inputmode="numeric" autocomplete="off" value="'+vtS.d+'"'+(vtS.done?' disabled':'')+'></label><div><label for="vt-numerator">Zähler (markierte Stücke)</label><div class="vt-counter">'+vtButton('minus','−',false,vtS.done)+'<input type="number" id="vt-numerator" data-vt="numerator" min="0" step="1" inputmode="numeric" autocomplete="off" value="'+vtS.n+'"'+(vtS.done?' disabled':'')+'>'+vtButton('plus','+',false,vtS.done)+'</div></div></div><p id="vt-access" class="vt-caption">Nenner wählen, dann Stücke von links an markieren. Das letzte markierte Stück erneut antippen: eines weniger. Für kleine Stücke: Zählerfeld oder die großen −/+ Tasten. Im Balken: Pfeiltasten, Pos1 und Ende.</p><div id="vt-readout" class="vt-readout"></div><div id="vt-graph" class="vt-board"></div></div><div class="vt-actions">';
+    h=(active?'<div class="vt-progress">Aufgabe '+(r.index+1)+' von 8 · '+VT_NAMES[r.type]+' · Schwierigkeit '+r.lvl+'</div>':'')+'<h3>'+VT_NAMES[t.type]+'</h3><p id="vt-instruction">'+t.instruction+'</p><div class="eq vt-equation">'+vtEquation(t)+'</div><div class="vt-board">'+vtUnit(t.a,t.b,'Ausgangsbruch '+fr(t.a,t.b),false)+(t.c!==undefined?vtUnit(t.c,t.d,'Zweiter Bruch '+fr(t.c,t.d),false):'')+'</div><div class="vt-answer" aria-describedby="vt-instruction vt-access"><h3>Deine Antwort</h3><div class="vt-controls"><label for="vt-denominator">Nenner (1–36)<input type="number" id="vt-denominator" data-vt="denominator" min="1" max="36" step="1" inputmode="numeric" autocomplete="off" value="'+vtS.d+'"'+(vtS.done?' disabled':'')+'></label><div><label for="vt-numerator">Zähler (markierte Stücke)</label><div class="vt-counter">'+vtButton('minus','−',false,vtS.done)+'<input type="number" id="vt-numerator" data-vt="numerator" min="0" step="1" inputmode="numeric" autocomplete="off" value="'+vtS.n+'"'+(vtS.done?' disabled':'')+'>'+vtButton('plus','+',false,vtS.done)+'</div></div></div><p id="vt-access" class="vt-caption">Jedes Stück lässt sich einzeln an- und ausschalten. Der Nenner bestimmt die Stückgröße. Bei kleinen Stücken nutze −/+ oder das Zählerfeld. Pfeiltasten wechseln das Stück; Enter oder Leertaste schalten es um. Ein weiteres Ganzes erscheint, sobald das vorherige voll ist.</p><div id="vt-readout" class="vt-readout"></div><div id="vt-graph" class="vt-board"></div></div><div class="vt-actions">';
     if(!vtS.done)h+=vtButton('submit',active?'Antwort abgeben':'Prüfen',true);
     if(!active){h+=vtButton('tip','Tipp',false,vtS.done)+vtButton('show','Lösung ansehen',false,vtS.done)+vtButton('new',vtS.done?'Nächste Aufgabe':'Neue Aufgabe',vtS.done);}
     else{if(vtS.done)h+=vtButton('next',!r.review?'Antwort auswerten':r.index===7?'Ergebnis ansehen':'Nächste Aufgabe',true);h+=vtButton('abort','Lerncheck abbrechen',false);}
@@ -1252,7 +1417,8 @@ function vtReview(t){
 function vtPaintAnswer(){
   var graph=vtEl('graph'),t=vtS.task;if(!graph||!t)return;
   var valid=vtValidInt(vtS.d,1,36),d=valid?Number(vtS.d):0,n=vtValidInt(vtS.n,0,t.wholes*d)?Number(vtS.n):0,h='';
-  if(valid)for(var k=0;k<t.wholes;k++)h+=vtUnit(n,d,'Deine Antwort · Ganzes '+(k+1),true,k*d);
+  var visible=valid?spVisibleWholes(vtS,n,d,t.wholes):1;
+  if(valid)for(var k=0;k<visible;k++)h+=vtUnit(n,d,'Deine Antwort · Ganzes '+(k+1),true,k*d,visible*d);
   graph.innerHTML=valid?h:'<p>Wähle einen Nenner, um jedes Ganze in gleich große Stücke zu teilen.</p>';
   var good=vtAnswer();vtEl('readout').textContent=good.error?'Noch keine gültige Antwort.':good.n+' markierte Stücke · '+good.n+'/'+good.d;
   var input=vtEl('numerator');if(input){if(valid)input.max=t.wholes*d;else input.removeAttribute('max');}
@@ -1260,7 +1426,7 @@ function vtPaintAnswer(){
 function vtSetNumerator(n,focusId){
   if(vtS.done||!vtS.task)return;
   if(!vtValidInt(vtS.d,1,36)){vtMessage('info','Wähle zuerst einen Nenner von 1 bis 36.');vtEl('denominator').focus();return;}
-  vtS.n=String(Math.max(0,Math.min(vtS.task.wholes*Number(vtS.d),n)));vtEl('numerator').value=vtS.n;vtPaintAnswer();
+  vtS.picture=null;vtS.n=String(Math.max(0,Math.min(vtS.task.wholes*Number(vtS.d),n)));vtEl('numerator').value=vtS.n;vtPaintAnswer();
   if(focusId){var e=document.getElementById(focusId);if(e)e.focus({preventScroll:true});}
 }
 function vtSubmitAnswer(){
@@ -1292,7 +1458,8 @@ function vtNextCheck(){
 document.addEventListener('click',function(e){
   var t=e.target.closest&&e.target.closest('[data-vt]');if(!t||t.disabled||!t.closest('#vt-root'))return;
   var act=t.getAttribute('data-vt'),n=vtValidInt(vtS.n,0,144)?Number(vtS.n):0;
-  if(act==='piece'){var i=Number(t.getAttribute('data-vt-i'));vtSetNumerator(i===n?i-1:i,t.id);}
+  if(act==='view'){workshopView=t.getAttribute('data-view');vtRender();}
+  else if(act==='piece'&&!vtS.done){var i=Number(t.getAttribute('data-vt-i')),d=Number(vtS.d);vtS.n=String(spToggle(vtS,n,d,vtS.task.wholes*d,i,1,0));vtEl('numerator').value=vtS.n;vtPaintAnswer();var p=document.getElementById(t.id);if(p)p.focus({preventScroll:true});}
   else if(act==='plus'||act==='minus')vtSetNumerator(n+(act==='plus'?1:-1));
   else if(act==='submit')vtSubmitAnswer();
   else if(act==='tip'&&vtS.mode==='training'&&!vtS.done)vtMessage('info',visualTrainingTip(vtS.task));
@@ -1304,8 +1471,8 @@ document.addEventListener('click',function(e){
 });
 document.addEventListener('input',function(e){
   if(!e.target.closest||!e.target.closest('#vt-root')||vtS.done)return;
-  if(e.target.id==='vt-denominator')vtS.d=e.target.value;
-  else if(e.target.id==='vt-numerator')vtS.n=e.target.value;else return;
+  if(e.target.id==='vt-denominator'){vtS.d=e.target.value;vtS.picture=null;}
+  else if(e.target.id==='vt-numerator'){vtS.n=e.target.value;vtS.picture=null;}else return;
   vtPaintAnswer();
 });
 document.addEventListener('change',function(e){
@@ -1321,12 +1488,8 @@ document.addEventListener('change',function(e){
 });
 document.addEventListener('keydown',function(e){
   var t=e.target;if(!t.closest||!t.closest('#vt-root'))return;
+  if(spHandleKey(e,'vt'))return;
   if(e.key==='Enter'&&(t.id==='vt-numerator'||t.id==='vt-denominator')){e.preventDefault();vtSubmitAnswer();}
-  else if(t.getAttribute('data-vt')==='piece'&&!vtS.done&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].indexOf(e.key)>=0){
-    e.preventDefault();var n=vtValidInt(vtS.n,0,144)?Number(vtS.n):0,max=vtS.task.wholes*Number(vtS.d);
-    n=e.key==='Home'?0:e.key==='End'?max:Math.max(0,Math.min(max,n+(e.key==='ArrowRight'||e.key==='ArrowUp'?1:-1)));
-    vtSetNumerator(n,'vt-piece-'+Math.max(1,n));
-  }
 });
 
 /* ---------- Fehlerdetektiv: finden, reparieren, begründen ---------- */
@@ -1362,37 +1525,36 @@ function dtEl(id){return document.getElementById('dt-'+id);}
 function dtMessage(kind,text){dtS.kind=kind;dtS.feedback=text;var e=dtEl('feedback');if(e){e.className='vt-feedback '+kind;e.textContent=text;}}
 function dtNewCase(){
   var t;for(var i=0;i<20;i++){t=generateDetectiveTask(dtS.type,dtS.lvl);if(t.key!==dtS.lastKey)break;}
-  dtS.task=t;dtS.lastKey=t.key;dtS.n=String(t.wrong[0]);dtS.d=String(t.wrong[1]);dtS.reason=null;dtS.done=false;dtS.revealed=false;dtS.help=false;dtS.tries=0;dtS.seen=[];
+  dtS.task=t;dtS.picture=null;dtS.lastKey=t.key;dtS.n=String(t.wrong[0]);dtS.d=String(t.wrong[1]);dtS.reason=null;dtS.done=false;dtS.revealed=false;dtS.help=false;dtS.tries=0;dtS.seen=[];
   dtMessage('info','Ein neuer Fall: Der gezeigte Rechenweg ist falsch. Repariere das Bild und begründe die Korrektur.');
 }
 function openDetective(){cur='detective';try{history.replaceState(null,'','#detective');}catch(e){}save();renderTabs();renderPanel();var heading=dtEl('title');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}}
-function dtUnit(n,d,label,interactive,offset){
-  var h='',idx;offset=offset||0;
-  for(var i=1;i<=d;i++){idx=offset+i;var on=interactive?idx<=n:i<=n;
-    h+=interactive?'<button class="vt-piece'+(on?' on':'')+'" id="dt-piece-'+idx+'" data-dt="piece" data-index="'+idx+'" tabindex="'+(idx===Math.max(1,n)?0:-1)+'" aria-pressed="'+on+'" aria-label="Bis Stück '+idx+' markieren; jedes Stück ist ein '+d+'-tel"'+(dtS.done?' disabled':'')+'></button>':'<span class="vt-piece'+(on?' on':'')+'"></span>';
-  }
-  return '<div class="vt-unit-row"><p class="vt-unit-label">'+label+'</p><div class="vt-unit" style="--vt-d:'+d+'"'+(interactive?' role="group" aria-label="'+label+'"':' role="img" aria-label="'+n+' von '+d+' Stücken"')+'>'+h+'</div><div class="vt-scale"><span>0</span><span>1 Ganzes</span></div></div>';
+function dtUnit(n,d,label,interactive,offset,total){
+  var selected=interactive?spSelection(dtS,n,d,dtS.task.wholes*d):null;
+  return '<div class="vt-unit-row"><p class="vt-unit-label">'+label+'</p>'+spPicture(n,d,{ns:interactive?'dt':null,selected:selected,offset:interactive?(offset||0):0,total:total||d,focus:interactive?dtS.picture.focus:1,disabled:dtS.done,label:label})+'<div class="vt-scale"><span>0</span><span>1 Ganzes</span></div></div>';
 }
-function dtBars(n,d,interactive,wholes){var h='';for(var k=0;k<wholes;k++)h+=dtUnit(interactive?n:Math.min(d,Math.max(0,n-k*d)),d,'Ganzes '+(k+1),interactive,k*d);return h;}
+function dtBars(n,d,interactive,wholes){var h='',visible=interactive?spVisibleWholes(dtS,n,d,wholes):wholes;for(var k=0;k<visible;k++)h+=dtUnit(interactive?n:Math.min(d,Math.max(0,n-k*d)),d,'Ganzes '+(k+1),interactive,k*d,visible*d);return h;}
+
 function dtButton(action,label,primary,disabled){return '<button class="btn'+(primary?' p':'')+'" id="dt-'+action+'" data-dt="'+action+'"'+(disabled?' disabled':'')+'>'+label+'</button>';}
 function renderDetective(){
   var m=document.getElementById('panel');m.setAttribute('data-op','detective');
   if(!dtS.task)dtNewCase();
   m.innerHTML='<section class="card vt-trainer dt-trainer" id="dt-root"><div class="label">Fehlerdetektiv</div><h2 id="dt-title">Finden. Reparieren. Begründen.</h2><p>Hier ist jeder gezeigte Rechenweg absichtlich falsch. Nicht nur das Ergebnis zählt: Erkläre auch, wo der Denkfehler steckt.</p>'+
-    '<div id="dt-config" class="dt-config"></div><p id="dt-stats" class="vt-stats"></p><div id="dt-body"></div><p id="dt-feedback" class="vt-feedback" role="status" aria-live="polite" aria-atomic="true"></p><p class="vt-privacy">Fortschritt nur in diesem Browser. Keine Anmeldung oder persönlichen Schülerdaten; keine Prüfungsnoten.</p></section>';
+    '<div id="dt-config" class="dt-config"></div><div id="dt-view"></div><p id="dt-stats" class="vt-stats"></p><div id="dt-body"></div><p id="dt-feedback" class="vt-feedback" role="status" aria-live="polite" aria-atomic="true"></p><p class="vt-privacy">Fortschritt nur in diesem Browser. Keine Anmeldung oder persönlichen Schülerdaten; keine Prüfungsnoten.</p></section>';
   dtRender();dtMessage(dtS.kind,dtS.feedback);
 }
 function dtRender(focusId){
   var t=dtS.task;if(!dtEl('root')||!t)return;
   var prev=document.activeElement;focusId=focusId||(prev&&dtEl('root').contains(prev)?prev.id:'');
+  dtEl('view').innerHTML=spViewButtons('dt');
   dtEl('config').innerHTML='<label for="dt-type">Fehlerart<select id="dt-type">'+['mixed'].concat(VT_TYPES).map(function(k){return '<option value="'+k+'"'+(dtS.type===k?' selected':'')+'>'+VT_NAMES[k]+'</option>';}).join('')+'</select></label><label for="dt-level">Schwierigkeit<select id="dt-level"><option value="1"'+(dtS.lvl===1?' selected':'')+'>1 · Einstieg</option><option value="2"'+(dtS.lvl===2?' selected':'')+'>2 · Kniffliger</option></select></label>';
   dtEl('stats').textContent='Fälle gelöst: '+dtTotals.solved+' · Davon im ersten Versuch ohne Hilfe: '+dtTotals.independent+' · Gewertete Versuche: '+dtTotals.attempts+(dtStorage?'':' · Speicherung nicht verfügbar.');
   var expr=fr(t.a,t.b)+(t.c!==undefined?o({add:'+',sub:'−',mul:'·',div:':'}[t.type])+fr(t.c,t.d):'');
   var h='<h3>1. Untersuche den verdächtigen Rechenweg</h3><p>'+t.instruction+'</p><div class="dt-suspect"><p class="label">Absichtlich falsch</p><div class="eq">'+expr+o('=')+t.wrongCalc+o('=')+fr(t.wrong[0],t.wrong[1])+'</div></div>'+
     '<details class="how"><summary>Ausgangsbrüche als Bild ansehen</summary><div class="vt-board">'+dtUnit(t.a,t.b,'Erster Bruch',false)+(t.c!==undefined?dtUnit(t.c,t.d,'Zweiter Bruch',false):'')+'</div></details>'+
-    '<h3>2. Repariere das Bruchbild</h3><p class="vt-caption">Die falsche Antwort ist voreingestellt. Ändere Nenner und markierte Stücke. Alle Balken sind gleich breit: jeder ist ein Ganzes.</p>'+
+    '<h3>2. Repariere das Bruchbild</h3><p class="vt-caption">Die falsche Antwort ist voreingestellt. Ändere Nenner und markierte Stücke. Jeder Balken und jeder Kreis ist ein Ganzes.</p>'+
     '<div class="vt-controls"><label for="dt-denominator">Nenner (1–36)<input id="dt-denominator" type="number" min="1" max="36" step="1" inputmode="numeric" value="'+dtS.d+'"'+(dtS.done?' disabled':'')+'></label><div><label for="dt-numerator">Zähler (markierte Stücke)</label><div class="vt-counter">'+dtButton('minus','−',false,dtS.done)+'<input id="dt-numerator" type="number" min="0" step="1" inputmode="numeric" value="'+dtS.n+'"'+(dtS.done?' disabled':'')+'>'+dtButton('plus','+',false,dtS.done)+'</div></div></div>'+
-    '<p class="vt-caption">Stücke antippen, das letzte markierte Stück erneut antippen, um eines weniger zu wählen. Bei kleinen Stücken die großen −/+ Tasten oder das Zählerfeld nutzen. Im Balken funktionieren Pfeiltasten, Pos1 und Ende.</p><p id="dt-readout" class="vt-readout"></p><div id="dt-graph" class="vt-board"></div>'+
+    '<p class="vt-caption">Ein Stück antippen: markieren oder entfernen. Bei kleinen Stücken helfen −/+ und das Zählerfeld. Pfeiltasten wechseln das Stück; Enter oder Leertaste schalten es um. Weitere Ganze erscheinen beim Füllen.</p><p id="dt-readout" class="vt-readout"></p><div id="dt-graph" class="vt-board"></div>'+
     '<fieldset class="dt-reasons"><legend>3. Welche Begründung erklärt den Fehler?</legend>'+t.choices.map(function(c,i){return '<label class="dt-reason'+(dtS.reason===c.id?' selected':'')+'"><input type="radio" name="dt-reason" id="dt-reason-'+i+'" value="'+c.id+'"'+(dtS.reason===c.id?' checked':'')+(dtS.done?' disabled':'')+'><span>'+c.text+'</span></label>';}).join('')+'</fieldset><div class="vt-actions">';
   if(!dtS.done)h+=dtButton('check','Fall prüfen',true)+dtButton('tip','Tipp',false)+dtButton('show','Lösung ansehen',false);
   h+=dtButton('new',dtS.done?'Nächster Fall':'Anderer Fall',dtS.done)+'</div>';
@@ -1407,7 +1569,7 @@ function dtPaint(){
   dtEl('graph').innerHTML=valid?dtBars(n,d,true,dtS.task.wholes):'<p>Wähle einen gültigen Nenner, um Stücke zu sehen.</p>';
   dtEl('readout').textContent=x.error?'Noch kein gültiges Bruchbild.':'Dein Bruchbild: '+x.n+'/'+x.d+' · '+x.n+' markierte Stücke';var inp=dtEl('numerator');if(inp){if(valid)inp.max=dtS.task.wholes*d;else inp.removeAttribute('max');}
 }
-function dtSetN(n,id){if(dtS.done)return;if(!vtValidInt(dtS.d,1,36)){dtMessage('info','Wähle zuerst einen Nenner von 1 bis 36.');dtEl('denominator').focus();return;}dtS.n=String(Math.max(0,Math.min(dtS.task.wholes*Number(dtS.d),n)));dtEl('numerator').value=dtS.n;dtPaint();if(id&&document.getElementById(id))document.getElementById(id).focus({preventScroll:true});}
+function dtSetN(n,id){if(dtS.done)return;if(!vtValidInt(dtS.d,1,36)){dtMessage('info','Wähle zuerst einen Nenner von 1 bis 36.');dtEl('denominator').focus();return;}dtS.picture=null;dtS.n=String(Math.max(0,Math.min(dtS.task.wholes*Number(dtS.d),n)));dtEl('numerator').value=dtS.n;dtPaint();if(id&&document.getElementById(id))document.getElementById(id).focus({preventScroll:true});}
 function dtCheck(){
   if(dtS.done)return;var x=dtAnswer();if(x.error){dtMessage('info',x.error);dtEl(vtValidInt(dtS.d,1,36)?'numerator':'denominator').focus();return;}
   if(!dtS.task.choices.some(function(c){return c.id===dtS.reason;})){dtMessage('info','Wähle auch eine Begründung. Ein Fall ist erst mit korrigiertem Bruchbild und Erklärung gelöst.');return;}
@@ -1420,14 +1582,15 @@ function dtCheck(){
 document.addEventListener('click',function(e){
   var t=e.target.closest&&e.target.closest('[data-dt]');if(!t||t.disabled)return;var action=t.getAttribute('data-dt');if(action==='open'){openDetective();return;}if(!t.closest('#dt-root'))return;
   var n=vtValidInt(dtS.n,0,144)?Number(dtS.n):0;
-  if(action==='piece'){var idx=+t.getAttribute('data-index');dtSetN(idx===n?idx-1:idx,t.id);}
+  if(action==='view'){workshopView=t.getAttribute('data-view');dtRender();}
+  else if(action==='piece'&&!dtS.done){var idx=+t.getAttribute('data-index'),d=Number(dtS.d);dtS.n=String(spToggle(dtS,n,d,dtS.task.wholes*d,idx,1,0));dtEl('numerator').value=dtS.n;dtPaint();var p=document.getElementById(t.id);if(p)p.focus({preventScroll:true});}
   else if(action==='plus'||action==='minus')dtSetN(n+(action==='plus'?1:-1));
   else if(action==='check')dtCheck();
   else if(action==='tip'&&!dtS.done){dtS.help=true;dtMessage('info',DT_RULES[dtS.task.type].good+' '+(dtS.task.type==='expand'?'Der Faktor ist '+dtS.task.factor+'.':dtS.task.type==='reduce'?'Suche einen gemeinsamen Teiler von Zähler und Nenner.':'Die Stücke stehen für Anteile desselben Ganzen.'));}
   else if(action==='show'&&!dtS.done){dtS.help=true;dtS.done=true;dtS.revealed=true;dtMessage('info','Lösung aufgedeckt. Dieser Fall zählt nicht als gelöst.');dtRender('dt-new');}
   else if(action==='new'){dtNewCase();dtRender('dt-denominator');}
 });
-document.addEventListener('input',function(e){var t=e.target;if(!t.closest||!t.closest('#dt-root')||dtS.done)return;if(t.id==='dt-denominator')dtS.d=t.value;else if(t.id==='dt-numerator')dtS.n=t.value;else return;dtPaint();});
+document.addEventListener('input',function(e){var t=e.target;if(!t.closest||!t.closest('#dt-root')||dtS.done)return;if(t.id==='dt-denominator'){dtS.d=t.value;dtS.picture=null;}else if(t.id==='dt-numerator'){dtS.n=t.value;dtS.picture=null;}else return;dtPaint();});
 document.addEventListener('change',function(e){
   var t=e.target;if(!t.closest||!t.closest('#dt-root'))return;
   if(t.id==='dt-type'||t.id==='dt-level'){if(t.id==='dt-type')dtS.type=VT_TYPES.indexOf(t.value)>=0?t.value:'mixed';else dtS.lvl=Number(t.value)===2?2:1;dtNewCase();dtRender(t.id);return;}
@@ -1435,8 +1598,8 @@ document.addEventListener('change',function(e){
 });
 document.addEventListener('keydown',function(e){
   var t=e.target;if(!t.closest||!t.closest('#dt-root'))return;
+  if(spHandleKey(e,'dt'))return;
   if(e.key==='Enter'&&(t.id==='dt-denominator'||t.id==='dt-numerator')){e.preventDefault();dtCheck();}
-  else if(t.getAttribute('data-dt')==='piece'&&!dtS.done&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].indexOf(e.key)>=0){e.preventDefault();var n=vtValidInt(dtS.n,0,144)?Number(dtS.n):0,max=dtS.task.wholes*Number(dtS.d);n=e.key==='Home'?0:e.key==='End'?max:Math.max(0,Math.min(max,n+(e.key==='ArrowLeft'||e.key==='ArrowDown'?-1:1)));dtSetN(n,'dt-piece-'+Math.max(1,n));}
 });
 
 /* ---------- Ereignisse ---------- */
@@ -1448,7 +1611,7 @@ document.addEventListener('click',function(e){
     var k=t.getAttribute('data-key'),dm=demo[cur],dl=act==='inc'?1:-1;
     if(k==='b'||k==='d'){dm[k]=Math.min(12,Math.max(2,dm[k]+dl));var nk=k==='b'?'a':'c';if(dm[nk]>dm[k])dm[nk]=dm[k];}
     else{var dk=k==='a'?'b':'d',min=cur==='div'&&k==='c'?1:0;dm[k]=Math.min(dm[dk],Math.max(min,dm[k]+dl));}
-    resetWorkshop();workshopSource='';updateWorkspace();
+    spOperand(k==='b'?'a':k==='d'?'c':k).picture=null;resetWorkshop();workshopSource='';updateWorkspace();
   }
   else if(act==='lvl'){level=parseInt(t.getAttribute('data-l'),10);save();document.querySelectorAll('[data-act="lvl"]').forEach(function(b){b.setAttribute('aria-pressed',String(parseInt(b.getAttribute('data-l'),10)===level));});newTask();}
   else if(act==='wnew')newWord();
