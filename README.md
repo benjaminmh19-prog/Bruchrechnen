@@ -24,6 +24,12 @@ Mit **„Mit Bild lösen“** unter einer Übungsaufgabe werden deren Brüche in
 
 Die Werkstatt unterstützt Brüche von 0 bis 1 mit Nennern von 2 bis 12 sowie Ergebnisse über 1. Negative Differenzen werden im Klasse-6-Grundmodus mit einem Hinweis abgefangen; die Brüche können dann getauscht werden. Alle Aktionen funktionieren ohne Ziehen, per Antippen oder Tastatur. Pfeiltasten wechseln das fokussierte Stück, Enter/Leertaste markieren oder entfernen es. Sehr feine Subtraktionsbalken und breite Multiplikationsraster lassen sich seitlich scrollen.
 
+### Rückmeldung beim Anklicken
+
+Kreis- und Balkenstücke wechseln ihre Farbe sanft in 140 ms und bestätigen eine Auswahländerung mit einem kurzen Helligkeitsimpuls von 180 ms. Form, Fläche und Position der Stücke bleiben unverändert. Bei gleich bleibender Einteilung werden die Bildstücke im DOM erhalten, statt das ganze Bild neu aufzubauen. Dadurch bleiben Tastaturfokus und Farbwechsel auch bei schnellen Klicks erhalten. Beim Kürzen reagieren alle Stücke der Gruppe, ebenso die zugehörige Vorschau. Wiederholte Klicks ersetzen den vorherigen Impuls, statt Animationen aufzustauen; Bruchzahlen und Auswahl werden sofort aktualisiert.
+
+Die Systemeinstellung **„Bewegung reduzieren“** schaltet Farbwechsel und Impulse ab. Ein Wechsel zu dieser Einstellung beendet auch laufende Impulse und bereits gestartete Farbtransitions. Ohne Web-Animations-Unterstützung funktioniert die Auswahl weiterhin. Bereits abgegebene oder aufgelöste Antworten bleiben gesperrt und verändern weder Auswahl noch Wertung.
+
 ## Erweitern und Kürzen
 
 Der Reiter **„Erweitern & Kürzen“** zeigt den Ausgangsbruch und die neue Einteilung direkt **nebeneinander**, wahlweise als gleich große Balken oder Kreise. Die Bruchzahlen stehen unmittelbar an den Bildern. Beim Erweitern entstehen kleinere Stücke; beim Kürzen werden kleine Stücke zu größeren Gruppen zusammengefasst. Die gefärbte Menge bleibt sichtbar gleich groß. Zähler und Nenner werden immer mit derselben ganzen Zahl verändert.
@@ -77,7 +83,7 @@ npm ci --ignore-scripts
 npm test
 ```
 
-Die Tests prüfen Bruchmodelle und Bedienung, zwölf gezielte Regressionen für Einzelstücke, Kreis-Ganzes, Vorher-/Nachher-Bildpaare und Ansichtswechsel, Wertgleichheit bei Erweitern/Kürzen, ungültige Umformungen, Aufgabengeneratoren, grafische Antwortbewertung, Einmalwertung des Acht-Aufgaben-Lernchecks, Tastaturfokus sowie die bisherigen Übungen und Spiele. `.github/workflows/tests.yml` führt dieselben Tests automatisch bei jedem Push und Pull Request aus. Die Abhängigkeit `jsdom` wird ausschließlich für die Tests verwendet und nicht von der Lernseite geladen.
+Die Tests prüfen Bruchmodelle und Bedienung, zwölf gezielte Regressionen für Einzelstücke, Kreis-Ganzes, Vorher-/Nachher-Bildpaare und Ansichtswechsel, neun Animationsregressionen für DOM-Erhalt, unveränderte Geometrie, Gruppen-/Vorschauimpulse, schnelle Klicks, reduzierte Bewegung und gesperrte Antworten, Wertgleichheit bei Erweitern/Kürzen, ungültige Umformungen, Aufgabengeneratoren, grafische Antwortbewertung, Einmalwertung des Acht-Aufgaben-Lernchecks, Tastaturfokus sowie die bisherigen Übungen und Spiele. `.github/workflows/tests.yml` führt dieselben Tests automatisch bei jedem Push und Pull Request aus. Die Abhängigkeit `jsdom` wird ausschließlich für die Tests verwendet und nicht von der Lernseite geladen. Der reale Live-/Browservergleich ist in [`tests/kreis-klicktest.md`](tests/kreis-klicktest.md) dokumentiert.
 
 ## Veröffentlichen mit GitHub Pages
 
@@ -91,7 +97,7 @@ Das Repository verwendet GitHub Pages mit **Deploy from a branch**, Branch **mai
 
 ## Neue Version ausliefern
 
-In `sw.js` den Versionsnamen bei `CACHE` erhöhen, damit der alte Offline-Cache dieser App ersetzt wird. Die vereinfachte Bruch-Werkstatt verwendet `bruchrechnen-v5`. Caches anderer Apps derselben Domain bleiben unangetastet.
+In `sw.js` den Versionsnamen bei `CACHE` erhöhen, damit der alte Offline-Cache dieser App ersetzt wird. Die Version mit optimierten Klick-Rückmeldungen verwendet `bruchrechnen-v6`. Caches anderer Apps derselben Domain bleiben unangetastet.
 
 ## Schriften
 

@@ -331,6 +331,11 @@ button.vt-piece{cursor:pointer;touch-action:manipulation}
 .sp-wedge.selected{fill:var(--piece)}
 .sp-wedge[role="button"]{cursor:pointer}
 .sp-wedge:focus-visible{outline:none;stroke:var(--bad);stroke-width:3}
+.sp-wedge[aria-disabled="true"],.sp-bar button.sp-piece:disabled{cursor:default}
+/* Nur Farbe, keine Größenänderung: die Bruchfläche bleibt immer korrekt. */
+@media (prefers-reduced-motion:no-preference){
+  .sp-picture .sp-piece{transition:fill 140ms ease-out,background-color 140ms ease-out}
+}
 .sp-outline{fill:none;stroke:var(--ink);stroke-width:2;pointer-events:none}
 .sp-picture[data-view="bar"]>.sp-old-boundary{pointer-events:none;position:absolute;top:0;bottom:0;width:3px;background:var(--ink);transform:translateX(-50%)}
 .sp-circle .sp-old-boundary{pointer-events:none;stroke:var(--ink);stroke-width:3}
@@ -968,6 +973,72 @@ function spPicture(n,d,options) {
 function spViewButtons(ns) {
   return '<div class="wk-mode sp-view" role="group" aria-label="Darstellung wählen">'+['bar','circle'].map(function(view){return '<button type="button" id="'+ns+'-view-'+view+'" class="chip" data-'+ns+'="view" data-view="'+view+'" aria-pressed="'+(workshopView===view)+'">'+(view==='bar'?'Balken':'Kreise')+'</button>';}).join('')+'</div>';
 }
+/* Gleich eingeteilte Bilder bleiben im DOM. Das erhält Fokus und Farbwechsel
+   auch bei schnellen Klicks; neue Einteilungen ersetzen nur das betroffene Bild. */
+var spPulses=new WeakMap();
+var spMotionQuery=window.matchMedia?window.matchMedia('(prefers-reduced-motion: reduce)'):null;
+function spPulse(piece) {
+  var previous=spPulses.get(piece);if(previous){previous.cancel();spPulses.delete(piece);}
+  if(!piece.animate||spMotionQuery&&spMotionQuery.matches)return;
+  var pulse;
+  try{pulse=piece.animate([{opacity:1},{opacity:.72,offset:.32},{opacity:1}],
+    {duration:180,easing:'cubic-bezier(.2,.7,.25,1)'});}catch(e){return;}
+  spPulses.set(piece,pulse);
+  pulse.onfinish=function(){if(spPulses.get(piece)===pulse)spPulses.delete(piece);};
+}
+function spStopMotion(e) {
+  if(!e.matches)return;
+  document.querySelectorAll('.sp-piece').forEach(function(piece){
+    var pulse=spPulses.get(piece);if(pulse){pulse.cancel();spPulses.delete(piece);}
+    /* Chromium kann gestartete CSS-Transitions trotz neuer Media Query beenden.
+       Nur unsere Farbtransitions stoppen, keine fremden Elementanimationen. */
+    if(piece.getAnimations)piece.getAnimations().forEach(function(animation){
+      if(animation.transitionProperty==='fill'||animation.transitionProperty==='background-color')animation.cancel();
+    });
+  });
+}
+if(spMotionQuery){
+  if(spMotionQuery.addEventListener)spMotionQuery.addEventListener('change',spStopMotion);
+  else if(spMotionQuery.addListener)spMotionQuery.addListener(spStopMotion);
+}
+function spSameNode(current,next) {
+  if(current.nodeType!==next.nodeType)return false;
+  if(current.nodeType!==1)return true;
+  if(current.localName!==next.localName||current.namespaceURI!==next.namespaceURI||current.id!==next.id)return false;
+  if(current.classList.contains('sp-picture')||next.classList.contains('sp-picture')) {
+    if(!current.classList.contains('sp-picture')||!next.classList.contains('sp-picture'))return false;
+    if(['data-view','data-parts','data-group'].some(function(a){return current.getAttribute(a)!==next.getAttribute(a);}))return false;
+    var a=current.querySelector('.sp-piece'),b=next.querySelector('.sp-piece');
+    if(!a||!b||a.id!==b.id)return false;
+  }
+  return true;
+}
+function spPatchNode(current,next) {
+  if(current.nodeType!==1){if(current.nodeValue!==next.nodeValue)current.nodeValue=next.nodeValue;return;}
+  var changed=current.classList.contains('sp-piece')&&current.classList.contains('selected')!==next.classList.contains('selected');
+  Array.from(current.attributes).forEach(function(a){
+    /* Geöffnete Erklärungen bleiben beim Antippen geöffnet. */
+    if(!next.hasAttribute(a.name)&&!(a.name==='open'&&current.localName==='details'))current.removeAttribute(a.name);
+  });
+  Array.from(next.attributes).forEach(function(a){if(current.getAttribute(a.name)!==a.value)current.setAttribute(a.name,a.value);});
+  spPatchChildren(current,next);
+  if(changed)spPulse(current);
+}
+function spPatchChildren(current,next) {
+  var child=current.firstChild;
+  for(var incoming=next.firstChild;incoming;incoming=incoming.nextSibling) {
+    if(!child){current.appendChild(incoming.cloneNode(true));continue;}
+    var sibling=child.nextSibling;
+    if(spSameNode(child,incoming))spPatchNode(child,incoming);
+    else current.replaceChild(incoming.cloneNode(true),child);
+    child=sibling;
+  }
+  while(child){var sibling=child.nextSibling;current.removeChild(child);child=sibling;}
+}
+function spRenderPictures(container,html) {
+  var next=document.createElement('template');next.innerHTML=html;
+  spPatchChildren(container,next.content);
+}
 function spHandleKey(e,ns) {
   var t=e.target.closest&&e.target.closest('[data-'+ns+'="piece"]');
   if(!t||!t.closest('.sp-picture')||t.disabled||t.getAttribute('aria-disabled')==='true')return false;
@@ -1005,8 +1076,8 @@ function editableFraction(n,d,key){
 }
 function renderOperandEditors(){
   var dm=demo[cur];
-  document.getElementById('wk-edit-a').innerHTML=editableFraction(dm.a,dm.b,'a');
-  document.getElementById('wk-edit-c').innerHTML=editableFraction(dm.c,dm.d,'c');
+  spRenderPictures(document.getElementById('wk-edit-a'),editableFraction(dm.a,dm.b,'a'));
+  spRenderPictures(document.getElementById('wk-edit-c'),editableFraction(dm.c,dm.d,'c'));
   ['a','b','c','d'].forEach(function(k){
     var min=(k==='b'||k==='d')?2:(cur==='div'&&k==='c'?1:0),max=(k==='b'||k==='d')?12:dm[k==='a'?'b':'d'];
     var dec=document.querySelector('[data-act="dec"][data-key="'+k+'"]'),inc=document.querySelector('[data-act="inc"][data-key="'+k+'"]');
@@ -1239,7 +1310,7 @@ function renderEqPicture(message){
     '<button class="btn" data-eq="undo"'+(!s.history.length?' disabled':'')+'>Zurück</button><button class="btn" data-eq="reset">Neu starten</button></div>'+
     '<details class="sp-more"><summary>Weitere Möglichkeiten</summary><p class="hint">Gemeinsame Teiler: '+(commonDivisors(s.n,s.d).join(', ')||'keine – vollständig gekürzt')+'</p><div class="btns"><button class="btn" data-eq="fully"'+(g<=1?' disabled':'')+'>Ganz kürzen</button><button class="btn" data-eq="clear">Stücke leeren</button></div>'+
     (s.log.length?'<div class="eq">'+fr(s.origin[0],s.origin[1])+s.log.map(function(x){return o('=')+fr(x.n,x.d);}).join('')+'</div>':'')+'</details>';
-  document.getElementById('eq-preview').innerHTML=h;
+  spRenderPictures(document.getElementById('eq-preview'),h);
   document.getElementById('eq-status').textContent=message||(res.ok?sourceN+'/'+sourceD+' = '+res.n+'/'+res.d+'. Der gefärbte Anteil bleibt gleich.':res.message);
 }
 function applyEquivalent(mode,factor){
@@ -1419,7 +1490,7 @@ function vtPaintAnswer(){
   var valid=vtValidInt(vtS.d,1,36),d=valid?Number(vtS.d):0,n=vtValidInt(vtS.n,0,t.wholes*d)?Number(vtS.n):0,h='';
   var visible=valid?spVisibleWholes(vtS,n,d,t.wholes):1;
   if(valid)for(var k=0;k<visible;k++)h+=vtUnit(n,d,'Deine Antwort · Ganzes '+(k+1),true,k*d,visible*d);
-  graph.innerHTML=valid?h:'<p>Wähle einen Nenner, um jedes Ganze in gleich große Stücke zu teilen.</p>';
+  spRenderPictures(graph,valid?h:'<p>Wähle einen Nenner, um jedes Ganze in gleich große Stücke zu teilen.</p>');
   var good=vtAnswer();vtEl('readout').textContent=good.error?'Noch keine gültige Antwort.':good.n+' markierte Stücke · '+good.n+'/'+good.d;
   var input=vtEl('numerator');if(input){if(valid)input.max=t.wholes*d;else input.removeAttribute('max');}
 }
@@ -1566,7 +1637,7 @@ function dtRender(focusId){
 function dtAnswer(){var t=dtS.task;if(!t||!vtValidInt(dtS.d,1,36))return {error:'Wähle einen ganzzahligen Nenner von 1 bis 36. Ein Nenner 0 ist nicht erlaubt.'};if(!vtValidInt(dtS.n,0,t.wholes*Number(dtS.d)))return {error:'Wähle einen ganzzahligen Zähler von 0 bis '+(t.wholes*Number(dtS.d))+'. Leere oder ungültige Eingaben werden nicht gewertet.'};return {n:Number(dtS.n),d:Number(dtS.d)};}
 function dtPaint(){
   var x=dtAnswer(),valid=vtValidInt(dtS.d,1,36),d=valid?Number(dtS.d):0,n=!x.error?x.n:0;
-  dtEl('graph').innerHTML=valid?dtBars(n,d,true,dtS.task.wholes):'<p>Wähle einen gültigen Nenner, um Stücke zu sehen.</p>';
+  spRenderPictures(dtEl('graph'),valid?dtBars(n,d,true,dtS.task.wholes):'<p>Wähle einen gültigen Nenner, um Stücke zu sehen.</p>');
   dtEl('readout').textContent=x.error?'Noch kein gültiges Bruchbild.':'Dein Bruchbild: '+x.n+'/'+x.d+' · '+x.n+' markierte Stücke';var inp=dtEl('numerator');if(inp){if(valid)inp.max=dtS.task.wholes*d;else inp.removeAttribute('max');}
 }
 function dtSetN(n,id){if(dtS.done)return;if(!vtValidInt(dtS.d,1,36)){dtMessage('info','Wähle zuerst einen Nenner von 1 bis 36.');dtEl('denominator').focus();return;}dtS.picture=null;dtS.n=String(Math.max(0,Math.min(dtS.task.wholes*Number(dtS.d),n)));dtEl('numerator').value=dtS.n;dtPaint();if(id&&document.getElementById(id))document.getElementById(id).focus({preventScroll:true});}
