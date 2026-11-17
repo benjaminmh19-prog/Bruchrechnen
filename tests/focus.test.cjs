@@ -1,0 +1,12 @@
+const fs=require('fs');const assert=require('node:assert/strict');const {JSDOM}=require('jsdom');
+const dom=new JSDOM(fs.readFileSync(require('node:path').join(__dirname,'../index.html'),'utf8'),{url:'https://example.test',runScripts:'dangerously'});
+const d=dom.window.document;const click=s=>d.querySelector(s).dispatchEvent(new dom.window.MouseEvent('click',{bubbles:true}));
+click('[data-act="tab"][data-op="mul"]');
+click('.wk-square[data-col="2"][data-row="3"]');assert.equal(d.activeElement.getAttribute('data-col'),'2');assert.equal(d.activeElement.getAttribute('data-row'),'3');
+click('.wk-axis.col[data-index="2"]');assert(d.activeElement.closest('.wk-grid'));assert.equal(d.activeElement.getAttribute('data-index'),'2');
+click('.wk-axis.row[data-index="2"]');assert(d.activeElement.closest('.wk-grid'));assert.equal(d.activeElement.getAttribute('data-index'),'2');
+click('[data-wk="view"][data-view="circle"]');assert.equal(d.activeElement.getAttribute('data-view'),'circle');
+click('#wk-edit-a [data-index="1"]');assert(d.activeElement.closest('#wk-edit-a'));
+click('[data-wk="loadtask"]');assert.equal(d.activeElement.tagName,'H2');assert(d.activeElement.closest('#workshop'));
+assert(d.querySelector('#wk-status').textContent.length>0);
+console.log('PASS Tastaturfokus: Rasterzelle, Spalte, Zeile, Kreisumschaltung, Bruchstück, Übungsübernahme; persistenter Live-Status');dom.window.close();

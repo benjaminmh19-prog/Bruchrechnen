@@ -1,0 +1,25 @@
+name: Lernseite testen
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  funktionstests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+      - name: Node.js einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Test-Abhängigkeiten installieren
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Bruchmodelle und Lernfunktionen testen
+        run: npm test
