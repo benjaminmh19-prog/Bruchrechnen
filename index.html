@@ -10,8 +10,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Brüche">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>Bruchrechnen Klasse 6</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -166,6 +166,79 @@ details.pre summary{cursor:pointer;font-weight:800;font-family:var(--f-display);
 .pc:disabled{opacity:.3;cursor:default}
 .gbig{font-family:var(--f-display);font-weight:800;font-size:2.4rem;line-height:1.1}
 @media (prefers-reduced-motion:no-preference){.panel{animation:in .25s ease}@keyframes in{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:none}}}
+
+/* ---------- Interaktive Bruch-Werkstatt ---------- */
+.wk-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.workshop{border:2px solid color-mix(in srgb,var(--op) 38%,var(--line));scroll-margin-top:18px}
+.workshop .pickcol:first-child{--piece:var(--op)}
+.workshop .pickcol:last-child{--piece:var(--ink)}
+.wk-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.wk-top h2{margin:0;font-size:1.6rem}
+.wk-top .hint{margin:3px 0 0}
+.wk-mode{display:flex;gap:6px;flex-wrap:wrap}
+.wk-mode .chip{min-height:44px}
+.wk-edit{margin-top:6px}
+.wk-edit p{font-size:.85rem;color:var(--muted);margin:7px 0 0}
+.wk-pieces{display:grid;grid-template-columns:repeat(var(--parts),minmax(0,1fr));height:60px;border:2px solid var(--piece);border-radius:10px;overflow:hidden;gap:0}
+.wk-piece{min-width:0;padding:0;border:0;border-right:1px solid var(--surface);background:var(--surface);color:var(--piece);font:inherit;font-size:.82rem;font-weight:800;cursor:pointer;touch-action:manipulation}
+.wk-piece:last-child{border-right:0}
+.wk-piece.selected{background:var(--piece);color:var(--surface)}
+.wk-piece:focus-visible{outline:3px solid var(--ink);outline-offset:-4px}
+.wk-circle{display:block;width:160px;height:160px;margin:0 auto;overflow:visible}
+.wk-wedge{fill:var(--surface);stroke:var(--piece);stroke-width:1;cursor:pointer;touch-action:manipulation}
+.wk-wedge.selected{fill:var(--piece)}
+.wk-wedge:focus-visible{outline:none;stroke:var(--bad);stroke-width:4}
+.wk-readout{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0;font-weight:800}
+.wk-clear{border:0;background:none;color:var(--muted);font:inherit;font-weight:700;text-decoration:underline;padding:8px;min-height:44px;cursor:pointer}
+.wk-equation{display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-size:1.6rem;font-family:var(--f-display);font-weight:700;margin:0 0 14px}
+.wk-board{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:14px;min-width:0}
+.wk-board h3{margin:0 0 4px;font-size:1.05rem}
+.wk-caption{font-size:.88rem;color:var(--muted);margin:4px 0 10px}
+.wk-scale{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-top:4px}
+.wk-row{margin:12px 0}
+.wk-rowhead{display:flex;align-items:center;gap:9px;font-weight:800;font-size:.9rem;margin-bottom:7px;flex-wrap:wrap}
+.wk-swatch{display:inline-block;width:12px;height:12px;border-radius:3px;background:var(--op);flex:none}
+.wk-swatch.second{background:var(--ink)}
+.wk-bar{display:flex;height:46px;border:2px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+.wk-cell{flex:1;min-width:0;border:0;border-right:1px solid color-mix(in srgb,var(--ink) 22%,transparent);background:transparent;padding:0;display:grid;place-items:center;font:inherit;font-weight:800;font-size:.78rem;color:var(--surface)}
+.wk-cell:last-child{border-right:0}
+.wk-cell.first{background:var(--op)}
+.wk-cell.second{background:var(--ink)}
+.wk-cell.removed{background:repeating-linear-gradient(45deg,var(--op) 0 3px,var(--surface) 3px 8px);color:var(--ink)}
+.wk-cell.grouped{background:var(--op)}
+.wk-cell.group-alt{background:var(--ink)}
+.wk-cell.partial{background:repeating-linear-gradient(135deg,var(--op) 0 5px,var(--surface) 5px 9px)}
+.wk-cell.group-end{border-right:3px solid var(--surface)}
+.wk-scroll{overflow-x:auto;overscroll-behavior-x:contain;max-width:100%;padding:3px 3px 7px}
+.wk-scroll .wk-bar{min-width:calc(var(--parts) * 32px)}
+button.wk-cell{cursor:pointer;touch-action:manipulation}
+button.wk-cell:focus-visible{outline:3px solid var(--ink);outline-offset:-4px}
+button.wk-cell:disabled{cursor:default}
+.wk-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.wk-actions .btn:disabled,.wk-clear:disabled,.rb:disabled{opacity:.4;cursor:not-allowed}
+.wk-progress{display:flex;gap:6px;margin:0 0 14px;list-style:none;padding:0}
+.wk-progress li{flex:1;border-top:4px solid var(--line);padding-top:6px;color:var(--muted);font-size:.78rem;font-weight:800}
+.wk-progress li.active{border-color:var(--op);color:var(--op)}
+.wk-result{margin-top:12px;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.wk-result .eq{margin:0;font-size:1.4rem}
+.wk-result p{margin-top:8px;font-size:.95rem}
+.wk-grid{display:grid;grid-template-columns:38px repeat(var(--cols),minmax(32px,1fr));gap:3px;min-width:calc(38px + var(--cols) * 35px);width:100%;max-width:560px;margin:0 auto}
+.wk-axis,.wk-square{border-radius:6px;border:1px solid var(--line);min-width:0;min-height:36px;padding:0;background:var(--surface);color:var(--ink);font:inherit;font-size:.8rem;font-weight:800;cursor:pointer;touch-action:manipulation}
+.wk-axis.col.selected{background:var(--op);color:var(--on-op)}
+.wk-axis.row.selected{background:var(--ink);color:var(--surface)}
+.wk-square.h{background:color-mix(in srgb,var(--op) 27%,var(--surface))}
+.wk-square.v{background:color-mix(in srgb,var(--ink) 22%,var(--surface))}
+.wk-square.x{background:var(--op);color:var(--on-op);border-color:var(--op)}
+.wk-portion{max-width:100%;width:calc(100% * var(--fraction));min-width:2px;height:38px;border:2px dashed var(--op);background:color-mix(in srgb,var(--op) 12%,var(--surface));border-radius:7px;margin-top:8px}
+.wk-live{min-height:1.5em;font-size:.88rem;color:var(--muted);margin-top:10px}
+.wk-source{padding:10px 12px;border-radius:10px;background:var(--ok-soft);margin-bottom:12px;font-size:.9rem}
+.wk-mini{margin-top:12px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px}
+.wk-mini summary{cursor:pointer;font-weight:800;color:var(--op);min-height:36px}
+.wk-mini .wk-board{margin-top:12px}
+@media(max-width:440px){.workshop{padding:14px}.wk-top h2{font-size:1.4rem}.wk-board{padding:10px}.wk-actions .btn{padding:9px 12px}.wk-piece{font-size:.7rem}.wk-progress li{font-size:.7rem}.wk-mode{width:100%}.wk-mode .chip{flex:1}.wk-caption{font-size:.84rem}}
+@media print{.wk-actions,.wk-mode,.wk-clear,.wk-edit .wk-caption{display:none}.wk-board{break-inside:avoid}}
+
+@media(max-width:440px){.tab{padding:8px 9px;gap:7px;font-size:.88rem}.tab .sym{width:30px;height:30px;font-size:1.3rem}.tab>span:last-child{min-width:0;overflow-wrap:anywhere}}
 </style>
 
 </head>
@@ -173,7 +246,7 @@ details.pre summary{cursor:pointer;font-weight:800;font-family:var(--f-display);
 <div class="wrap">
   <header>
     <h1>Bruchrechnen</h1>
-    <p class="sub">Die vier Grundrechenarten mit Brüchen. Wähle oben eine Rechenart: erst verstehen, dann ausprobieren, dann üben.</p>
+    <p class="sub">Die vier Grundrechenarten mit Brüchen. Wähle oben eine Rechenart: erst verstehen, dann Stücke antippen und grafisch rechnen, dann üben.</p>
   </header>
   <details class="pre" id="pre"><summary>Vorwissen auffrischen: Erweitern, Kürzen, gemischte Zahlen</summary>
     <div class="pre-grid">
@@ -335,14 +408,17 @@ function renderPanel(){
     storyCard(op)+
     '<div class="card"><h2>So geht\'s</h2><ol class="steps">'+p.steps.map(function(t){return '<li><div>'+t+'</div></li>';}).join('')+'</ol>'+(p.hint?'<p class="hint">'+p.hint+'</p>':'')+'</div>'+
     why+
-    '<div class="card"><h2>Probier\'s aus</h2><p class="hint" style="margin:0 0 12px">Stelle zwei Brüche ein und schau, wie der Rechenweg aussieht.</p>'+
-      '<div class="pick"><div class="pickcol"><h3>1. Bruch</h3>'+stepper('Zähler','a',dm.a)+stepper('Nenner','b',dm.b)+'</div><div class="pickcol"><h3>2. Bruch</h3>'+stepper('Zähler','c',dm.c)+stepper('Nenner','d',dm.d)+'</div></div>'+
-      '<div id="demo-out"></div></div>'+
+    '<div class="card workshop" id="workshop"><div class="wk-top"><div><div class="label">Anfassen &amp; verstehen</div><h2>Deine Bruch-Werkstatt</h2><p class="hint">Stücke antippen. Mengen verändern. Den Rechenweg selbst bauen.</p></div><div class="wk-mode" role="group" aria-label="Darstellung der Brüche">'+
+      '<button class="chip" data-wk="view" data-view="bar" aria-pressed="true">Balken</button><button class="chip" data-wk="view" data-view="circle" aria-pressed="false">Kreise</button></div></div>'+
+      '<p id="wk-source" class="wk-source" hidden></p>'+
+      '<div class="pick"><div class="pickcol"><h3>1. Bruch</h3>'+stepper('Zähler','a',dm.a)+stepper('Nenner','b',dm.b)+'<div class="wk-edit" id="wk-edit-a"></div></div><div class="pickcol"><h3>2. Bruch</h3>'+stepper('Zähler','c',dm.c)+stepper('Nenner','d',dm.d)+'<div class="wk-edit" id="wk-edit-c"></div></div></div>'+
+      '<div class="wk-board" id="wk-board"></div><p class="wk-sr-only" id="wk-status" role="status" aria-live="polite" aria-atomic="true"></p>'+
+      '<details class="how"><summary>Vollständigen Rechenweg ansehen</summary><div id="demo-out" style="margin-top:14px"></div></details></div>'+
     '<div class="card"><div class="prac-top"><h2 style="margin:0">Du bist dran</h2><div class="lvl" role="group" aria-label="Schwierigkeit">'+
       [1,2,3].map(function(l){return '<button class="chip" data-act="lvl" data-l="'+l+'" aria-pressed="'+(l===level)+'">'+['Leicht','Mittel','Schwer'][l-1]+'</button>';}).join('')+
       '</div></div><div class="stats" id="stats"></div><div id="prac"></div></div>'+
     '<div class="card"><div class="prac-top"><h2 style="margin:0">Zufalls-Sachaufgabe</h2><button class="btn" data-act="wnew">Neue Sachaufgabe</button></div><div id="word"></div></div>';
-  updateDemo();newTask();updateStats();newWord();
+  workshopSource='';resetWorkshop();updateWorkspace();newTask();updateStats();newWord();
 }
 
 /* ---------- Demo ---------- */
@@ -400,7 +476,7 @@ function newTask(){
   document.getElementById('prac').innerHTML=
     '<div class="task">'+fr(task.a,task.b)+o(sym)+fr(task.c,task.d)+o('=')+
     '<span class="ans"><input id="ans-n" inputmode="numeric" autocomplete="off" aria-label="Zähler deiner Antwort" placeholder="Zähler"><hr><input id="ans-d" inputmode="numeric" autocomplete="off" aria-label="Nenner deiner Antwort" placeholder="Nenner"></span></div>'+
-    '<div class="btns"><button class="btn p" data-act="check">Prüfen</button><button class="btn" data-act="hint">Tipp</button><button class="btn" data-act="skip">Neue Aufgabe</button></div>'+
+    '<div class="btns"><button class="btn p" data-act="check">Prüfen</button><button class="btn" data-act="hint">Tipp</button><button class="btn" data-act="skip">Neue Aufgabe</button><button class="btn" data-wk="loadtask">Mit Bild lösen</button></div>'+
     '<div id="fb" aria-live="polite"></div>';
   var f=document.getElementById('ans-n');
 }
@@ -674,6 +750,225 @@ function whintShow(){
   document.getElementById('wfb').innerHTML='<div class="fb info"><div class="hintlist">'+stepsHtml(all.slice(0,whint))+'</div>'+(whint<all.length?'<p class="hint" style="margin-top:10px">Drück nochmal auf Tipp für den nächsten Schritt.</p>':'')+'</div>';
 }
 
+/* ---------- Grafisch handeln statt nur Bilder ansehen ---------- */
+var workshopView='bar';
+var workshopStates={};
+var workshopSource='';
+function freshWorkshop(){return {stage:0,removed:[],groups:0,history:[]};}
+function ws(){return workshopStates[cur]||(workshopStates[cur]=freshWorkshop());}
+function resetWorkshop(){workshopStates[cur]=freshWorkshop();}
+function rememberWorkshop(){var s=ws();s.history.push({stage:s.stage,removed:s.removed.slice(),groups:s.groups});}
+function workshopUndo(){var s=ws(),prev=s.history.pop();if(prev){s.stage=prev.stage;s.removed=prev.removed;s.groups=prev.groups;}}
+function escapeText(t){return String(t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function pieceAction(key,index,n){return index===n?index-1:index;}
+function circlePoint(angle){return [(90+76*Math.cos(angle)).toFixed(3),(90+76*Math.sin(angle)).toFixed(3)].join(' ');}
+function editableFraction(n,d,key){
+  var h='',i,active,min=cur==='div'&&key==='c'?1:0;
+  if(workshopView==='circle'){
+    h='<svg class="wk-circle" viewBox="0 0 180 180" aria-label="'+n+' von '+d+' Kreisstücken; ein Kreis ist ein Ganzes">';
+    for(i=0;i<d;i++){
+      active=i<n;
+      var start=-Math.PI/2+2*Math.PI*i/d,end=-Math.PI/2+2*Math.PI*(i+1)/d;
+      h+='<path class="wk-wedge'+(active?' selected':'')+'" d="M 90 90 L '+circlePoint(start)+' A 76 76 0 '+(d===1?1:0)+' 1 '+circlePoint(end)+' Z" role="button" tabindex="0" data-wk="piece" data-key="'+key+'" data-index="'+(i+1)+'" aria-pressed="'+active+'" aria-label="'+(i+1)+' von '+d+' Stücken einstellen"><title>Stück '+(i+1)+' von '+d+'</title></path>';
+    }
+    h+='</svg>';
+  }else{
+    h='<div class="wk-pieces" style="--parts:'+d+'" role="group" aria-label="'+n+' von '+d+' Balkenstücken; ein Balken ist ein Ganzes">';
+    for(i=0;i<d;i++)h+='<button class="wk-piece'+(i<n?' selected':'')+'" data-wk="piece" data-key="'+key+'" data-index="'+(i+1)+'" aria-pressed="'+(i<n)+'" aria-label="'+(i+1)+' von '+d+' Stücken einstellen">'+(i+1)+'</button>';
+    h+='</div>';
+  }
+  return h+'<div class="wk-readout"><span>'+fr(n,d)+' <span style="font-size:.85rem">des Ganzen</span></span><button class="wk-clear" data-wk="clear" data-key="'+key+'"'+(min===1?' disabled title="Durch 0 darfst du nicht teilen"':'')+'>Leeren</button></div>'+
+    '<p>Tippe bis zum gewünschten Stück. Das letzte gefärbte Stück erneut antippen: ein Stück weniger.</p>';
+}
+function renderOperandEditors(){
+  var dm=demo[cur];
+  document.getElementById('wk-edit-a').innerHTML=editableFraction(dm.a,dm.b,'a');
+  document.getElementById('wk-edit-c').innerHTML=editableFraction(dm.c,dm.d,'c');
+  ['a','b','c','d'].forEach(function(k){
+    var min=(k==='b'||k==='d')?2:(cur==='div'&&k==='c'?1:0),max=(k==='b'||k==='d')?12:dm[k==='a'?'b':'d'];
+    var dec=document.querySelector('[data-act="dec"][data-key="'+k+'"]'),inc=document.querySelector('[data-act="inc"][data-key="'+k+'"]');
+    if(dec)dec.disabled=dm[k]<=min;if(inc)inc.disabled=dm[k]>=max;
+  });
+  document.querySelectorAll('[data-wk="view"]').forEach(function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-view')===workshopView));});
+  var source=document.getElementById('wk-source');
+  if(source){source.hidden=!workshopSource;source.textContent=workshopSource;}
+}
+function wkRow(title,n,d,color){
+  var cells='',i;
+  for(i=0;i<d;i++)cells+='<span class="wk-cell'+(i<n?' '+color:'')+'"></span>';
+  return '<div class="wk-row"><div class="wk-rowhead"><span class="wk-swatch'+(color==='second'?' second':'')+'"></span>'+title+' '+fr(n,d)+'</div><div class="wk-bar" role="img" aria-label="'+n+' von '+d+' gleich großen Stücken">'+cells+'</div><div class="wk-scale"><span>0</span><span>1 Ganzes</span></div></div>';
+}
+function resultBars(N,D,A){
+  var total=Math.max(1,Math.ceil(N/D)),h='';
+  for(var k=0;k<total;k++){
+    var cells='';
+    for(var i=0;i<D;i++){var idx=k*D+i;cells+='<span class="wk-cell'+(idx<N?' '+(A!==undefined&&idx>=A?'second':'first'):'')+'"></span>';}
+    h+='<div class="wk-row"><div class="wk-rowhead">Ganzes '+(k+1)+'</div><div class="wk-bar" role="img" aria-label="'+Math.min(D,Math.max(0,N-k*D))+' von '+D+' Stücken">'+cells+'</div><div class="wk-scale"><span>0</span><span>1 Ganzes</span></div></div>';
+  }
+  return h;
+}
+function wkButton(action,label,disabled,primary){return '<button class="btn'+(primary?' p':'')+'" data-wk="'+action+'"'+(disabled?' disabled':'')+'>'+label+'</button>';}
+function multiplicationGrid(dm){
+  var h='<div class="wk-scroll"><div class="wk-grid" style="--cols:'+dm.b+'"><span aria-hidden="true"></span>';
+  for(var k=0;k<dm.b;k++)h+='<button class="wk-axis col'+(k<dm.a?' selected':'')+'" data-wk="piece" data-key="a" data-index="'+(k+1)+'" aria-pressed="'+(k<dm.a)+'" aria-label="'+(k+1)+' von '+dm.b+' Spalten markieren">'+(k+1)+'</button>';
+  for(var r=0;r<dm.d;r++){
+    h+='<button class="wk-axis row'+(r<dm.c?' selected':'')+'" data-wk="piece" data-key="c" data-index="'+(r+1)+'" aria-pressed="'+(r<dm.c)+'" aria-label="'+(r+1)+' von '+dm.d+' Zeilen markieren">'+(r+1)+'</button>';
+    for(k=0;k<dm.b;k++){
+      var x=k<dm.a&&r<dm.c,cl=x?'x':k<dm.a?'h':r<dm.c?'v':'';
+      h+='<button class="wk-square '+cl+'" data-wk="area" data-col="'+(k+1)+'" data-row="'+(r+1)+'" aria-label="Rechteck bis Spalte '+(k+1)+', Zeile '+(r+1)+' markieren" aria-pressed="'+x+'">'+(x?'×':'')+'</button>';
+    }
+  }
+  return h+'</div></div><p class="wk-caption">Das gesamte Rechteck ist <strong>1 Ganzes</strong>. Tippe auf Spalten- und Zeilennummern oder direkt ins Raster. Bei vielen Spalten kannst du seitlich wischen.</p>';
+}
+function renderWorkshop(){
+  var dm=demo[cur],s=ws(),out=document.getElementById('wk-board');if(!out)return;
+  renderOperandEditors();
+  var L=lcm(dm.b,dm.d),A=dm.a*L/dm.b,B=dm.c*L/dm.d,valid=cur!=='sub'||A>=B;
+  var names=cur==='mul'?['Markieren','Zellen zählen','Kürzen']:['Darstellen','Mit Stücken rechnen','Ergebnis'];
+  var h='<ol class="wk-progress" aria-label="Grafischer Rechenweg">'+names.map(function(n,i){return '<li class="'+(Math.min(s.stage,2)>=i?'active':'')+'">'+(i+1)+'. '+n+'</li>';}).join('')+'</ol>'+
+    '<div class="wk-equation">'+fr(dm.a,dm.b)+o(OPS[cur].sy)+fr(dm.c,dm.d)+o('=')+(s.stage>=2&&valid?disp.apply(null,solve(cur,dm.a,dm.b,dm.c,dm.d).res):'<span aria-label="Noch unbekannt">?</span>')+'</div>';
+  var caption='',actions='',N,D,answer;
+  if(!valid){
+    h+='<div class="note">Hier käme ein negatives Ergebnis heraus. Für diese Werkstatt muss der erste Bruch mindestens so groß sein wie der zweite. Verändere die Stücke oder tausche die Brüche.</div>';
+    actions=wkButton('swap','Brüche tauschen',false,true);
+  }else if(cur==='mul'){
+    h+='<h3>Ein Teil von einem Teil</h3>'+multiplicationGrid(dm);
+    h+='<div class="legend"><span><b style="background:var(--op)"></b>1. Bruch: Spalten</span><span><b style="background:var(--ink)"></b>2. Bruch: Zeilen</span><span><b style="background:var(--op)"></b>×: Überschneidung</span></div>';
+    N=dm.a*dm.c;D=dm.b*dm.d;
+    if(s.stage===0){caption='Wie viele Zellen sind doppelt markiert? Zähle die Kreuze. Nicht die Nenner addieren: Das Raster hat '+dm.b+' · '+dm.d+' Zellen.';actions=wkButton('advance','Markierte Zellen zählen',false,true);}
+    else{
+      h+='<div class="wk-result"><div class="eq">'+dm.a+' · '+dm.c+o('=')+N+' markierte Zellen</div><p>Von insgesamt '+dm.b+' · '+dm.d+' = '+D+' gleich großen Zellen: '+fr(N,D)+'.</p></div>';
+      caption='Die Überschneidung ist das Produkt. '+N+' von '+D+' Zellen sind doppelt markiert.';
+      if(s.stage===1)actions=wkButton('advance','Ergebnis kürzen',false,true);
+    }
+  }else if(s.stage===0){
+    h+='<h3>Beide Bilder zeigen dasselbe Ganze</h3>'+wkRow('1. Bruch',dm.a,dm.b,'first')+wkRow('2. Bruch',dm.c,dm.d,'second');
+    caption=cur==='div'?'Wie oft passt die zweite Menge in die erste? Unterteile beide Balken zunächst gleich fein.':'Zum Zusammenlegen oder Wegnehmen müssen die Stücke gleich groß sein. Der Wert der Brüche bleibt beim Unterteilen gleich.';
+    actions=wkButton('advance',dm.b===dm.d?'Mit den Stücken rechnen':'Gleich große Stücke machen',false,true);
+  }else if(cur==='add'){
+    if(s.stage===1){
+      h+='<h3>Gleiche Stückgröße: '+fr(1,L)+'</h3>'+wkRow('1. Bruch',A,L,'first')+wkRow('2. Bruch',B,L,'second');
+      caption=dm.a+'/'+dm.b+' = '+A+'/'+L+' und '+dm.c+'/'+dm.d+' = '+B+'/'+L+'. Die Mengen ändern sich nicht. Jetzt kannst du die Stücke zusammenlegen.';
+      actions=wkButton('advance','Stücke zusammenlegen',false,true);
+    }else{
+      h+='<h3>Zusammengelegt: '+(A+B)+' Stücke</h3>'+resultBars(A+B,L,A);
+      h+='<div class="legend"><span><b style="background:var(--op)"></b>'+A+' Stücke vom 1. Bruch</span><span><b style="background:var(--ink)"></b>'+B+' Stücke vom 2. Bruch</span></div>';
+      N=A+B;D=L;caption='Zähle die gefärbten Stücke: '+A+' + '+B+' = '+N+'. Jedes Ganze besteht weiterhin aus '+L+' Stücken.';
+      if(s.stage===2)actions=wkButton('advance','Kürzen zeigen',false,true);
+    }
+  }else if(cur==='sub'){
+    var remaining=A-s.removed.length;
+    h+='<h3>Nimm '+B+' Stücke der Größe '+fr(1,L)+' weg</h3>';
+    if(s.stage===1){
+      var cells='';
+      for(var i=0;i<L;i++){
+        var removed=s.removed.indexOf(i)>-1,can=i<A&&(removed||s.removed.length<B);
+        cells+='<button class="wk-cell'+(removed?' removed':i<A?' first':'')+'" data-wk="remove" data-index="'+i+'" aria-label="Stück '+(i+1)+(removed?' zurücklegen':' wegnehmen')+'" aria-pressed="'+removed+'"'+(!can?' disabled':'')+'>'+(i<A?(removed?'×':i+1):'')+'</button>';
+      }
+      h+='<div class="wk-scroll"><div class="wk-bar" style="--parts:'+L+'" role="group" aria-label="Stücke wegnehmen">'+cells+'</div></div><div class="wk-scale"><span>0</span><span>1 Ganzes</span></div>';
+      h+='<p class="wk-caption">'+fr(dm.a,dm.b)+' = '+fr(A,L)+'. Abzuziehen: '+fr(dm.c,dm.d)+' = '+fr(B,L)+'.</p>';
+      caption='Weggenommen: '+s.removed.length+' von '+B+'. Übrig: '+remaining+' von '+L+'. Tippe gefärbte Stücke an; gestreifte Stücke kannst du zurücklegen.';
+      actions=wkButton('take','Ein Stück wegnehmen',s.removed.length>=B,false)+wkButton('advance','Rest ansehen',s.removed.length!==B,true);
+    }else{
+      N=A-B;D=L;h+=resultBars(N,D);caption=A+' − '+B+' = '+N+' Stücke bleiben übrig. Der Nenner bleibt '+L+'.';
+      if(s.stage===2)actions=wkButton('advance','Kürzen zeigen',false,true);
+    }
+  }else{
+    var full=Math.floor(A/B),rest=A%B,used=s.groups*B;
+    h+='<h3>Wie viele Portionen passen hinein?</h3>';
+    var divcells='';
+    for(var j=0;j<L;j++){
+      var group=Math.floor(j/B),placed=j<used,partial=s.stage>=2&&j>=full*B&&j<A,cl=placed?(group%2?'group-alt':'grouped'):partial?'partial':j<A?'first':'';
+      divcells+='<span class="wk-cell '+cl+(placed&&(j+1)%B===0?' group-end':'')+'">'+(placed&&B>=2&&(j%B===Math.floor((B-1)/2))?group+1:'')+'</span>';
+    }
+    h+='<div class="wk-rowhead">Vorrat: '+fr(dm.a,dm.b)+' = '+fr(A,L)+'</div><div class="wk-bar" role="img" aria-label="'+s.groups+' volle Portionen abgemessen'+(s.stage>=2&&rest?', dazu eine Teilportion':'')+'">'+divcells+'</div><div class="wk-scale"><span>0</span><span>1 Ganzes</span></div>'+
+      '<p class="wk-caption" style="margin-top:12px">Eine Portion: '+fr(dm.c,dm.d)+' = '+fr(B,L)+' des Ganzen. Der gestrichelte Rahmen ist genauso lang wie eine Portion.</p><div class="wk-portion" style="--fraction:'+B+'/'+L+'" role="img" aria-label="Eine Portion umfasst '+B+' von '+L+' Stücken"></div>';
+    if(s.stage===1){
+      caption='Abgemessen: '+s.groups+' volle Portionen. Noch im Vorrat: '+(A-used)+' von '+L+' Stücken.';
+      actions=wkButton('portion','Eine Portion abmessen',s.groups>=full,true)+wkButton('advance',rest?'Rest als Teilportion ansehen':'Ergebnis ansehen',s.groups<full,s.groups>=full);
+    }else{
+      N=A;D=B;caption=full+' volle Portionen'+(rest?' und '+rest+' von '+B+' Stücken einer weiteren Portion.':'; es bleibt nichts übrig.');
+      if(rest){
+        h+='<div class="wk-result"><p><strong>Restmenge:</strong> '+fr(rest,L)+' des ursprünglichen Ganzen.</p><p><strong>Teilportion:</strong> '+fr(rest,B)+' einer Portion. Die Portion, nicht das ursprüngliche Ganze, ist jetzt die neue Einheit!</p><div class="wk-bar" role="img" aria-label="Die letzte Portion ist zu '+rest+' von '+B+' gefüllt">';
+        for(j=0;j<B;j++)h+='<span class="wk-cell'+(j<rest?' partial':'')+'"></span>';
+        h+='</div><p>'+full+' + '+fr(rest,B)+' Portionen insgesamt.</p></div>';
+      }
+      if(s.stage===2)actions=wkButton('advance','Kürzen und Kehrwert zeigen',false,true);
+    }
+  }
+  if(valid&&N!==undefined){
+    answer=rd(N,D);
+    h+='<div class="wk-result"><div class="eq">'+fr(N,D)+(s.stage>=3||cur==='mul'&&s.stage>=2?o('=')+disp(answer[0],answer[1]):'')+(answer[0]>answer[1]&&answer[1]>1?o('=')+mixed(answer[0],answer[1]):'')+'</div>';
+    if(s.stage>=3||cur==='mul'&&s.stage>=2){
+      var divisor=gcd(N,D);
+      h+='<p>'+(divisor>1?'Zähler und Nenner durch '+divisor+' teilen. Die Menge bleibt gleich.':'Dieser Bruch ist bereits vollständig gekürzt.')+'</p>';
+      if(cur==='add'||cur==='sub')h+=resultBars(answer[0],answer[1]);
+      if(cur==='div')h+='<div class="eq">'+fr(dm.a,dm.b)+o(':')+fr(dm.c,dm.d)+o('=')+fr(dm.a,dm.b)+o('·')+fr(dm.d,dm.c)+o('=')+disp(answer[0],answer[1])+'</div><p>Das Abmessen erklärt den Kehrwert: Durch einen Bruch teilen heißt mit seinem Kehrwert multiplizieren.</p>';
+    }
+    h+='</div>';
+  }
+  h+='<p class="wk-live" id="wk-live">'+caption+'</p><div class="wk-actions">'+actions+wkButton('undo','Schritt zurück',!s.history.length,false)+wkButton('reset','Neu starten',s.stage===0&&!s.removed.length&&!s.groups,false)+'</div>';
+  out.innerHTML=h;
+  var status=document.getElementById('wk-status');if(status)status.textContent=caption;
+}
+function updateWorkspace(){renderWorkshop();updateDemo();}
+function applyPiece(key,index){
+  var dm=demo[cur],min=cur==='div'&&key==='c'?1:0;
+  dm[key]=Math.max(min,pieceAction(key,index,dm[key]));
+  resetWorkshop();workshopSource='';updateWorkspace();
+}
+function handleWorkshopAction(t){
+  var action=t.getAttribute('data-wk'),s=ws(),dm=demo[cur],idx=parseInt(t.getAttribute('data-index'),10),key=t.getAttribute('data-key');
+  if(action==='view'){workshopView=t.getAttribute('data-view');renderOperandEditors();return;}
+  if(action==='piece'){applyPiece(key,idx);return;}
+  if(action==='area'){dm.a=+t.getAttribute('data-col');dm.c=+t.getAttribute('data-row');resetWorkshop();workshopSource='';updateWorkspace();return;}
+  if(action==='clear'){if(cur==='div'&&key==='c')return;dm[key]=0;resetWorkshop();workshopSource='';updateWorkspace();return;}
+  if(action==='loadtask'){
+    if(!task)return;
+    demo[cur]={a:task.a,b:task.b,c:task.c,d:task.d};resetWorkshop();
+    workshopSource='Die aktuelle Übungsaufgabe ist übernommen. Bearbeite sie oben grafisch und trage das Ergebnis danach bei „Du bist dran“ ein.';
+    updateWorkspace();var el=document.getElementById('workshop');
+    if(el.scrollIntoView)el.scrollIntoView({behavior:window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
+    var heading=el.querySelector('h2');heading.tabIndex=-1;heading.focus({preventScroll:true});return;
+  }
+  if(action==='swap'){var a=dm.a,b=dm.b;dm.a=dm.c;dm.b=dm.d;dm.c=a;dm.d=b;resetWorkshop();updateWorkspace();return;}
+  if(action==='reset'){resetWorkshop();renderWorkshop();return;}
+  if(action==='undo'){workshopUndo();renderWorkshop();return;}
+  var L=lcm(dm.b,dm.d),A=dm.a*L/dm.b,B=dm.c*L/dm.d;
+  if(action==='remove'){
+    var pos=s.removed.indexOf(idx);if(idx<0||idx>=A||pos<0&&s.removed.length>=B)return;
+    rememberWorkshop();if(pos>=0)s.removed.splice(pos,1);else s.removed.push(idx);
+  }else if(action==='take'){
+    if(s.removed.length>=B)return;rememberWorkshop();for(var i=0;i<A;i++)if(s.removed.indexOf(i)<0){s.removed.push(i);break;}
+  }else if(action==='portion'){
+    if(s.groups>=Math.floor(A/B))return;rememberWorkshop();s.groups++;
+  }else if(action==='advance'){
+    if(cur==='sub'&&(A<B||s.stage===1&&s.removed.length!==B))return;
+    if(cur==='div'&&s.stage===1&&s.groups<Math.floor(A/B))return;
+    if(s.stage>=(cur==='mul'?2:3))return;
+    rememberWorkshop();s.stage++;
+  }
+  renderWorkshop();
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('[data-wk]');if(!t||t.disabled)return;
+  /* Redraws preserve keyboard focus on the corresponding control. */
+  var action=t.getAttribute('data-wk');
+  var context=t.closest('.wk-grid')?'.wk-grid':t.closest('#wk-edit-a')?'#wk-edit-a':t.closest('#wk-edit-c')?'#wk-edit-c':'';
+  var selector=['data-wk','data-key','data-index','data-col','data-row','data-view'].map(function(attr){
+    var value=t.getAttribute(attr);return value===null?'':'['+attr+'="'+value+'"]';
+  }).join('');
+  handleWorkshopAction(t);
+  if(action==='loadtask')return;
+  var replacement=document.querySelector((context?context+' ':'')+selector);
+  if(!replacement||replacement.disabled)replacement=document.querySelector('#wk-board .wk-actions .btn:not(:disabled)');
+  if(replacement)replacement.focus({preventScroll:true});
+});
+document.addEventListener('keydown',function(e){
+  var t=e.target.closest&&e.target.closest('.wk-wedge');
+  if(t&&(e.key==='Enter'||e.key===' ')){e.preventDefault();t.dispatchEvent(new MouseEvent('click',{bubbles:true}));}
+});
+
 /* ---------- Ereignisse ---------- */
 document.addEventListener('click',function(e){
   var t=e.target.closest('[data-act]');if(!t)return;
@@ -682,8 +977,8 @@ document.addEventListener('click',function(e){
   else if(act==='inc'||act==='dec'){
     var k=t.getAttribute('data-key'),dm=demo[cur],dl=act==='inc'?1:-1;
     if(k==='b'||k==='d'){dm[k]=Math.min(12,Math.max(2,dm[k]+dl));var nk=k==='b'?'a':'c';if(dm[nk]>dm[k])dm[nk]=dm[k];}
-    else{var dk=k==='a'?'b':'d';dm[k]=Math.min(dm[dk],Math.max(1,dm[k]+dl));}
-    updateDemo();
+    else{var dk=k==='a'?'b':'d',min=cur==='div'&&k==='c'?1:0;dm[k]=Math.min(dm[dk],Math.max(min,dm[k]+dl));}
+    resetWorkshop();workshopSource='';updateWorkspace();
   }
   else if(act==='lvl'){level=parseInt(t.getAttribute('data-l'),10);save();document.querySelectorAll('[data-act="lvl"]').forEach(function(b){b.setAttribute('aria-pressed',String(parseInt(b.getAttribute('data-l'),10)===level));});newTask();}
   else if(act==='wnew')newWord();
