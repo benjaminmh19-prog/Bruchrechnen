@@ -33,8 +33,8 @@ test('Erweitern und Kürzen werden exakt geprüft, Tipps und Auflösung sind fai
  a.click('#dt-new');const attempts=tot.attempts;a.click('#dt-show');assert(s.revealed);assert(s.done);assert.equal(tot.solved,3);assert.equal(tot.attempts,attempts);assert(!a.d.querySelector('#dt-check'));assert.equal(a.errors.length,0);a.dom.window.close();
 });
 test('Stückwahl, Tastatur und Reiterwechsel erhalten den Fall',()=>{
- const a=boot(),s=a.api.s;a.fill('dt-denominator',6);a.fill('dt-numerator',1);a.click('#dt-piece-3');assert.equal(s.n,'3');assert.equal(a.d.activeElement.id,'dt-piece-3');a.d.activeElement.dispatchEvent(new a.dom.window.KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true}));assert.equal(s.n,'4');assert.equal(a.d.activeElement.id,'dt-piece-4');const t=s.task;
- a.click('[data-act="tab"][data-op="visual"]');a.click('[data-act="tab"][data-op="detective"]');assert.equal(s.task,t);assert.equal(a.d.querySelector('#dt-numerator').value,'4');assert.equal(a.errors.length,0);a.dom.window.close();
+ const a=boot(),s=a.api.s;a.fill('dt-denominator',6);a.fill('dt-numerator',1);a.click('#dt-piece-3');assert.equal(s.n,'2');assert.equal(a.d.activeElement.id,'dt-piece-3');a.d.activeElement.dispatchEvent(new a.dom.window.KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true}));assert.equal(s.n,'2');assert.equal(a.d.activeElement.id,'dt-piece-4');const t=s.task;
+ a.click('[data-act="tab"][data-op="visual"]');a.click('[data-act="tab"][data-op="detective"]');assert.equal(s.task,t);assert.equal(a.d.querySelector('#dt-numerator').value,'2');assert.equal(a.errors.length,0);a.dom.window.close();
 });
 test('Direkte Einstiege synchronisieren die URL und erhalten den Grafiktrainer',()=>{
  const a=boot('visual'),vt=a.api.vtS;const t=vt.task;a.choose('vt-mode','detective');assert(a.d.querySelector('#dt-root'));assert.equal(a.dom.window.location.hash,'#detective');assert.equal(vt.task,t);

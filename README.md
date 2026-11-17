@@ -11,7 +11,7 @@ Interaktive Lern-App zum Rechnen mit Brüchen für Schülerinnen und Schüler de
 
 ## Grafisch rechnen
 
-In „Deine Bruch-Werkstatt“ lassen sich die beiden Brüche über die Plus-/Minus-Tasten oder direkt im Bild einstellen. Ein Balken beziehungsweise ein Kreis ist immer ein Ganzes. Ein Stück antippen, um den Bruch bis dorthin zu färben; das letzte gefärbte Stück erneut antippen, um ein Stück weniger zu wählen. „Leeren“ setzt den Zähler auf 0. Beim zweiten Bruch einer Division ist das gesperrt, denn durch 0 darf man nicht teilen.
+Der Einstieg zeigt sofort die beiden anklickbaren Bruchbilder. Ausführliche Erklärung, Rechenschritte, Raster und weitere Zahlentasten sind eingeklappt. In „Deine Bruch-Werkstatt“ lassen sich die beiden Brüche über die Plus-/Minus-Tasten oder direkt im Bild einstellen. Ein Balken beziehungsweise ein Kreis ist immer ein Ganzes. Jedes Stück lässt sich einzeln markieren oder entfernen; ein Klick verändert genau dieses Stück. Balken/Kreis-Wechsel erhält die ausgewählten Positionen. „Leeren“ setzt den Zähler auf 0. Beim zweiten Bruch einer Division ist das gesperrt, denn durch 0 darf man nicht teilen.
 
 - **Addieren:** Beide Brüche gleich fein unterteilen und die Stücke zusammenlegen. Ergebnisse über 1 werden auf mehrere gleich große Ganze verteilt. Die beiden Ausgangsmengen bleiben durch unterschiedliche Farben erkennbar.
 - **Subtrahieren:** Nach dem Gleichnamigmachen die abzuziehenden Stücke einzeln antippen oder „Ein Stück wegnehmen“ benutzen. Gestreifte Stücke sind weggenommen; erneut antippen legt sie zurück. Sobald die geforderte Anzahl entfernt ist, lässt sich der Rest ansehen.
@@ -22,17 +22,17 @@ In „Deine Bruch-Werkstatt“ lassen sich die beiden Brüche über die Plus-/Mi
 
 Mit **„Mit Bild lösen“** unter einer Übungsaufgabe werden deren Brüche in die Werkstatt übernommen. Das Ergebnis wird danach wie gewohnt bei „Du bist dran“ eingegeben; die Übernahme zählt nicht als Versuch und füllt keine Antwort automatisch aus.
 
-Die Werkstatt unterstützt Brüche von 0 bis 1 mit Nennern von 2 bis 12 sowie Ergebnisse über 1. Negative Differenzen werden im Klasse-6-Grundmodus mit einem Hinweis abgefangen; die Brüche können dann getauscht werden. Alle Aktionen funktionieren ohne Ziehen, per Antippen oder Tastatur. Sehr feine Subtraktionsbalken und breite Multiplikationsraster lassen sich seitlich scrollen.
+Die Werkstatt unterstützt Brüche von 0 bis 1 mit Nennern von 2 bis 12 sowie Ergebnisse über 1. Negative Differenzen werden im Klasse-6-Grundmodus mit einem Hinweis abgefangen; die Brüche können dann getauscht werden. Alle Aktionen funktionieren ohne Ziehen, per Antippen oder Tastatur. Pfeiltasten wechseln das fokussierte Stück, Enter/Leertaste markieren oder entfernen es. Sehr feine Subtraktionsbalken und breite Multiplikationsraster lassen sich seitlich scrollen.
 
 ## Erweitern und Kürzen
 
-Der neue Reiter **„Erweitern & Kürzen“** zeigt zwei gleich große Balken: den aktuellen Bruch und eine Vorschau der neuen Einteilung. Beim Erweitern entstehen kleinere Stücke; beim Kürzen werden kleine Stücke zu größeren Gruppen zusammengefasst. Die gefärbte Menge bleibt sichtbar gleich groß. Zähler und Nenner werden immer mit derselben ganzen Zahl verändert.
+Der Reiter **„Erweitern & Kürzen“** zeigt den Ausgangsbruch und die neue Einteilung direkt **nebeneinander**, wahlweise als gleich große Balken oder Kreise. Die Bruchzahlen stehen unmittelbar an den Bildern. Beim Erweitern entstehen kleinere Stücke; beim Kürzen werden kleine Stücke zu größeren Gruppen zusammengefasst. Die gefärbte Menge bleibt sichtbar gleich groß. Zähler und Nenner werden immer mit derselben ganzen Zahl verändert.
 
-Faktor beziehungsweise Kürzungszahl auswählen und die Umformung anwenden. Ungültige Kürzungen werden mit einer Erklärung gesperrt. Gemeinsame Teiler, „Ganz kürzen“, Rückgängig und ein Entdeckerweg helfen beim Ausprobieren. Auch 0/6 → 0/1 und 6/6 → 1/1 sind möglich. Für gut lesbare Bilder ist die Darstellung auf höchstens 72 Teile eines Ganzen begrenzt.
+Faktor beziehungsweise **Teiler** über wenige Vorschläge oder ein Zahlenfeld auswählen. Beim Erweitern wird jedes alte Stück in genau so viele neue Stücke geteilt; dicke Linien zeigen die alten Grenzen. Beim Kürzen markieren dicke Linien Gruppen dieser Größe, die im Ergebnis je ein großes Stück bilden. In einer gültigen Kürzung schaltet das Antippen eine ganze Gruppe, sonst ein einzelnes Stück. Zum Gruppieren werden bei Bedarf gefärbte Stücke nebeneinandergelegt. Nach dem Anwenden bleibt das ausgeführte Vorher-/Nachher-Bild stehen; erst „Weiter umformen“ startet den nächsten Schritt. Ungültige Kürzungen werden mit einer Erklärung gesperrt. Gemeinsame Teiler, „Ganz kürzen“ und der Entdeckerweg sind unter „Weitere Möglichkeiten“ eingeklappt; „Zurück“ macht einen Schritt rückgängig. Auch 0/6 → 0/1 und 6/6 → 1/1 sind möglich. Für gut lesbare Bilder ist die Darstellung auf höchstens 72 Teile eines Ganzen begrenzt.
 
 ## Grafisch üben und Lerncheck
 
-Im Reiter **„Grafisch üben“** werden zufällige Aufgaben zu den vier Rechenarten sowie zum Erweitern und Kürzen erzeugt. Es gibt zwei Schwierigkeitsstufen und eine gemischte Auswahl. Die Antwort wird selbst gebaut: Nenner von 1 bis 36 wählen, anschließend Stücke im Bild markieren oder die großen Plus-/Minus-Tasten und das Zählerfeld nutzen. Alle Ganzes-Balken haben dieselbe Breite. Bei Division können bis zu vier Ganze dargestellt werden.
+Im Reiter **„Grafisch üben“** werden zufällige Aufgaben zu den vier Rechenarten sowie zum Erweitern und Kürzen erzeugt. Es gibt zwei Schwierigkeitsstufen und eine gemischte Auswahl. Die Antwort wird selbst gebaut: Der Nenner des Ausgangsbruchs ist zunächst eingestellt, der Antwortzähler bleibt leer und wird erst durch eine eigene Eingabe oder Stückwahl gesetzt. Der Nenner kann zwischen 1 und 36 verändert werden. Stücke im Balken oder Kreis einzeln markieren oder die großen Plus-/Minus-Tasten und das Zählerfeld nutzen. Jedes Bild ist ein Ganzes; weitere Ganze erscheinen beim Füllen des vorherigen und bleiben sichtbar, solange dort markierte Stücke oder der Tastaturfokus liegen. Bei Division können bis zu vier Ganze dargestellt werden. Pfeiltasten bewegen den Fokus, Enter/Leertaste schalten das fokussierte Stück.
 
 | Modus | Verhalten |
 | --- | --- |
@@ -77,7 +77,7 @@ npm ci --ignore-scripts
 npm test
 ```
 
-Die Tests prüfen Bruchmodelle und Bedienung, Wertgleichheit bei Erweitern/Kürzen, ungültige Umformungen, Aufgabengeneratoren, grafische Antwortbewertung, Einmalwertung des Acht-Aufgaben-Lernchecks, Tastaturfokus sowie die bisherigen Übungen und Spiele. `.github/workflows/tests.yml` führt dieselben Tests automatisch bei jedem Push und Pull Request aus. Die Abhängigkeit `jsdom` wird ausschließlich für die Tests verwendet und nicht von der Lernseite geladen.
+Die Tests prüfen Bruchmodelle und Bedienung, zwölf gezielte Regressionen für Einzelstücke, Kreis-Ganzes, Vorher-/Nachher-Bildpaare und Ansichtswechsel, Wertgleichheit bei Erweitern/Kürzen, ungültige Umformungen, Aufgabengeneratoren, grafische Antwortbewertung, Einmalwertung des Acht-Aufgaben-Lernchecks, Tastaturfokus sowie die bisherigen Übungen und Spiele. `.github/workflows/tests.yml` führt dieselben Tests automatisch bei jedem Push und Pull Request aus. Die Abhängigkeit `jsdom` wird ausschließlich für die Tests verwendet und nicht von der Lernseite geladen.
 
 ## Veröffentlichen mit GitHub Pages
 
@@ -91,7 +91,7 @@ Das Repository verwendet GitHub Pages mit **Deploy from a branch**, Branch **mai
 
 ## Neue Version ausliefern
 
-In `sw.js` den Versionsnamen bei `CACHE` erhöhen, damit der alte Offline-Cache dieser App ersetzt wird. Die Bruch-Werkstatt mit Fehlerdetektiv verwendet `bruchrechnen-v4`. Caches anderer Apps derselben Domain bleiben unangetastet.
+In `sw.js` den Versionsnamen bei `CACHE` erhöhen, damit der alte Offline-Cache dieser App ersetzt wird. Die vereinfachte Bruch-Werkstatt verwendet `bruchrechnen-v5`. Caches anderer Apps derselben Domain bleiben unangetastet.
 
 ## Schriften
 
