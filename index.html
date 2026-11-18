@@ -1330,7 +1330,7 @@ function renderWorkshop(){
   var status=document.getElementById('wk-status');if(status)status.textContent=caption;
 }
 function updateWorkspace(){renderWorkshop();updateDemo();var e=document.getElementById('wk-simple-equation');if(e){var dm=demo[cur];e.innerHTML=fr(dm.a,dm.b)+o(OPS[cur].sy)+fr(dm.c,dm.d)+o('=')+'?';}}
-/* Nenner ändern = Erweitern bzw. Kürzen: Der Zähler wächst oder schrumpft so mit, dass der Wert gleich bleibt
+/* Nur beim Addieren und Subtrahieren: Nenner ändern = Erweitern bzw. Kürzen: Der Zähler wächst oder schrumpft so mit, dass der Wert gleich bleibt
    (1/2 → 2/4 → 3/6, rückwärts 3/6 → 2/4 → 1/2). Gibt es in dieser Richtung keinen Nenner mit gleichem Wert,
    wird um 1 geändert und der Zähler auf den nächstliegenden Wert gesetzt. Gibt eine Erklärung zurück. */
 function stepDenominator(dm,k,dl){
@@ -2040,7 +2040,8 @@ document.addEventListener('click',function(e){
   else if(act==='inc'||act==='dec'){
     var k=t.getAttribute('data-key'),dm=demo[cur],dl=act==='inc'?1:-1;
     var wkNote='';
-    if(k==='b'||k==='d')wkNote=stepDenominator(dm,k,dl);
+    if((k==='b'||k==='d')&&(cur==='add'||cur==='sub'))wkNote=stepDenominator(dm,k,dl);
+    else if(k==='b'||k==='d'){var nk0=k==='b'?'a':'c';dm[k]=Math.min(12,Math.max(2,dm[k]+dl));if(dm[nk0]>dm[k])dm[nk0]=dm[k];}
     else{var dk=k==='a'?'b':'d',min=cur==='div'&&k==='c'?1:0;dm[k]=Math.min(dm[dk],Math.max(min,dm[k]+dl));}
     spOperand(k==='b'?'a':k==='d'?'c':k).picture=null;resetWorkshop();workshopSource=wkNote;updateWorkspace();
   }

@@ -66,6 +66,15 @@ test('Nenner ohne gleichwertigen Schritt: ±1 mit angepasstem Zähler und Hinwei
   click('[data-act="dec"][data-key="b"]');assert.equal(value('b'),3);assert.equal(value('a'),1);
   assert(/geht 1\/4 nicht genau auf/.test($('#wk-source').textContent));
 });
+test('Multiplikation und Division: Nenner ändern lässt den Zähler unabhängig (kein Erweitern)',()=>{
+  for(const op of ['mul','div']){
+    tab(op);operands(1,2,1,3);
+    click('[data-act="inc"][data-key="b"]');assert.equal(value('b'),3,op);assert.equal(value('a'),1,op);
+    click('[data-act="inc"][data-key="d"]');assert.equal(value('d'),4,op);assert.equal(value('c'),1,op);
+    click('[data-act="dec"][data-key="b"]');assert.equal(value('b'),2,op);assert.equal(value('a'),1,op);
+    assert(!/Gleicher Wert/.test($('#wk-source')?$('#wk-source').textContent:''),op);
+  }
+});
 test('Keine Laufzeitfehler',()=>{assert.equal(errors.length,0,errors.map(e=>e.stack).join('\n'));});
 console.log(`\n${count} Funktionstests erfolgreich.`);
 dom.window.close();
