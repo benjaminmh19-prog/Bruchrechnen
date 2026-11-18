@@ -381,6 +381,38 @@ button.vt-piece{cursor:pointer;touch-action:manipulation}
 .vt-source-controls label{flex:0 0 105px}
 .vt-source-controls .btn{min-height:44px;padding:9px 12px}
 .vt-source-status{font-size:.84rem;color:var(--muted);margin:6px 0;min-height:1.3em}
+/* Lernweg: erst die aktuelle Handlung, zusätzliche Optionen auf Wunsch. */
+.vt-trainer [hidden]{display:none!important}
+.vt-settings,.vt-progress-details,.vt-help,.vt-more{margin:12px 0}
+.vt-settings>summary,.vt-progress-details>summary,.vt-help>summary,.vt-more>summary{cursor:pointer;min-height:44px;padding:10px 0;font-weight:800;color:var(--op)}
+.vt-settings>summary{border-bottom:1px solid var(--line)}
+.vt-settings-summary{font-size:.85rem;font-weight:500;color:var(--muted);display:block;margin-top:4px}
+.vt-trainer .vt-config{margin-top:12px}
+.vt-trainer .vt-equation{font-size:2rem;margin:16px 0 20px}
+.vt-flow-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0}
+.vt-flow-controls .btn{min-height:44px}
+.vt-flow-controls .btn[aria-pressed="true"]{background:var(--op);color:var(--surface);border-color:var(--op)}
+.vt-steps{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:16px 0 10px;padding:0}
+.vt-steps .btn{width:100%;min-height:66px;padding:10px 8px;display:flex;align-items:center;gap:8px;text-align:left;font-size:.85rem}
+.vt-step-number{display:flex;align-items:center;justify-content:center;flex:none;width:27px;height:27px;border:1px solid currentColor;border-radius:50%;font-weight:800}
+.vt-steps [aria-current="step"]{background:var(--op);color:var(--surface);border-color:var(--op)}
+.vt-current-step{font-weight:800;font-size:1.1rem;margin:16px 0 8px;scroll-margin-top:20px}
+.vt-current-step:focus{outline:none}
+.vt-trainer .vt-board{border:0;background:var(--bg)}
+.vt-answer .vt-unit-label,.vt-source .vt-unit-label{font-size:1rem}
+.vt-source-summary{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 0;color:var(--muted)}
+.vt-source-summary .fr{color:var(--ink);font-size:1.25rem}
+.vt-source-stage,.vt-answer{scroll-margin-top:20px}
+.vt-actions .btn.p{min-width:180px;font-size:1rem}
+.vt-actions .btn{min-height:48px}
+.vt-more .vt-secondary{display:flex;flex-wrap:wrap;gap:8px}
+.vt-trainer #vt-common{padding:0;background:none;margin:12px 0}
+.vt-trainer #vt-common .vt-feedback{margin-top:8px}
+.vt-trainer .vt-feedback:empty{margin:0;padding:0;min-height:0;background:none}
+.vt-trainer #vt-access{font-size:.95rem;color:var(--ink)}
+@media(min-width:650px){#vt-sources.vt-two-sources{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}#vt-sources.vt-two-sources .vt-source+.vt-source{border-top:0;border-left:1px solid var(--line);padding-top:0;padding-left:18px;margin-top:0}}
+@media(max-width:440px){.vt-steps{gap:5px}.vt-steps .btn{flex-direction:column;align-items:flex-start;gap:6px;font-size:.76rem;padding:9px 7px}.vt-trainer .vt-equation{font-size:1.8rem}.vt-actions .btn.p{flex:1;min-width:0}}
+@media print{.vt-settings,.vt-flow-controls,.vt-steps,.vt-progress-details,.vt-help,.vt-more{display:none}}
 @media print{.sp-view,.sp-factor-row,.sp-number-details,.sp-more summary{display:none}}
 
 @media(max-width:440px){.sp-workspace .stp .ctl{gap:3px}.sp-workspace .rb{width:32px;height:44px;border-radius:9px}.sp-workspace .stp .val{min-width:1em;font-size:1.2rem}}
@@ -1410,7 +1442,7 @@ function visualTrainingTip(t){
   return 'Suche einen gemeinsamen Teiler von '+t.a+' und '+t.b+'. Der größte ist '+gcd(t.a,t.b)+'. Teile beide Zahlen dadurch: Die Stücke werden größer, die Menge bleibt gleich.';
 }
 var vtStoreKey='bruch-visual-training-v1',vtTotals={v:1,attempts:0,correct:0,checks:0,best:0};
-var vtS={mode:'training',type:'mixed',lvl:1,task:null,n:'',d:'',done:false,seen:[],run:null,feedback:'',kind:'info',storage:true};
+var vtS={mode:'training',type:'mixed',lvl:1,task:null,n:'',d:'',done:false,seen:[],run:null,feedback:'',kind:'info',storage:true,guided:true,step:1,settingsOpen:false,progressOpen:false,inputHint:false};
 try{
   var vtStored=JSON.parse(localStorage.getItem(vtStoreKey)||'null');
   if(vtStored&&vtStored.v===1&&['attempts','correct','checks','best'].every(function(k){return Number.isSafeInteger(vtStored[k])&&vtStored[k]>=0&&vtStored[k]<=1000000000;})&&
@@ -1421,11 +1453,11 @@ try{
 function vtSave(){try{localStorage.setItem(vtStoreKey,JSON.stringify(vtTotals));vtS.storage=true;}catch(e){vtS.storage=false;}}
 function vtEl(id){return document.getElementById('vt-'+id);}
 function vtMessage(kind,text){
-  vtS.kind=kind;vtS.feedback=text;var e=vtEl('feedback');
+  vtS.inputHint=false;vtS.kind=kind;vtS.feedback=text;var e=vtEl('feedback');
   if(e){e.className='vt-feedback '+kind;e.textContent=text;}
 }
 function vtCount(k){vtTotals[k]=Math.min(1000000000,vtTotals[k]+1);}
-function vtLoadTask(t){vtS.task=t;vtS.n='';vtS.d=String(t.b);vtS.done=false;vtS.seen=[];vtS.picture=null;vtS.sourceTask=null;vtS.sources=null;vtS.denominatorTouched=false;}
+function vtLoadTask(t){vtS.task=t;vtS.n='';vtS.d=String(t.b);vtS.done=false;vtS.seen=[];vtS.picture=null;vtS.sourceTask=null;vtS.sources=null;vtS.denominatorTouched=false;vtS.step=1;vtS.inputHint=false;}
 function vtValidInt(s,min,max){return /^\d+$/.test(String(s))&&Number.isSafeInteger(Number(s))&&Number(s)>=min&&Number(s)<=max;}
 function vtAnswer(){
   var t=vtS.task;
@@ -1477,8 +1509,10 @@ function vtSourceUnit(t,index) {
 }
 function vtPaintSources() {
   var root=vtEl('sources'),t=vtS.task;if(!root||!t)return;
+  root.classList.toggle('vt-two-sources',t.c!==undefined);
   spRenderPictures(root,vtSourceUnit(t,0)+(t.c!==undefined?vtSourceUnit(t,1):''));
   vtPaintCommonDenominator();
+  vtSyncFlow();
 }
 /* Prüfung der Zwischeneinteilung, nicht des eventuell gekürzten Endergebnisses. */
 function vtMinimumCommonDenominator(t) {
@@ -1496,28 +1530,31 @@ function vtCommonDenominatorStatus(t,sources) {
   return vtCheckCommonDenominator(t,sources[0].d);
 }
 function vtPaintCommonDenominator() {
-  var t=vtS.task,box=vtEl('common'),root=vtEl('sources');
-  if(!root||!t||vtS.mode!=='training'||(t.type!=='add'&&t.type!=='sub')){if(box)box.remove();return;}
+  var t=vtS.task,box=vtEl('common'),answer=vtEl('common-answer'),root=vtEl('sources');
+  if(!root||!t||vtS.mode!=='training'||(t.type!=='add'&&t.type!=='sub')){if(box)box.remove();if(answer)answer.remove();return;}
   if(!box){
     box=document.createElement('section');box.id='vt-common';box.className='vt-board';
-    box.innerHTML='<h3>Gemeinsamen Nenner erkennen</h3><p id="vt-common-sources" role="status" aria-live="polite" aria-atomic="true"></p><p id="vt-common-answer" role="status" aria-live="polite" aria-atomic="true"></p><p class="vt-caption">Diese Prüfung betrifft das Gleichnamigmachen der beiden Ausgangsbrüche, nicht den Nenner eines gekürzten Endergebnisses. Sie zählt nicht als Versuch.</p>';
+    box.innerHTML='<p id="vt-common-sources" role="status" aria-live="polite" aria-atomic="true"></p><details class="vt-help"><summary>Warum gleiche Stücke?</summary><p class="vt-caption">Zum Addieren oder Subtrahieren müssen die Stücke gleich groß sein. Diese Prüfung betrifft das Gleichnamigmachen der beiden Ausgangsbrüche, nicht den Nenner eines gekürzten Endergebnisses. Sie zählt nicht als Versuch.</p></details>';
     root.insertAdjacentElement('afterend',box);
   }
+  if(!answer){answer=document.createElement('p');answer.id='vt-common-answer';answer.setAttribute('role','status');answer.setAttribute('aria-live','polite');answer.setAttribute('aria-atomic','true');vtEl('answer-common').appendChild(answer);}
   var sources=vtEnsureSources(t),status=vtCommonDenominatorStatus(t,sources),e=vtEl('common-sources');
   e.dataset.kind=status.kind;e.className='vt-feedback '+(status.kind==='smallest'||status.kind==='common'?'ok':'info');
   var text;
-  if(status.kind==='pending')text='Noch nicht gleichnamig: Der erste Bruch hat '+sources[0].d+' Teile, der zweite '+sources[1].d+'. Forme beide auf dieselbe Teilzahl um.';
-  else if(status.kind==='smallest')text='Richtig erkannt! Beide Bilder haben den kleinsten gemeinsamen Nenner '+status.d+'. Die Stücke sind jetzt gleich groß.';
-  else text='Richtig: '+status.d+' ist ein gültiger gemeinsamer Nenner. Eine kleinere gemeinsame Einteilung ist möglich: '+status.minimum+' (gegebenenfalls zuerst kürzen).';
+  if(status.kind==='pending')text='Noch nicht gleichnamig: '+sources[0].d+' Teile und '+sources[1].d+' Teile. Forme die Brüche auf gleich große Stücke um.';
+  else if(status.kind==='smallest')text='Gemeinsamer Nenner '+status.d+' – richtig erkannt! Die Stücke sind gleich groß.';
+  else text='Gemeinsamer Nenner '+status.d+' – ebenfalls richtig. Mit vorherigem Kürzen genügt auch '+status.minimum+'.';
   if(e.textContent!==text)e.textContent=text;
   e=vtEl('common-answer');
-  if(!vtS.denominatorTouched){e.textContent='';e.className='';e.removeAttribute('data-kind');return;}
+  if(!vtS.denominatorTouched){e.textContent='';e.className='';e.hidden=true;e.removeAttribute('data-kind');return;}
+  var duplicate=!vtGuided()&&status.d===Number(vtS.d)&&(status.kind==='smallest'||status.kind==='common');
+  e.hidden=vtS.done||duplicate;
   status=vtCheckCommonDenominator(t,vtS.d);e.dataset.kind=status.kind;
   e.className='vt-feedback '+(status.kind==='smallest'||status.kind==='common'?'ok':status.kind==='invalid'?'info':'bad');
   if(status.kind==='invalid')text='Für die Nennerprüfung wähle eine ganze Zahl von 1 bis 36.';
   else if(status.kind==='unsuitable')text='Für das Gleichnamigmachen passt '+status.d+' noch nicht: Mindestens ein Ausgangsbruch lässt sich damit nicht in eine ganze Anzahl gleich großer Teile umformen.';
-  else if(status.kind==='smallest')text='Deine Nennerwahl '+status.d+' ist richtig: der kleinste gemeinsame Nenner. Baue die Antwort weiterhin selbst.';
-  else text='Deine Nennerwahl '+status.d+' ist ebenfalls richtig. Der kleinere gemeinsame Nenner '+status.minimum+' würde auch genügen (gegebenenfalls zuerst kürzen).';
+  else if(status.kind==='smallest')text='Nenner '+status.d+' passt zum Gleichnamigmachen. Markiere jetzt deine Antwort.';
+  else text='Nenner '+status.d+' passt ebenfalls. Nach möglichem Kürzen würde auch '+status.minimum+' genügen.';
   if(e.textContent!==text)e.textContent=text;
 }
 function vtTransformSource(index,mode) {
@@ -1542,10 +1579,58 @@ function vtButton(action,label,primary,disabled){return '<button type="button" c
 function vtStats(){
   var e=vtEl('stats');if(e)e.textContent='Training: '+vtTotals.correct+' richtige von '+vtTotals.attempts+' gewerteten Antworten · Lernchecks: '+vtTotals.checks+' · Bester Lerncheck: '+vtTotals.best+'/8 (alle Einstellungen)'+(vtS.storage?' · Nur in diesem Browser gespeichert.':' · Lokale Speicherung nicht verfügbar; neue Werte gelten nur hier.');
 }
+function vtCanGuide(){return vtS.mode==='training'&&vtS.task&&(vtS.task.type==='add'||vtS.task.type==='sub');}
+function vtGuided(){return !!(vtCanGuide()&&vtS.guided);}
+function vtFlowStep(){return vtS.done?3:vtValidInt(vtS.step,1,3)?Number(vtS.step):1;}
+function vtSyncFlow(){
+  var guided=vtGuided(),step=vtFlowStep(),t=vtS.task,root=vtEl('root');if(!root||!t)return;
+  root.dataset.flow=guided?'guided':'free';root.dataset.step=String(step);
+  var e=vtEl('source-stage');if(e)e.hidden=guided&&step>1;
+  e=vtEl('answer-stage');if(e)e.hidden=guided&&step===1;
+  e=vtEl('source-summary');
+  if(e){
+    e.hidden=!guided||step===1;
+    var s=vtEnsureSources(t),html='<span>Deine Einteilung:</span> '+fr(s[0].n,s[0].d)+o(t.type==='add'?'+':'−')+fr(s[1].n,s[1].d);
+    if(e.innerHTML!==html)e.innerHTML=html;
+  }
+  e=vtEl('steps');if(e)e.hidden=!guided;
+  for(var i=1;i<=3;i++){e=vtEl('step-'+i);if(e){if(i===step)e.setAttribute('aria-current','step');else e.removeAttribute('aria-current');}}
+  e=vtEl('step-title');if(e){e.hidden=!guided;e.textContent=['','1. Brüche gleichnamig machen','2. Antwort markieren','3. Ergebnis prüfen'][step];}
+  e=vtEl('answer-title');if(e)e.textContent=guided&&step===3?'Deine Antwort zum Prüfen':'Deine Antwort';
+  e=vtEl('continue');if(e){e.hidden=!guided||vtS.done||step===3;e.textContent=step===1?'Weiter zur Antwort':'Weiter zum Prüfen';}
+  e=vtEl('back');if(e)e.hidden=!guided||vtS.done||step===1;
+  e=vtEl('submit');if(e)e.hidden=guided&&step<3;
+  e=vtEl('guide');if(e)e.setAttribute('aria-pressed',String(vtS.guided));
+  e=vtEl('free');if(e)e.setAttribute('aria-pressed',String(!vtS.guided));
+}
+function vtFocusVisible(id){
+  var e=document.getElementById(id);
+  if(!e||e.disabled||e.closest('[hidden]'))e=['continue','new','next','start','submit','denominator'].map(vtEl).find(function(x){return x&&!x.disabled&&!x.closest('[hidden]');});
+  if(e&&!e.disabled&&!e.closest('[hidden]'))e.focus({preventScroll:true});
+}
+function vtMoveStep(step){
+  if(!vtCanGuide()||!vtValidInt(step,1,3))return;
+  vtS.step=Number(step);vtSyncFlow();
+  var id=vtS.done?'vt-new':step===1?'vt-step-title':step===2?'vt-denominator':'vt-submit',e=document.getElementById(id);
+  if(e&&!e.disabled&&!e.closest('[hidden]'))e.focus();
+}
+function vtContinue(){
+  if(!vtGuided()||vtS.done)return;
+  if(vtFlowStep()===1){vtMoveStep(2);return;}
+  var answer=vtAnswer();
+  if(answer.error){vtMessage('info',answer.error);vtS.inputHint=true;vtFocusVisible(vtValidInt(vtS.d,1,36)?'vt-numerator':'vt-denominator');return;}
+  vtMoveStep(3);
+}
+function vtMakeAnswerVisible(){if(vtGuided()&&vtFlowStep()===1)vtS.step=2;}
 function renderVisualTraining(){
   var m=document.getElementById('panel');m.setAttribute('data-op','visual');
   if(!vtEl('root')){
-    m.innerHTML='<section class="card vt-trainer" id="vt-root" aria-labelledby="vt-title"><h2 id="vt-title">Grafisch üben</h2><p>Tippe Stücke an und baue deine Antwort. Jeder Balken und jeder Kreis zeigt genau ein Ganzes.</p><div id="vt-config" class="vt-config"></div><div id="vt-view"></div><p id="vt-stats" class="vt-stats"></p><div id="vt-body"></div><p id="vt-feedback" class="vt-feedback" role="status" aria-live="polite" aria-atomic="true"></p><p class="vt-privacy">Ohne Zeitdruck, Anmeldung oder persönliche Daten. Gespeichert werden nur zusammengefasste Übungszahlen und der beste Lerncheck.</p></section>';
+    m.innerHTML='<section class="card vt-trainer" id="vt-root" aria-labelledby="vt-title"><h2 id="vt-title">Grafisch üben</h2>'+
+      '<details id="vt-settings" class="vt-settings"'+(vtS.settingsOpen?' open':'')+'><summary>Übung einstellen<span id="vt-settings-summary" class="vt-settings-summary"></span></summary><div id="vt-config" class="vt-config"></div></details>'+
+      '<div id="vt-view"></div><div id="vt-body"></div><p id="vt-feedback" class="vt-feedback" role="status" aria-live="polite" aria-atomic="true"></p>'+
+      '<details id="vt-progress" class="vt-progress-details"'+(vtS.progressOpen?' open':'')+'><summary>Mein Fortschritt</summary><p id="vt-stats" class="vt-stats"></p><p class="vt-privacy">Ohne Zeitdruck, Anmeldung oder persönliche Daten. Gespeichert werden nur zusammengefasste Übungszahlen und der beste Lerncheck in diesem Browser.</p></details></section>';
+    vtEl('settings').addEventListener('toggle',function(){vtS.settingsOpen=this.open;});
+    vtEl('progress').addEventListener('toggle',function(){vtS.progressOpen=this.open;});
     vtMessage(vtS.kind,vtS.feedback);
   }
   if(vtS.mode==='training'&&!vtS.task)vtLoadTask(generateVisualTask(vtS.type,vtS.lvl));
@@ -1554,25 +1639,46 @@ function renderVisualTraining(){
 function vtRender(focusId){
   if(!vtEl('root'))return;
   var previous=document.activeElement;focusId=focusId||(previous&&vtEl('root').contains(previous)?previous.id:'');
+  vtS.settingsOpen=vtEl('settings').open;vtS.progressOpen=vtEl('progress').open;
   var active=vtS.mode==='check'&&vtS.run&&!vtS.run.finished,locked=active?' disabled':'';
-  vtEl('config').innerHTML='<label for="vt-mode">Modus<select id="vt-mode" data-vt="mode"'+locked+'><option value="training"'+(vtS.mode==='training'?' selected':'')+'>Training</option><option value="check"'+(vtS.mode==='check'?' selected':'')+'>Lerncheck</option><option value="detective">Fehlerdetektiv</option></select></label><label for="vt-type">Aufgabentyp<select id="vt-type" data-vt="type"'+locked+'>'+['mixed'].concat(VT_TYPES).map(function(k){return '<option value="'+k+'"'+(k===vtS.type?' selected':'')+'>'+VT_NAMES[k]+'</option>';}).join('')+'</select></label><label for="vt-level">Schwierigkeit<select id="vt-level" data-vt="level"'+locked+'><option value="1"'+(vtS.lvl===1?' selected':'')+'>1 · Einstieg</option><option value="2"'+(vtS.lvl===2?' selected':'')+'>2 · Kniffliger</option></select></label>';
+  vtEl('config').innerHTML='<label for="vt-mode">Modus<select id="vt-mode" data-vt="mode"'+locked+'><option value="training"'+(vtS.mode==='training'?' selected':'')+'>Training</option><option value="check"'+(vtS.mode==='check'?' selected':'')+'>Lerncheck</option><option value="detective">Fehlerdetektiv</option></select></label>'+
+    '<label for="vt-type">Aufgabentyp<select id="vt-type" data-vt="type"'+locked+'>'+['mixed'].concat(VT_TYPES).map(function(k){return '<option value="'+k+'"'+(k===vtS.type?' selected':'')+'>'+VT_NAMES[k]+'</option>';}).join('')+'</select></label>'+
+    '<label for="vt-level">Schwierigkeit<select id="vt-level" data-vt="level"'+locked+'><option value="1"'+(vtS.lvl===1?' selected':'')+'>1 · Einstieg</option><option value="2"'+(vtS.lvl===2?' selected':'')+'>2 · Kniffliger</option></select></label>';
+  vtEl('settings-summary').textContent=(vtS.mode==='training'?'Training':'Lerncheck')+' · '+VT_NAMES[vtS.type]+' · '+(vtS.lvl===1?'Einstieg':'Kniffliger');
   vtEl('view').innerHTML=spViewButtons('vt');
-  var t=vtS.task,r=vtS.run,h='';
+  var t=vtS.task,r=vtS.run,h='',canGuide=vtCanGuide();
   if(vtS.mode==='check'&&r&&r.finished){
-    h='<h3 id="vt-summary-title" tabindex="-1">Dein Lerncheck: '+r.score+' von 8 richtig</h3><p>'+VT_NAMES[r.type]+' · Schwierigkeit '+r.lvl+'. Jede Aufgabe wurde genau einmal gewertet.</p><ol class="vt-results">'+r.results.map(function(x,i){return '<li><strong>'+VT_NAMES[x.task.type]+': '+(x.ok?'richtig':'noch üben')+'</strong><p>'+x.task.instruction+'</p><div class="eq">'+vtEquation(x.task)+'</div><p>Deine Antwort: '+fr(x.n,x.d)+' · Richtig: '+fr(x.task.answer[0],x.task.answer[1])+'</p></li>';}).join('')+'</ol>'+vtButton('start','Neuen Lerncheck starten',true);
+    h='<h3 id="vt-summary-title" tabindex="-1">Dein Lerncheck: '+r.score+' von 8 richtig</h3><p>'+VT_NAMES[r.type]+' · Schwierigkeit '+r.lvl+'. Jede Aufgabe wurde genau einmal gewertet.</p><ol class="vt-results">'+r.results.map(function(x){return '<li><strong>'+VT_NAMES[x.task.type]+': '+(x.ok?'richtig':'noch üben')+'</strong><p>'+x.task.instruction+'</p><div class="eq">'+vtEquation(x.task)+'</div><p>Deine Antwort: '+fr(x.n,x.d)+' · Richtig: '+fr(x.task.answer[0],x.task.answer[1])+'</p></li>';}).join('')+'</ol>'+vtButton('start','Neuen Lerncheck starten',true);
   }else if(vtS.mode==='check'&&!r){
     h='<h3>Lerncheck · 8 Aufgaben</h3><p>'+(vtS.type==='mixed'?'Alle sechs Aufgabentypen plus zwei zufällige Zusatzaufgaben.':'Acht Aufgaben zum Typ „'+VT_NAMES[vtS.type]+'“.')+' Ohne Tipps oder Lösungen vor der Abgabe. Pro Aufgabe zählt nur eine Antwort. Erst danach kannst du die richtige Antwort aufdecken. Die Einstellungen bleiben bis zum Ende gesperrt.</p>'+vtButton('start','Lerncheck starten',true);
   }else if(t){
-    h=(active?'<div class="vt-progress">Aufgabe '+(r.index+1)+' von 8 · '+VT_NAMES[r.type]+' · Schwierigkeit '+r.lvl+'</div>':'')+'<h3>'+VT_NAMES[t.type]+'</h3><p id="vt-instruction">'+t.instruction+'</p><div class="eq vt-equation">'+vtEquation(t)+'</div>'+(vtS.mode==='training'?'<p class="vt-caption">Forme jeden Ausgangsbruch einzeln um. Das Bild zeigt sofort die neue Teilzahl. Baue danach deine Antwort selbst.</p>':'')+'<div id="vt-sources" class="vt-board"></div><div class="vt-answer" aria-describedby="vt-instruction vt-access"><h3>Deine Antwort</h3><div class="vt-controls"><label for="vt-denominator">Nenner (1–36)<input type="number" id="vt-denominator" data-vt="denominator" min="1" max="36" step="1" inputmode="numeric" autocomplete="off" value="'+vtS.d+'"'+(vtS.done?' disabled':'')+'></label><div><label for="vt-numerator">Zähler (markierte Stücke)</label><div class="vt-counter">'+vtButton('minus','−',false,vtS.done)+'<input type="number" id="vt-numerator" data-vt="numerator" min="0" step="1" inputmode="numeric" autocomplete="off" value="'+vtS.n+'"'+(vtS.done?' disabled':'')+'>'+vtButton('plus','+',false,vtS.done)+'</div></div></div><p id="vt-access" class="vt-caption">Jedes Stück lässt sich einzeln an- und ausschalten. Der Nenner bestimmt die Stückgröße. Bei kleinen Stücken nutze −/+ oder das Zählerfeld. Pfeiltasten wechseln das Stück; Enter oder Leertaste schalten es um. Ein weiteres Ganzes erscheint, sobald das vorherige voll ist.</p><div id="vt-readout" class="vt-readout"></div><div id="vt-graph" class="vt-board"></div></div><div class="vt-actions">';
-    if(!vtS.done)h+=vtButton('submit',active?'Antwort abgeben':'Prüfen',true);
-    if(!active){h+=vtButton('tip','Tipp',false,vtS.done)+vtButton('show','Lösung ansehen',false,vtS.done)+vtButton('new',vtS.done?'Nächste Aufgabe':'Neue Aufgabe',vtS.done);}
-    else{if(vtS.done)h+=vtButton('next',!r.review?'Antwort auswerten':r.index===7?'Ergebnis ansehen':'Nächste Aufgabe',true);h+=vtButton('abort','Lerncheck abbrechen',false);}
+    h=(active?'<div class="vt-progress">Aufgabe '+(r.index+1)+' von 8 · '+VT_NAMES[r.type]+' · Schwierigkeit '+r.lvl+'</div>':'')+
+      '<h3>'+VT_NAMES[t.type]+'</h3><p id="vt-instruction">'+t.instruction+'</p><div class="eq vt-equation">'+vtEquation(t)+'</div>';
+    if(canGuide){
+      h+='<div class="vt-flow-controls"><span>Lernweg:</span>'+vtButton('guide','Schrittweise',false)+vtButton('free','Frei arbeiten',false)+'</div><nav id="vt-steps" aria-label="Dein Lernweg"><ol class="vt-steps">'+
+        ['Brüche gleichnamig machen','Antwort markieren','Ergebnis prüfen'].map(function(label,i){return '<li><button type="button" class="btn" id="vt-step-'+(i+1)+'" data-vt="step" data-step="'+(i+1)+'"><span class="vt-step-number">'+(i+1)+'</span><span>'+label+'</span></button></li>';}).join('')+'</ol></nav><p id="vt-step-title" class="vt-current-step" tabindex="-1"></p>';
+    }
+    h+='<section id="vt-source-stage" class="vt-source-stage">'+(vtS.mode==='training'?'<p class="vt-caption">Hier kannst du die Ausgangsbrüche erweitern oder kürzen. Die gefärbte Menge bleibt gleich.</p>':'')+'<div id="vt-sources" class="vt-board"></div></section>'+
+      (canGuide?'<div id="vt-source-summary" class="vt-source-summary" aria-label="Deine umgeformten Ausgangsbrüche"></div>':'')+
+      '<section id="vt-answer-stage" class="vt-answer" aria-describedby="vt-instruction vt-access"><h3 id="vt-answer-title">Deine Antwort</h3><p id="vt-access" class="vt-caption">Tippe die passenden Stücke an. Jeder Balken oder Kreis zeigt ein Ganzes.</p>'+
+      '<div class="vt-controls"><label for="vt-denominator">Nenner · Teile pro Ganzem<input type="number" id="vt-denominator" data-vt="denominator" min="1" max="36" step="1" inputmode="numeric" autocomplete="off" value="'+vtS.d+'"'+(vtS.done?' disabled':'')+'></label>'+
+      '<div><label for="vt-numerator">Zähler · gefärbte Stücke</label><div class="vt-counter">'+vtButton('minus','−',false,vtS.done)+'<input type="number" id="vt-numerator" data-vt="numerator" min="0" step="1" inputmode="numeric" autocomplete="off" value="'+vtS.n+'"'+(vtS.done?' disabled':'')+'>'+vtButton('plus','+',false,vtS.done)+'</div></div></div>'+
+      '<div id="vt-answer-common"></div><div id="vt-readout" class="vt-readout"></div><div id="vt-graph" class="vt-board"></div>'+
+      '<details class="vt-help"><summary>Bedienhilfe</summary><p class="vt-caption">Der Nenner bestimmt die Stückgröße: 1 bis 36 Teile. Bei kleinen Stücken nutze −/+ oder das Zählerfeld. Pfeiltasten wechseln das Stück; Enter oder Leertaste schalten es um. Ein weiteres Ganzes erscheint, sobald das vorherige voll ist.</p></details></section><div class="vt-actions" id="vt-actions">';
+    if(canGuide&&!vtS.done)h+=vtButton('back','Zurück',false)+vtButton('continue','Weiter zur Antwort',true);
+    if(!vtS.done)h+=vtButton('submit',active?'Antwort abgeben':'Antwort prüfen',true);
+    if(!active&&vtS.done)h+=vtButton('new','Nächste Aufgabe',true);
+    if(active){if(vtS.done)h+=vtButton('next',!r.review?'Antwort auswerten':r.index===7?'Ergebnis ansehen':'Nächste Aufgabe',true);h+=vtButton('abort','Lerncheck abbrechen',false);}
     h+='</div>';
+    if(!active&&!vtS.done)h+='<details class="vt-more"><summary>Tipp und weitere Möglichkeiten</summary><div class="vt-secondary">'+vtButton('tip','Tipp',false)+vtButton('show','Lösung ansehen',false)+vtButton('new','Andere Aufgabe',false)+'</div></details>';
     if(active&&r.review||!active&&vtS.done)h+=vtReview(t);
   }
   vtEl('body').innerHTML=h;vtStats();
-  if(t&&!(r&&r.finished)){vtPaintSources();vtPaintAnswer();var minus=vtEl('minus'),plus=vtEl('plus');if(minus)minus.setAttribute('aria-label','Ein Stück weniger markieren');if(plus)plus.setAttribute('aria-label','Ein Stück mehr markieren');}
-  if(focusId){var target=document.getElementById(focusId);if(!target||target.disabled)target=vtEl('next')||vtEl('new')||vtEl('start')||vtEl('denominator');if(target&&!target.disabled)target.focus({preventScroll:true});}
+  if(t&&!(r&&r.finished)){
+    vtPaintSources();vtPaintAnswer();vtSyncFlow();
+    var minus=vtEl('minus'),plus=vtEl('plus');if(minus)minus.setAttribute('aria-label','Ein Stück weniger markieren');if(plus)plus.setAttribute('aria-label','Ein Stück mehr markieren');
+  }
+  if(focusId)vtFocusVisible(focusId);
 }
 function vtReview(t){
   var h='<div class="vt-review"><h3>Richtige Antwort</h3><div class="eq">'+fr(t.answer[0],t.answer[1])+'</div><div class="vt-board">';
@@ -1586,18 +1692,26 @@ function vtPaintAnswer(){
   if(valid)for(var k=0;k<visible;k++)h+=vtUnit(n,d,'Deine Antwort · Ganzes '+(k+1),true,k*d,visible*d);
   spRenderPictures(graph,valid?h:'<p>Wähle einen Nenner, um jedes Ganze in gleich große Stücke zu teilen.</p>');
   var good=vtAnswer();vtEl('readout').textContent=good.error?'Noch keine gültige Antwort.':good.n+' markierte Stücke · '+good.n+'/'+good.d;
+  if(vtS.inputHint){
+    if(!good.error)vtMessage('info','');
+    else if(vtS.feedback!==good.error){vtMessage('info',good.error);vtS.inputHint=true;}
+  }
   var input=vtEl('numerator');if(input){if(valid)input.max=t.wholes*d;else input.removeAttribute('max');}
   vtPaintCommonDenominator();
+  vtSyncFlow();
 }
 function vtSetNumerator(n,focusId){
   if(vtS.done||!vtS.task)return;
-  if(!vtValidInt(vtS.d,1,36)){vtMessage('info','Wähle zuerst einen Nenner von 1 bis 36.');vtEl('denominator').focus();return;}
+  vtMakeAnswerVisible();
+  if(!vtValidInt(vtS.d,1,36)){vtMessage('info','Wähle zuerst einen Nenner von 1 bis 36.');vtS.inputHint=true;vtEl('denominator').focus();return;}
   vtS.picture=null;vtS.n=String(Math.max(0,Math.min(vtS.task.wholes*Number(vtS.d),n)));vtEl('numerator').value=vtS.n;vtPaintAnswer();
   if(focusId){var e=document.getElementById(focusId);if(e)e.focus({preventScroll:true});}
 }
 function vtSubmitAnswer(){
-  if(!vtS.task||vtS.done)return;var x=vtAnswer();
-  if(x.error){vtMessage('info',x.error);vtEl(vtValidInt(vtS.d,1,36)?'numerator':'denominator').focus();return;}
+  if(!vtS.task||vtS.done)return;
+  if(vtGuided()){vtS.step=3;vtSyncFlow();}
+  var x=vtAnswer();
+  if(x.error){vtMessage('info',x.error);vtS.inputHint=true;vtEl(vtValidInt(vtS.d,1,36)?'numerator':'denominator').focus();return;}
   var t=vtS.task,ok=vtIsCorrect(t,x.n,x.d),signature=x.n+'/'+x.d;
   if(vtS.mode==='check'){
     var r=vtS.run;if(!r||r.finished||r.results.length!==r.index)return;
@@ -1625,11 +1739,17 @@ document.addEventListener('click',function(e){
   var t=e.target.closest&&e.target.closest('[data-vt]');if(!t||t.disabled||!t.closest('#vt-root'))return;
   var act=t.getAttribute('data-vt'),n=vtValidInt(vtS.n,0,144)?Number(vtS.n):0;
   if(act==='view'){workshopView=t.getAttribute('data-view');vtRender();}
+  else if((act==='guide'||act==='free')&&vtCanGuide()){
+    vtS.guided=act==='guide';vtPaintCommonDenominator();vtSyncFlow();vtFocusVisible(t.id);
+  }
+  else if(act==='step')vtMoveStep(Number(t.getAttribute('data-step')));
+  else if(act==='continue')vtContinue();
+  else if(act==='back'&&vtGuided()&&!vtS.done)vtMoveStep(Math.max(1,vtFlowStep()-1));
   else if(act==='source-expand'||act==='source-reduce'||act==='source-reset'){
     vtTransformSource(Number(t.getAttribute('data-source')),act==='source-expand'?'expand':act==='source-reduce'?'reduce':'reset');
     var replacement=document.getElementById(t.id);if(replacement&&!replacement.disabled)replacement.focus({preventScroll:true});
   }
-  else if(act==='piece'&&!vtS.done){var i=Number(t.getAttribute('data-vt-i')),d=Number(vtS.d);vtS.n=String(spToggle(vtS,n,d,vtS.task.wholes*d,i,1,0));vtEl('numerator').value=vtS.n;vtPaintAnswer();var p=document.getElementById(t.id);if(p)p.focus({preventScroll:true});}
+  else if(act==='piece'&&!vtS.done){vtMakeAnswerVisible();var i=Number(t.getAttribute('data-vt-i')),d=Number(vtS.d);vtS.n=String(spToggle(vtS,n,d,vtS.task.wholes*d,i,1,0));vtEl('numerator').value=vtS.n;vtPaintAnswer();var p=document.getElementById(t.id);if(p)p.focus({preventScroll:true});}
   else if(act==='plus'||act==='minus')vtSetNumerator(n+(act==='plus'?1:-1));
   else if(act==='submit')vtSubmitAnswer();
   else if(act==='tip'&&vtS.mode==='training'&&!vtS.done)vtMessage('info',visualTrainingTip(vtS.task));
@@ -1647,6 +1767,7 @@ document.addEventListener('input',function(e){
   }
   if(e.target.id==='vt-denominator'){vtS.d=e.target.value;vtS.picture=null;vtS.denominatorTouched=true;}
   else if(e.target.id==='vt-numerator'){vtS.n=e.target.value;vtS.picture=null;}else return;
+  vtMakeAnswerVisible();
   vtPaintAnswer();
 });
 document.addEventListener('change',function(e){
@@ -1663,7 +1784,7 @@ document.addEventListener('change',function(e){
 document.addEventListener('keydown',function(e){
   var t=e.target;if(!t.closest||!t.closest('#vt-root'))return;
   if(spHandleKey(e,'vt'))return;
-  if(e.key==='Enter'&&(t.id==='vt-numerator'||t.id==='vt-denominator')){e.preventDefault();vtSubmitAnswer();}
+  if(e.key==='Enter'&&(t.id==='vt-numerator'||t.id==='vt-denominator')){e.preventDefault();if(vtGuided()&&vtFlowStep()<3)vtContinue();else vtSubmitAnswer();}
 });
 
 /* ---------- Fehlerdetektiv: finden, reparieren, begründen ---------- */
