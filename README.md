@@ -2,6 +2,7 @@
 
 Interaktive Lern-App zum Rechnen mit Brüchen für Schülerinnen und Schüler der 6. Klasse.
 
+- **Übersichtliche Startseite:** Die Reiter sind in „Rechenarten“ und „Verstehen, üben & spielen“ gruppiert und passen auch auf dem Handy in zwei Zeilen. Jede Rechenart beginnt mit dem Merksatz und einer Sprungleiste (Ausprobieren · Erklärung · Üben · Sachaufgabe); ein schwebender „↑ Menü“-Knopf bringt beim Scrollen zurück zur Auswahl
 - Vier Reiter für Addieren, Subtrahieren, Multiplizieren und Dividieren, jeweils mit Merksatz, Alltagsbeispiel, Rechenweg und Übungsaufgaben in drei Stufen
 - **Grafische Bruch-Werkstatt:** Brüche durch Antippen von Balken- oder Kreisstücken einstellen und die Rechnung Schritt für Schritt mit Bildern bearbeiten
 - Zufällige Sachaufgaben mit Tipp-Funktion bei jeder Rechenart
@@ -107,7 +108,7 @@ Das Repository verwendet GitHub Pages mit **Deploy from a branch**, Branch **mai
 
 ## Neue Version ausliefern
 
-In `sw.js` den Versionsnamen bei `CACHE` erhöhen, damit der alte Offline-Cache dieser App ersetzt wird. Die Version mit optionalem Lernweg und kompakter Übungsoberfläche verwendet `bruchrechnen-v8`. Caches anderer Apps derselben Domain bleiben unangetastet.
+In `sw.js` den Versionsnamen bei `CACHE` erhöhen, damit der alte Offline-Cache dieser App ersetzt wird. Die Version mit gruppierter Navigation und übersichtlicher Startseite verwendet `bruchrechnen-v9`. Caches anderer Apps derselben Domain bleiben unangetastet.
 
 ## Schriften
 

@@ -417,26 +417,91 @@ button.vt-piece{cursor:pointer;touch-action:manipulation}
 
 @media(max-width:440px){.sp-workspace .stp .ctl{gap:3px}.sp-workspace .rb{width:32px;height:44px;border-radius:9px}.sp-workspace .stp .val{min-width:1em;font-size:1.2rem}}
 
+/* ---------- Übersichtliche Oberfläche (v9): Kopfzeile, gruppierte Navigation, Einstieg ---------- */
+.wrap{max-width:880px;padding-block:16px 72px}
+header.top{flex-direction:row;align-items:center;gap:12px;margin-bottom:14px}
+header.top .logo{flex:none;display:grid;place-items:center;width:52px;height:52px;border-radius:16px;background:var(--surface);border:1px solid var(--line);box-shadow:0 2px 8px color-mix(in srgb,var(--ink) 10%,transparent)}
+header.top h1{font-size:clamp(1.7rem,6vw,2.3rem)}
+header.top .sub{font-size:.95rem}
+
+.tabs{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;grid-template-columns:none}
+.tabgroup-label{font-size:.72rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 6px 2px}
+.tabgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.tabgrid .tab,.tabgrid .tab[data-op="games"],.tabgrid .tab[data-op="detective"]{grid-column:auto;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;gap:6px;padding:10px 4px 9px;min-height:84px;border-radius:16px;font-size:.78rem;line-height:1.15;box-shadow:0 1px 0 color-mix(in srgb,var(--ink) 8%,transparent)}
+.tabgrid .tab .sym{width:38px;height:38px;font-size:1.55rem}
+.tabgrid .tab .tl{display:block;min-width:0;max-width:100%;overflow-wrap:normal;word-break:normal;hyphens:manual}
+.tabgrid .tab small{display:none}
+.tabgrid .tab:hover{border-color:color-mix(in srgb,var(--op) 55%,var(--line))}
+.tabgrid .tab:active{transform:scale(.97)}
+.tabgrid .tab[aria-selected="true"]{box-shadow:0 0 0 2px var(--op) inset;background:color-mix(in srgb,var(--op) 12%,var(--surface))}
+.tabgrid .tab[aria-selected="true"] .tl{color:var(--op)}
+@media(min-width:560px){
+  .tabgrid .tab,.tabgrid .tab[data-op="games"],.tabgrid .tab[data-op="detective"]{flex-direction:row;text-align:left;gap:10px;padding:10px 12px;min-height:64px;font-size:.9rem;justify-content:flex-start}
+  .tabgrid .tab .sym{width:40px;height:40px}
+  .tabgrid .tab small{display:block;font-size:.72rem}
+}
+@media(min-width:560px) and (max-width:759px){
+  .tabgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(prefers-reduced-motion:no-preference){.tabgrid .tab{transition:border-color .15s,background-color .15s,transform .1s}}
+
+/* Einstieg in ein Kapitel */
+.lead{display:flex;gap:14px;align-items:center;padding:14px 16px;border-radius:18px;background:color-mix(in srgb,var(--op) 12%,var(--surface));border:1px solid color-mix(in srgb,var(--op) 35%,var(--line))}
+.lead-sym{flex:none;display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:var(--op);color:var(--on-op);font-family:var(--f-display);font-weight:800;font-size:1.9rem;line-height:1}
+.lead-kicker{font-size:.74rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--op);margin-bottom:2px}
+.lead-text{font-size:1.02rem;font-weight:700;line-height:1.4}
+.jump{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:-6px}
+.jump-label{font-size:.85rem;font-weight:700;color:var(--muted)}
+.jump .chip{min-height:40px;padding:6px 14px}
+.jump .chip:active{background:var(--op);color:var(--on-op);border-color:var(--op)}
+#workshop,#sec-explain,#sec-practice,#sec-word{scroll-margin-top:14px}
+
+/* Karten und Knöpfe ruhiger und klarer */
+.card,details.pre{box-shadow:0 1px 2px color-mix(in srgb,var(--ink) 6%,transparent)}
+.card{padding:18px 18px 20px}
+details.pre>summary{display:flex;align-items:center;min-height:44px}
+details.pre.lookup{margin-top:22px;background:transparent;border-style:dashed}
+details.pre.lookup>summary{font-size:1rem}
+.btn{transition:none}
+.btn:hover:not(:disabled){background:color-mix(in srgb,var(--op) 9%,var(--surface))}
+.btn.p:hover:not(:disabled){background:var(--op);filter:brightness(1.07)}
+.btns .btn{flex:0 1 auto}
+@media(max-width:440px){
+  .btns .btn.p{flex:1 1 100%}
+  .btns .btn:not(.p){flex:1 1 calc(50% - 5px);padding-inline:10px}
+  .lead{padding:12px}
+  .lead-sym{width:42px;height:42px;font-size:1.6rem}
+  .lead-text{font-size:.97rem}
+}
+.foot{margin-top:18px;text-align:center;font-size:.82rem;color:var(--muted)}
+
+/* Schwebender Knopf: zurück zum Menü */
+.to-menu{position:fixed;right:max(14px,env(safe-area-inset-right,0px));bottom:max(14px,env(safe-area-inset-bottom,0px));z-index:20;min-height:46px;padding:0 18px;border-radius:999px;border:2px solid var(--ink);background:var(--surface);color:var(--ink);font:inherit;font-weight:800;box-shadow:0 4px 14px color-mix(in srgb,var(--ink) 22%,transparent);cursor:pointer}
+.to-menu[hidden]{display:none}
+@media print{.to-menu,.jump,.tabs{display:none}}
+
 </style>
 
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <h1>Bruchrechnen</h1>
-    <p class="sub">Balken oder Kreise wählen. Stücke antippen. Brüche verstehen.</p>
+  <header class="top">
+    <span class="logo" aria-hidden="true"><svg viewBox="0 0 40 40" width="44" height="44" focusable="false"><circle cx="20" cy="20" r="18" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><path d="M20 20V2a18 18 0 0 1 18 18z" fill="var(--add)"/><path d="M20 20h18a18 18 0 0 1-18 18z" fill="var(--sub)"/><path d="M20 20v18A18 18 0 0 1 2 20z" fill="var(--div)"/><path d="M20 2v36M2 20h36" stroke="var(--ink)" stroke-width="1.5"/></svg></span>
+    <div><h1>Bruchrechnen</h1><p class="sub">Klasse 6 · Stücke antippen, Brüche verstehen</p></div>
   </header>
-  <details class="pre" id="pre"><summary>Vorwissen auffrischen: Erweitern, Kürzen, gemischte Zahlen</summary>
+
+  <nav class="tabs" role="tablist" id="tabs" aria-label="Rechenart"></nav>
+  <main id="panel" class="panel" role="tabpanel"></main>
+  <details class="pre lookup" id="pre"><summary>Nachschlagen: Erweitern, Kürzen, gemischte Zahlen</summary>
     <div class="pre-grid">
       <div><h3>Erweitern</h3><p>Zähler und Nenner mit derselben Zahl malnehmen. Der Wert bleibt gleich, nur die Stücke werden kleiner.</p><div class="eq" id="pre-e"></div></div>
       <div><h3>Kürzen</h3><p>Zähler und Nenner durch dieselbe Zahl teilen. Der Wert bleibt gleich, die Stücke werden größer.</p><div class="eq" id="pre-k"></div></div>
       <div><h3>Gemischte Zahl</h3><p>Ein Ganzes und ein Bruch. Wenn der Zähler größer als der Nenner ist, passen Ganze hinein.</p><div class="eq" id="pre-g"></div></div>
     </div>
   </details>
-
-  <nav class="tabs" role="tablist" id="tabs" aria-label="Rechenart"></nav>
-  <main id="panel" class="panel" role="tabpanel"></main>
+  <footer class="foot">Deine Ergebnisse bleiben nur in diesem Browser gespeichert.</footer>
 </div>
+<button type="button" class="to-menu" id="to-menu" hidden>↑ Menü</button>
 
 <script>
 (function(){
@@ -556,10 +621,18 @@ try{var hs=location.hash.replace('#','');if(OPS[hs])cur=hs;}catch(e){}
 function save(){try{localStorage.setItem('bruch-v1',JSON.stringify({stats:stats,level:level,cur:cur}));}catch(e){}}
 
 /* ---------- Tabs ---------- */
+var TAB_GROUPS=[
+  {t:'Rechenarten',k:['add','sub','mul','div'],c:'g-ops'},
+  {t:'Verstehen, üben &amp; spielen',k:['equiv','visual','detective','games'],c:'g-more'}
+];
+var TAB_NAME={add:'Addieren',sub:'Subtra&shy;hieren',mul:'Multipli&shy;zieren',div:'Divi&shy;dieren',equiv:'Erweitern &amp; Kürzen',visual:'Grafisch üben',detective:'Fehler&shy;detektiv',games:'Spiele'};
 function renderTabs(){
-  document.getElementById('tabs').innerHTML=ORDER.map(function(k){
-    var p=OPS[k];
-    return '<button class="tab" role="tab" data-op="'+k+'" data-act="tab" aria-selected="'+(k===cur)+'"><span class="sym">'+p.sym+'</span><span>'+p.name+'<small>'+p.sub+'</small></span></button>';
+  document.getElementById('tabs').innerHTML=TAB_GROUPS.map(function(g){
+    return '<div class="tabgroup" role="presentation"><div class="tabgroup-label" aria-hidden="true">'+g.t+'</div><div class="tabgrid '+g.c+'">'+
+      g.k.map(function(k){
+        var p=OPS[k];
+        return '<button class="tab" role="tab" data-op="'+k+'" data-act="tab" aria-label="'+p.name+', '+p.sub+'" aria-selected="'+(k===cur)+'"><span class="sym" aria-hidden="true">'+p.sym+'</span><span class="tl" aria-hidden="true">'+TAB_NAME[k]+'<small>'+p.sub+'</small></span></button>';
+      }).join('')+'</div></div>';
   }).join('');
 }
 
@@ -582,13 +655,15 @@ function renderPanel(){
   if(cur==='games'){document.getElementById('panel').setAttribute('data-op','games');renderGames();return;}
   var op=cur,p=OPS[op],m=document.getElementById('panel'),dm=demo[op];
   m.setAttribute('data-op',op);
-  m.innerHTML='<section class="card workshop sp-workspace" id="workshop"><div class="wk-top"><div><div class="label">'+p.name+'</div><h2>Deine Bruch-Werkstatt</h2><p class="hint">Tippe Stücke an: färben oder entfernen.</p></div>'+spViewButtons('wk')+'</div>'+
+  m.innerHTML='<section class="lead" id="lead" aria-label="Kurz erklärt"><span class="lead-sym" aria-hidden="true">'+p.sym+'</span><div><div class="lead-kicker">'+p.name+' · '+p.sub+'</div><p class="lead-text">'+p.merke+'</p></div></section>'+
+    '<div class="jump" role="group" aria-label="Zu einem Abschnitt springen"><span class="jump-label">Springe zu:</span>'+[['workshop','Ausprobieren'],['sec-explain','Erklärung'],['sec-practice','Üben'],['sec-word','Sachaufgabe']].map(function(j){return '<button type="button" class="chip" data-act="jump" data-to="'+j[0]+'">'+j[1]+'</button>';}).join('')+'</div>'+
+    '<section class="card workshop sp-workspace" id="workshop"><div class="wk-top"><div><div class="label">'+p.name+'</div><h2>Deine Bruch-Werkstatt</h2><p class="hint">Tippe Stücke an: färben oder entfernen.</p></div>'+spViewButtons('wk')+'</div>'+
     '<p id="wk-source" class="wk-source" hidden></p><div class="pick">'+[['a','b','1. Bruch'],['c','d','2. Bruch']].map(function(keys){return '<div class="pickcol"><h3>'+keys[2]+'</h3><div class="wk-edit" id="wk-edit-'+keys[0]+'"></div><div class="sp-controls">'+stepper('Teile pro Ganzes',keys[1],dm[keys[1]])+'<details class="sp-number-details"><summary>Zähler mit Tasten ändern</summary>'+stepper('Zähler',keys[0],dm[keys[0]])+'</details></div></div>';}).join('')+'</div>'+
     '<div class="wk-equation sp-equation" id="wk-simple-equation"></div><details class="sp-more" id="wk-detailed"><summary>Rechnung mit Bildern weiterführen</summary><div class="wk-board" id="wk-board"></div></details><p class="wk-sr-only" id="wk-status" role="status" aria-live="polite" aria-atomic="true"></p>'+
     '<details class="how"><summary>Schriftlichen Rechenweg ansehen</summary><div id="demo-out" style="margin-top:14px"></div></details><div class="btns"><button class="btn" data-dt="open">Fehlerdetektiv starten</button></div></section>'+
-    '<details class="pre"><summary>Erklärung und Beispiel</summary><div class="panel" style="margin-top:14px"><div class="merke"><div class="label">Merke</div><p>'+p.merke+'</p></div>'+storyCard(op)+'<div class="card"><h2>So geht’s</h2><ol class="steps">'+p.steps.map(function(t){return '<li><div>'+t+'</div></li>';}).join('')+'</ol>'+(p.hint?'<p class="hint">'+p.hint+'</p>':'')+'</div></div></details>'+
-    '<div class="card"><div class="prac-top"><h2 style="margin:0">Du bist dran</h2><div class="lvl" role="group" aria-label="Schwierigkeit">'+[1,2,3].map(function(l){return '<button class="chip" data-act="lvl" data-l="'+l+'" aria-pressed="'+(l===level)+'">'+['Leicht','Mittel','Schwer'][l-1]+'</button>';}).join('')+'</div></div><div class="stats" id="stats"></div><div id="prac"></div></div>'+
-    '<div class="card"><div class="prac-top"><h2 style="margin:0">Zufalls-Sachaufgabe</h2><button class="btn" data-act="wnew">Neue Sachaufgabe</button></div><div id="word"></div></div>';
+    '<details class="pre" id="sec-explain"><summary>Erklärung und Beispiel</summary><div class="panel" style="margin-top:14px"><div class="merke"><div class="label">Merke</div><p>'+p.merke+'</p></div>'+storyCard(op)+'<div class="card"><h2>So geht’s</h2><ol class="steps">'+p.steps.map(function(t){return '<li><div>'+t+'</div></li>';}).join('')+'</ol>'+(p.hint?'<p class="hint">'+p.hint+'</p>':'')+'</div></div></details>'+
+    '<div class="card" id="sec-practice"><div class="prac-top"><h2 style="margin:0">Du bist dran</h2><div class="lvl" role="group" aria-label="Schwierigkeit">'+[1,2,3].map(function(l){return '<button class="chip" data-act="lvl" data-l="'+l+'" aria-pressed="'+(l===level)+'">'+['Leicht','Mittel','Schwer'][l-1]+'</button>';}).join('')+'</div></div><div class="stats" id="stats"></div><div id="prac"></div></div>'+
+    '<div class="card" id="sec-word"><div class="prac-top"><h2 style="margin:0">Zufalls-Sachaufgabe</h2><button class="btn" data-act="wnew">Neue Sachaufgabe</button></div><div id="word"></div></div>';
   workshopSource='';resetWorkshop();updateWorkspace();newTask();updateStats();newWord();
 }
 
@@ -1909,6 +1984,10 @@ document.addEventListener('click',function(e){
     spOperand(k==='b'?'a':k==='d'?'c':k).picture=null;resetWorkshop();workshopSource='';updateWorkspace();
   }
   else if(act==='lvl'){level=parseInt(t.getAttribute('data-l'),10);save();document.querySelectorAll('[data-act="lvl"]').forEach(function(b){b.setAttribute('aria-pressed',String(parseInt(b.getAttribute('data-l'),10)===level));});newTask();}
+  else if(act==='jump'){
+    var jt=document.getElementById(t.getAttribute('data-to'));
+    if(jt){if(jt.tagName==='DETAILS')jt.open=true;if(jt.scrollIntoView){var rm=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;jt.scrollIntoView({behavior:rm?'auto':'smooth',block:'start'});}}
+  }
   else if(act==='wnew')newWord();
   else if(act==='wcheck')wcheck();
   else if(act==='whint')whintShow();
@@ -1934,6 +2013,16 @@ document.addEventListener('click',function(e){
 document.addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target&&(e.target.id==='ans-n'||e.target.id==='ans-d'))check();
   if(e.key==='Enter'&&e.target&&(e.target.id==='wa-n'||e.target.id==='wa-d'))wcheck();});
 
+(function(){
+  var mb=document.getElementById('to-menu');if(!mb)return;
+  function upd(){mb.hidden=(window.pageYOffset||0)<520;}
+  window.addEventListener('scroll',upd,{passive:true});
+  mb.addEventListener('click',function(){
+    var nv=document.getElementById('tabs');
+    if(nv&&nv.scrollIntoView){var rm=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;nv.scrollIntoView({behavior:rm?'auto':'smooth',block:'start'});}
+    var cb=nv&&nv.querySelector('.tab[aria-selected="true"]');if(cb&&cb.focus)cb.focus({preventScroll:true});
+  });
+})();
 document.getElementById('pre-e').innerHTML=fr(2,3)+o('=')+fr('2 · 4','3 · 4')+o('=')+fr(8,12);
 document.getElementById('pre-k').innerHTML=fr(6,9)+o('=')+fr('6 : 3','9 : 3')+o('=')+fr(2,3);
 document.getElementById('pre-g').innerHTML=fr(7,4)+o('=')+mixed(7,4);

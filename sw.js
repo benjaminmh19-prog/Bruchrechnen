@@ -1,6 +1,6 @@
 /* Service Worker: App-Dateien offline verfügbar machen.
    Bei einer neuen Version CACHE hochzählen, dann wird der alte Cache gelöscht. */
-const CACHE = 'bruchrechnen-v8';
+const CACHE = 'bruchrechnen-v9';
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'favicon.svg', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png'];
 
 self.addEventListener('install', (e) => {
