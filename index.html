@@ -485,7 +485,7 @@ details.pre.lookup>summary{font-size:1rem}
 @media print{.vt-opguide{break-inside:avoid}}
 
 /* Schwebender Knopf: zurück zum Menü */
-.to-menu{position:fixed;right:max(14px,env(safe-area-inset-right,0px));bottom:max(14px,env(safe-area-inset-bottom,0px));z-index:20;min-height:46px;padding:0 18px;border-radius:999px;border:2px solid var(--ink);background:var(--surface);color:var(--ink);font:inherit;font-weight:800;box-shadow:0 4px 14px color-mix(in srgb,var(--ink) 22%,transparent);cursor:pointer}
+.to-menu{position:fixed;right:max(10px,env(safe-area-inset-right,0px));bottom:max(10px,env(safe-area-inset-bottom,0px));z-index:20;width:44px;height:44px;min-height:44px;padding:0;font-size:1.3rem;line-height:1;opacity:.9;border-radius:999px;border:2px solid var(--ink);background:var(--surface);color:var(--ink);font:inherit;font-weight:800;box-shadow:0 4px 14px color-mix(in srgb,var(--ink) 22%,transparent);cursor:pointer}
 .to-menu[hidden]{display:none}
 @media print{.to-menu,.jump,.tabs{display:none}}
 
@@ -510,7 +510,7 @@ details.pre.lookup>summary{font-size:1rem}
   </details>
   <footer class="foot">Deine Ergebnisse bleiben nur in diesem Browser gespeichert.</footer>
 </div>
-<button type="button" class="to-menu" id="to-menu" hidden>↑ Menü</button>
+<button type="button" class="to-menu" id="to-menu" hidden aria-label="Zurück zum Menü" title="Zurück zum Menü">↑</button>
 
 <script>
 (function(){
@@ -1330,6 +1330,25 @@ function renderWorkshop(){
   var status=document.getElementById('wk-status');if(status)status.textContent=caption;
 }
 function updateWorkspace(){renderWorkshop();updateDemo();var e=document.getElementById('wk-simple-equation');if(e){var dm=demo[cur];e.innerHTML=fr(dm.a,dm.b)+o(OPS[cur].sy)+fr(dm.c,dm.d)+o('=')+'?';}}
+/* Nenner ändern = Erweitern bzw. Kürzen: Der Zähler wächst oder schrumpft so mit, dass der Wert gleich bleibt
+   (1/2 → 2/4 → 3/6, rückwärts 3/6 → 2/4 → 1/2). Gibt es in dieser Richtung keinen Nenner mit gleichem Wert,
+   wird um 1 geändert und der Zähler auf den nächstliegenden Wert gesetzt. Gibt eine Erklärung zurück. */
+function stepDenominator(dm,k,dl){
+  var nk=k==='b'?'a':'c',d=dm[k],n=dm[nk],minN=cur==='div'&&nk==='c'?1:0,cand,nn;
+  for(cand=d+dl;cand>=2&&cand<=12;cand+=dl){
+    if((n*cand)%d===0){
+      nn=n*cand/d;
+      if(nn>=minN&&nn<=cand){
+        dm[k]=cand;dm[nk]=nn;
+        return n===0?'':'Gleicher Wert: '+n+'/'+d+' = '+nn+'/'+cand+(cand>d?' (erweitert)':' (gekürzt)')+'. Zähler und Nenner ändern sich gemeinsam.';
+      }
+    }
+  }
+  var nd=Math.min(12,Math.max(2,d+dl));if(nd===d)return '';
+  nn=Math.max(minN,Math.min(nd,Math.round(n*nd/d)));
+  dm[k]=nd;dm[nk]=nn;
+  return n===0?'':'Mit '+nd+' Teilen geht '+n+'/'+d+' nicht genau auf. Der Zähler wurde auf '+nn+' gesetzt: '+nn+'/'+nd+'.';
+}
 function applyPiece(key,index,prefix){
   var dm=demo[cur],d=dm[key==='a'?'b':'d'],state=spOperand(key),min=cur==='div'&&key==='c'?1:0;
   if(prefix){dm[key]=Math.max(min,pieceAction(key,index,dm[key]));state.picture=null;}
@@ -2020,9 +2039,10 @@ document.addEventListener('click',function(e){
   if(act==='tab'){cur=t.getAttribute('data-op');try{history.replaceState(null,'','#'+cur);}catch(x){}save();renderTabs();renderPanel();}
   else if(act==='inc'||act==='dec'){
     var k=t.getAttribute('data-key'),dm=demo[cur],dl=act==='inc'?1:-1;
-    if(k==='b'||k==='d'){dm[k]=Math.min(12,Math.max(2,dm[k]+dl));var nk=k==='b'?'a':'c';if(dm[nk]>dm[k])dm[nk]=dm[k];}
+    var wkNote='';
+    if(k==='b'||k==='d')wkNote=stepDenominator(dm,k,dl);
     else{var dk=k==='a'?'b':'d',min=cur==='div'&&k==='c'?1:0;dm[k]=Math.min(dm[dk],Math.max(min,dm[k]+dl));}
-    spOperand(k==='b'?'a':k==='d'?'c':k).picture=null;resetWorkshop();workshopSource='';updateWorkspace();
+    spOperand(k==='b'?'a':k==='d'?'c':k).picture=null;resetWorkshop();workshopSource=wkNote;updateWorkspace();
   }
   else if(act==='lvl'){level=parseInt(t.getAttribute('data-l'),10);save();document.querySelectorAll('[data-act="lvl"]').forEach(function(b){b.setAttribute('aria-pressed',String(parseInt(b.getAttribute('data-l'),10)===level));});newTask();}
   else if(act==='jump'){

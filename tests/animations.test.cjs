@@ -187,6 +187,20 @@ function assertPulses(a, start, pieces) {
 }
 
 function setWorkshop(a, key, target) {
+  /* Der Nenner erweitert/kürzt jetzt mit: Zähler zuerst auf das Minimum, dann den Nenner einstellen. */
+  if (key === 'b' || key === 'd') {
+    const nk = key === 'b' ? 'a' : 'c';
+    while (!a.el(`[data-act="dec"][data-key="${nk}"]`).disabled) a.click(`[data-act="dec"][data-key="${nk}"]`);
+    for (let i = 0; i < 80; i++) {
+      const current = Number(a.el(`#v-${key}`).textContent);
+      if (current === target) return;
+      if (current < target) {
+        a.click(`[data-act="inc"][data-key="${key}"]`);
+        if (Number(a.el(`#v-${key}`).textContent) > target) while (!a.el(`[data-act="inc"][data-key="${key}"]`).disabled) a.click(`[data-act="inc"][data-key="${key}"]`);
+      } else a.click(`[data-act="dec"][data-key="${key}"]`);
+    }
+    assert.fail(`Werkstatt-Steller ${key} erreicht ${target} nicht`);
+  }
   for (let i = 0; i < 80; i++) {
     const current = Number(a.el(`#v-${key}`).textContent);
     if (current === target) return;

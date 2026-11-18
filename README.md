@@ -2,7 +2,7 @@
 
 Interaktive Lern-App zum Rechnen mit Brüchen für Schülerinnen und Schüler der 6. Klasse.
 
-- **Übersichtliche Startseite:** Die Reiter sind in „Rechenarten“ und „Verstehen, üben & spielen“ gruppiert und passen auch auf dem Handy in zwei Zeilen. Jede Rechenart beginnt mit dem Merksatz und einer Sprungleiste (Ausprobieren · Erklärung · Üben · Sachaufgabe); ein schwebender „↑ Menü“-Knopf bringt beim Scrollen zurück zur Auswahl
+- **Übersichtliche Startseite:** Die Reiter sind in „Rechenarten“ und „Verstehen, üben & spielen“ gruppiert und passen auch auf dem Handy in zwei Zeilen. Jede Rechenart beginnt mit dem Merksatz und einer Sprungleiste (Ausprobieren · Erklärung · Üben · Sachaufgabe); ein kleiner schwebender „↑“-Knopf bringt beim Scrollen zurück zur Auswahl
 - Vier Reiter für Addieren, Subtrahieren, Multiplizieren und Dividieren, jeweils mit Merksatz, Alltagsbeispiel, Rechenweg und Übungsaufgaben in drei Stufen
 - **Grafische Bruch-Werkstatt:** Brüche durch Antippen von Balken- oder Kreisstücken einstellen und die Rechnung Schritt für Schritt mit Bildern bearbeiten
 - Zufällige Sachaufgaben mit Tipp-Funktion bei jeder Rechenart
@@ -22,6 +22,8 @@ Der Einstieg zeigt sofort die beiden anklickbaren Bruchbilder. Ausführliche Erk
 „Schritt zurück“ und „Neu starten“ helfen beim Ausprobieren. Die letzten Schritte zeigen das Kürzen und beim Dividieren den Zusammenhang mit dem Kehrwert. „Vollständigen Rechenweg ansehen“ enthält weiterhin den schriftlichen Rechenweg.
 
 Mit **„Mit Bild lösen“** unter einer Übungsaufgabe werden deren Brüche in die Werkstatt übernommen. Das Ergebnis wird danach wie gewohnt bei „Du bist dran“ eingegeben; die Übernahme zählt nicht als Versuch und füllt keine Antwort automatisch aus.
+
+**Nenner ändern = Erweitern/Kürzen:** Mit „Teile pro Ganzes“ in der Werkstatt ändern sich Zähler und Nenner gemeinsam, sodass der Wert gleich bleibt (1/2 → 2/4 → 3/6, rückwärts wieder gekürzt). Bild und Bruch folgen sofort, und ein Hinweis nennt die gleichwertigen Brüche. Gibt es in der Richtung keinen Nenner mit gleichem Wert, wird um 1 geändert und der Zähler angepasst; der Hinweis sagt das. Mit Zähler 0 geht jeder Nenner.
 
 Die Werkstatt unterstützt Brüche von 0 bis 1 mit Nennern von 2 bis 12 sowie Ergebnisse über 1. Negative Differenzen werden im Klasse-6-Grundmodus mit einem Hinweis abgefangen; die Brüche können dann getauscht werden. Alle Aktionen funktionieren ohne Ziehen, per Antippen oder Tastatur. Pfeiltasten wechseln das fokussierte Stück, Enter/Leertaste markieren oder entfernen es. Sehr feine Subtraktionsbalken und breite Multiplikationsraster lassen sich seitlich scrollen.
 
