@@ -37,6 +37,10 @@ Der Reiter **„Erweitern & Kürzen“** zeigt den Ausgangsbruch und die neue Ei
 
 Faktor beziehungsweise **Teiler** über wenige Vorschläge oder ein Zahlenfeld auswählen. Beim Erweitern wird jedes alte Stück in genau so viele neue Stücke geteilt; dicke Linien zeigen die alten Grenzen. Beim Kürzen markieren dicke Linien Gruppen dieser Größe, die im Ergebnis je ein großes Stück bilden. In einer gültigen Kürzung schaltet das Antippen eine ganze Gruppe, sonst ein einzelnes Stück. Zum Gruppieren werden bei Bedarf gefärbte Stücke nebeneinandergelegt. Nach dem Anwenden bleibt das ausgeführte Vorher-/Nachher-Bild stehen; erst „Weiter umformen“ startet den nächsten Schritt. Ungültige Kürzungen werden mit einer Erklärung gesperrt. Gemeinsame Teiler, „Ganz kürzen“ und der Entdeckerweg sind unter „Weitere Möglichkeiten“ eingeklappt; „Zurück“ macht einen Schritt rückgängig. Auch 0/6 → 0/1 und 6/6 → 1/1 sind möglich. Für gut lesbare Bilder ist die Darstellung auf höchstens 72 Teile eines Ganzen begrenzt.
 
+### Nur Addieren und Subtrahieren brauchen gleiche Nenner
+
+Gleichnamig machen wird nur bei **Addieren und Subtrahieren** verlangt und geprüft. Beim **Multiplizieren** steht „ein Teil von einem Teil“ im Mittelpunkt (Zähler mal Zähler, Nenner mal Nenner, früh kürzen, Rechteckbild). Beim **Dividieren** geht es darum, wie oft der zweite Bruch in den ersten passt, und um den Kehrwert. In „Grafisch üben“ erscheint dafür im Training ein eigener Hinweiskasten; die Tasten zum Umformen der Ausgangsbrüche sind dort nur noch freiwillig und eingeklappt. Das Abmessen in der Werkstatt unterteilt die Balken nur zur Anschauung gleich fein.
+
 ## Grafisch üben und Lerncheck
 
 **Kompakte Oberfläche:** Modus, Aufgabenauswahl und Schwierigkeit stehen unter „Übung einstellen“, standardmäßig eingeklappt und mit kurzer Zusammenfassung sichtbar. „Mein Fortschritt“ zeigt die lokalen Übungszahlen auf Wunsch. Aufgabe und Bruchbilder stehen im Mittelpunkt; die Bedienhilfe sowie Tipp und weitere Möglichkeiten sind einklappbar.
