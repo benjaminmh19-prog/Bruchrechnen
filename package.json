@@ -4,7 +4,7 @@
   "private": true,
   "description": "Automatische Funktionstests der eigenständigen Bruchrechnen-Lernseite",
   "scripts": {
-    "test": "node tests/workshop.test.cjs && node tests/focus.test.cjs && node --test tests/learning.test.cjs tests/detective.test.cjs tests/simple-pictures.test.cjs tests/animations.test.cjs"
+    "test": "node tests/workshop.test.cjs && node tests/focus.test.cjs && node --test tests/learning.test.cjs tests/detective.test.cjs tests/simple-pictures.test.cjs tests/animations.test.cjs tests/source-parts.test.cjs"
   },
   "devDependencies": {
     "jsdom": "26.1.0"

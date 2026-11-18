@@ -40,6 +40,10 @@ Faktor beziehungsweise **Teiler** über wenige Vorschläge oder ein Zahlenfeld a
 
 Im Reiter **„Grafisch üben“** werden zufällige Aufgaben zu den vier Rechenarten sowie zum Erweitern und Kürzen erzeugt. Es gibt zwei Schwierigkeitsstufen und eine gemischte Auswahl. Die Antwort wird selbst gebaut: Der Nenner des Ausgangsbruchs ist zunächst eingestellt, der Antwortzähler bleibt leer und wird erst durch eine eigene Eingabe oder Stückwahl gesetzt. Der Nenner kann zwischen 1 und 36 verändert werden. Stücke im Balken oder Kreis einzeln markieren oder die großen Plus-/Minus-Tasten und das Zählerfeld nutzen. Jedes Bild ist ein Ganzes; weitere Ganze erscheinen beim Füllen des vorherigen und bleiben sichtbar, solange dort markierte Stücke oder der Tastaturfokus liegen. Bei Division können bis zu vier Ganze dargestellt werden. Pfeiltasten bewegen den Fokus, Enter/Leertaste schalten das fokussierte Stück.
 
+Im **Training** lassen sich schon die einzelnen Ausgangsbrüche direkt am Bild erweitern oder kürzen: Faktor beziehungsweise Teiler einstellen und „Erweitern“ oder „Kürzen“ drücken. Der Balken/Kreis zeigt sofort die neue Einteilung, daneben stehen Ausgangsbruch und wertgleicher neuer Bruch. Unter jedem Bild steht beispielsweise **„20 Teile insgesamt · 4 gefärbt“**. So lassen sich 1/5 mit Faktor 4 zu 4/20 und der zweite Bruch 1/4 mit Faktor 5 zu 5/20 umformen, bevor die Antwort gebaut wird. „Zurück zum Ausgangsbruch“ setzt nur dieses Bild zurück. Ungültige Kürzungen verändern das Bild nicht; je Ganzem sind bis zu 36 Teile möglich. Die gefärbte Menge und die Aufgabe selbst bleiben unverändert. Die Umformung füllt keine Antwort aus und zählt keinen Versuch. Darstellung und Umformungen bleiben beim Reiter- und Balken/Kreiswechsel erhalten; eine neue Aufgabe setzt sie zurück.
+
+Die Teilzahl ist auch bei Antwortbildern und den Zwischenbildern der Werkstatt direkt ablesbar. Bei mehreren Ganzen wird pro Bild die tatsächlich dort gefärbte Stückzahl angezeigt. Im **Lerncheck** fehlen die zusätzlichen Umformungshilfen weiterhin, damit vor der Abgabe keine Lösung vorgegeben wird. Nach einer gelösten oder aufgedeckten Trainingsaufgabe sind die Quellen-Umformungstasten gesperrt.
+
 | Modus | Verhalten |
 | --- | --- |
 | Training | Beliebig viele Aufgaben, gezielte Rückmeldungen, Tipps und Lösung aufdecken. Gleichwertige Rechenantworten sind erlaubt; beim Erweitern zählt der vorgegebene Faktor, beim Kürzen die vollständig gekürzte Form. Leere oder ungültige Eingaben werden nicht gewertet. |
@@ -97,7 +101,7 @@ Das Repository verwendet GitHub Pages mit **Deploy from a branch**, Branch **mai
 
 ## Neue Version ausliefern
 
-In `sw.js` den Versionsnamen bei `CACHE` erhöhen, damit der alte Offline-Cache dieser App ersetzt wird. Die Version mit optimierten Klick-Rückmeldungen verwendet `bruchrechnen-v6`. Caches anderer Apps derselben Domain bleiben unangetastet.
+In `sw.js` den Versionsnamen bei `CACHE` erhöhen, damit der alte Offline-Cache dieser App ersetzt wird. Die Version mit sofort sichtbaren Teilzahlen und einzeln umformbaren Trainingsbrüchen verwendet `bruchrechnen-v7`. Caches anderer Apps derselben Domain bleiben unangetastet.
 
 ## Schriften
 
