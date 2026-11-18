@@ -1644,6 +1644,7 @@ function vtPaintCommonDenominator() {
 function vtTransformSource(index,mode) {
   if(vtS.mode!=='training'||vtS.done||!vtS.task)return;
   var sources=vtEnsureSources(vtS.task),s=sources[index];if(!s)return;
+  var beforeD=s.d;
   if(mode==='reset'){
     s.n=index===0?vtS.task.a:vtS.task.c;s.d=index===0?vtS.task.b:vtS.task.d;s.group=1;s.message='Ausgangsbruch wiederhergestellt.';
   }else{
@@ -1658,6 +1659,21 @@ function vtTransformSource(index,mode) {
     }
   }
   vtPaintSources();
+  vtAnimateResize(index,beforeD,s.d);
+}
+/* Beim Erweitern, Kürzen und Zurücksetzen wachsen bzw. schrumpfen die Stücke sichtbar auf ihre neue Größe
+   (bei allen Aufgabentypen gleich). Nur Größe und Deckkraft werden kurz animiert; die Einteilung selbst ist sofort korrekt. */
+function vtAnimateResize(index,oldD,newD){
+  if(!oldD||!newD||oldD===newD)return;
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  var pic=document.querySelector('#vt-source-'+index+' .sp-picture');if(!pic)return;
+  var circle=pic.getAttribute('data-view')==='circle',r=Math.max(.25,Math.min(4,newD/oldD));
+  var from=circle?'scale('+Math.max(.7,Math.min(1.35,Math.sqrt(r)))+')':'scaleX('+r+')';
+  Array.prototype.forEach.call(pic.querySelectorAll('.sp-piece,.sp-wedge'),function(el){
+    if(!el.animate)return;
+    if(circle){el.style.transformBox='fill-box';el.style.transformOrigin='center';}
+    try{el.animate([{transform:from,opacity:.55},{transform:'none',opacity:1}],{duration:380,easing:'ease-out'});}catch(e){}
+  });
 }
 function vtButton(action,label,primary,disabled){return '<button type="button" class="btn'+(primary?' p':'')+'" id="vt-'+action+'" data-vt="'+action+'"'+(disabled?' disabled':'')+'>'+label+'</button>';}
 function vtStats(){

@@ -29,6 +29,8 @@ Die Werkstatt unterstützt Brüche von 0 bis 1 mit Nennern von 2 bis 12 sowie Er
 
 Kreis- und Balkenstücke wechseln ihre Farbe sanft in 140 ms und bestätigen eine Auswahländerung mit einem kurzen Helligkeitsimpuls von 180 ms. Form, Fläche und Position der Stücke bleiben unverändert. Bei gleich bleibender Einteilung werden die Bildstücke im DOM erhalten, statt das ganze Bild neu aufzubauen. Dadurch bleiben Tastaturfokus und Farbwechsel auch bei schnellen Klicks erhalten. Beim Kürzen reagieren alle Stücke der Gruppe, ebenso die zugehörige Vorschau. Wiederholte Klicks ersetzen den vorherigen Impuls, statt Animationen aufzustauen; Bruchzahlen und Auswahl werden sofort aktualisiert.
 
+Beim Erweitern, Kürzen und Zurücksetzen der Ausgangsbrüche in „Grafisch üben“ wachsen bzw. schrumpfen die Stücke bei allen Aufgabentypen (auch Addieren und Subtrahieren) in 380 ms auf ihre neue Größe; die neue Einteilung steht sofort fest.
+
 Die Systemeinstellung **„Bewegung reduzieren“** schaltet Farbwechsel und Impulse ab. Ein Wechsel zu dieser Einstellung beendet auch laufende Impulse und bereits gestartete Farbtransitions. Ohne Web-Animations-Unterstützung funktioniert die Auswahl weiterhin. Bereits abgegebene oder aufgelöste Antworten bleiben gesperrt und verändern weder Auswahl noch Wertung.
 
 ## Erweitern und Kürzen
