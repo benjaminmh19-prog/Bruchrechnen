@@ -375,6 +375,12 @@ button.vt-piece{cursor:pointer;touch-action:manipulation}
 .sp-inputs label{font-size:.9rem;font-weight:700}
 .sp-inputs input{width:100%;min-width:0;min-height:44px;border:2px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit;text-align:center}
 @media(max-width:440px){.sp-fraction-card{padding:8px}.sp-fraction-label{gap:4px;flex-wrap:wrap}.sp-fraction-label .fr{font-size:1.5rem}.sp-fraction-card h3{font-size:.78rem}.sp-comparison{gap:5px;grid-template-columns:minmax(0,1fr) 24px minmax(0,1fr)}.sp-count{font-size:.76rem}.sp-workspace .pick{gap:8px}.sp-workspace .pickcol{padding:8px}.sp-factor-row .eq-factors .chip{min-width:42px;padding:5px 8px}.sp-factor-row{gap:8px}}
+.vt-source+.vt-source{border-top:1px solid var(--line);padding-top:14px;margin-top:14px}
+.vt-source .vt-unit-label{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.vt-source-controls{display:flex;align-items:flex-end;flex-wrap:wrap;gap:8px;margin:10px 0}
+.vt-source-controls label{flex:0 0 105px}
+.vt-source-controls .btn{min-height:44px;padding:9px 12px}
+.vt-source-status{font-size:.84rem;color:var(--muted);margin:6px 0;min-height:1.3em}
 @media print{.sp-view,.sp-factor-row,.sp-number-details,.sp-more summary{display:none}}
 
 @media(max-width:440px){.sp-workspace .stp .ctl{gap:3px}.sp-workspace .rb{width:32px;height:44px;border-radius:9px}.sp-workspace .stp .val{min-width:1em;font-size:1.2rem}}
@@ -973,6 +979,9 @@ function spPicture(n,d,options) {
 function spViewButtons(ns) {
   return '<div class="wk-mode sp-view" role="group" aria-label="Darstellung wählen">'+['bar','circle'].map(function(view){return '<button type="button" id="'+ns+'-view-'+view+'" class="chip" data-'+ns+'="view" data-view="'+view+'" aria-pressed="'+(workshopView===view)+'">'+(view==='bar'?'Balken':'Kreise')+'</button>';}).join('')+'</div>';
 }
+function spPartCount(n,d) {
+  return '<p class="sp-count"><strong>'+d+' '+(d===1?'Teil':'Teile')+' insgesamt</strong> · '+n+' gefärbt</p>';
+}
 /* Gleich eingeteilte Bilder bleiben im DOM. Das erhält Fokus und Farbwechsel
    auch bei schnellen Klicks; neue Einteilungen ersetzen nur das betroffene Bild. */
 var spPulses=new WeakMap();
@@ -1088,7 +1097,7 @@ function renderOperandEditors(){
   if(source){source.hidden=!workshopSource;source.textContent=workshopSource;}
 }
 function wkRow(title,n,d,color){
-  return '<div class="wk-row"><div class="wk-rowhead">'+title+' '+fr(n,d)+'</div>'+spPicture(n,d,{color:color==='second'?'var(--ink)':'var(--op)'})+'<div class="wk-scale"><span>0</span><span>1 Ganzes</span></div></div>';
+  return '<div class="wk-row"><div class="wk-rowhead">'+title+' '+fr(n,d)+'</div>'+spPicture(n,d,{color:color==='second'?'var(--ink)':'var(--op)'})+spPartCount(Math.min(d,n),d)+'<div class="wk-scale"><span>0</span><span>1 Ganzes</span></div></div>';
 }
 function resultBars(N,D,A){
   var total=Math.max(1,Math.ceil(N/D)),h='';
@@ -1416,7 +1425,7 @@ function vtMessage(kind,text){
   if(e){e.className='vt-feedback '+kind;e.textContent=text;}
 }
 function vtCount(k){vtTotals[k]=Math.min(1000000000,vtTotals[k]+1);}
-function vtLoadTask(t){vtS.task=t;vtS.n='';vtS.d=String(t.b);vtS.done=false;vtS.seen=[];vtS.picture=null;}
+function vtLoadTask(t){vtS.task=t;vtS.n='';vtS.d=String(t.b);vtS.done=false;vtS.seen=[];vtS.picture=null;vtS.sourceTask=null;vtS.sources=null;vtS.denominatorTouched=false;}
 function vtValidInt(s,min,max){return /^\d+$/.test(String(s))&&Number.isSafeInteger(Number(s))&&Number(s)>=min&&Number(s)<=max;}
 function vtAnswer(){
   var t=vtS.task;
@@ -1440,9 +1449,94 @@ function vtWrong(t,n,d){
 function vtEquation(t){
   return fr(t.a,t.b)+(t.c!==undefined?o({add:'+',sub:'−',mul:'·',div:':'}[t.type])+fr(t.c,t.d):'')+o('=')+'<span aria-label="gesuchte Antwort">?</span>';
 }
-function vtUnit(n,d,label,interactive,offset,total){
+function vtUnit(n,d,label,interactive,offset,total,options){
   var selected=interactive?spSelection(vtS,n,d,vtS.task.wholes*d):null;
-  return '<div class="vt-unit-row"><p class="vt-unit-label">'+label+'</p>'+spPicture(n,d,{ns:interactive?'vt':null,selected:selected,offset:offset||0,total:total||d,focus:interactive?vtS.picture.focus:1,disabled:vtS.done,label:label.replace(/<[^>]*>/g,'')})+'<div class="vt-scale"><span>0</span><span>1 Ganzes</span></div></div>';
+  var filled=selected?selected.slice(offset||0,(offset||0)+d).filter(Boolean).length:Math.max(0,Math.min(d,n-(offset||0)));
+  return '<div class="vt-unit-row"><p class="vt-unit-label">'+label+'</p>'+spPicture(n,d,{ns:interactive?'vt':null,selected:selected,offset:offset||0,total:total||d,group:options&&options.group||1,focus:interactive?vtS.picture.focus:1,disabled:vtS.done,label:label.replace(/<[^>]*>/g,'')})+spPartCount(filled,d)+'<div class="vt-scale"><span>0</span><span>1 Ganzes</span></div></div>';
+}
+/* Ausgangsbrüche einzeln umformen, ohne die gesuchte Rechenantwort vorzugeben. */
+function vtEnsureSources(t) {
+  if(vtS.sourceTask!==t||!vtS.sources){
+    vtS.sourceTask=t;
+    vtS.sources=[{n:t.a,d:t.b,factor:'2',group:1,message:''}];
+    if(t.c!==undefined)vtS.sources.push({n:t.c,d:t.d,factor:'2',group:1,message:''});
+  }
+  return vtS.sources;
+}
+function vtSourceUnit(t,index) {
+  var n=index===0?t.a:t.c,d=index===0?t.b:t.d,title=index===0?'Ausgangsbruch':'Zweiter Bruch';
+  /* Im Lerncheck keine zusätzlichen Umformungshilfen oder Antwortvorschau. */
+  if(vtS.mode!=='training')return vtUnit(n,d,title+' '+fr(n,d),false);
+  var s=vtEnsureSources(t)[index],changed=s.n!==n||s.d!==d;
+  var label=title+' '+fr(n,d)+(changed?o('=')+fr(s.n,s.d):'');
+  var locked=vtS.done?' disabled':'';
+  return '<section class="vt-source" id="vt-source-'+index+'">'+vtUnit(s.n,s.d,label,false,0,s.d,{group:s.group})+
+    '<div class="vt-source-controls"><label for="vt-source-factor-'+index+'">Faktor / Teiler<input id="vt-source-factor-'+index+'" data-vt="source-factor" data-source="'+index+'" type="number" min="2" max="36" step="1" inputmode="numeric" value="'+escapeText(s.factor)+'"'+locked+'></label>'+
+    ['expand','reduce','reset'].map(function(action){return '<button type="button" class="btn" id="vt-source-'+action+'-'+index+'" data-vt="source-'+action+'" data-source="'+index+'"'+locked+'>'+{expand:'Erweitern',reduce:'Kürzen',reset:'Zurück zum Ausgangsbruch'}[action]+'</button>';}).join('')+'</div>'+
+    '<p class="vt-source-status" id="vt-source-status-'+index+'" role="status" aria-live="polite">'+escapeText(s.message)+'</p></section>';
+}
+function vtPaintSources() {
+  var root=vtEl('sources'),t=vtS.task;if(!root||!t)return;
+  spRenderPictures(root,vtSourceUnit(t,0)+(t.c!==undefined?vtSourceUnit(t,1):''));
+  vtPaintCommonDenominator();
+}
+/* Prüfung der Zwischeneinteilung, nicht des eventuell gekürzten Endergebnisses. */
+function vtMinimumCommonDenominator(t) {
+  return lcm(t.b/gcd(t.a,t.b),t.d/gcd(t.c,t.d));
+}
+function vtCheckCommonDenominator(t,value) {
+  var minimum=vtMinimumCommonDenominator(t),d=Number(value);
+  if(!vtValidInt(value,1,36))return {kind:'invalid',d:d,minimum:minimum};
+  if((t.a*d)%t.b!==0||(t.c*d)%t.d!==0)return {kind:'unsuitable',d:d,minimum:minimum};
+  return {kind:d===minimum?'smallest':'common',d:d,minimum:minimum};
+}
+function vtCommonDenominatorStatus(t,sources) {
+  var minimum=vtMinimumCommonDenominator(t);
+  if(!sources||sources.length<2||sources[0].d!==sources[1].d)return {kind:'pending',d:null,minimum:minimum};
+  return vtCheckCommonDenominator(t,sources[0].d);
+}
+function vtPaintCommonDenominator() {
+  var t=vtS.task,box=vtEl('common'),root=vtEl('sources');
+  if(!root||!t||vtS.mode!=='training'||(t.type!=='add'&&t.type!=='sub')){if(box)box.remove();return;}
+  if(!box){
+    box=document.createElement('section');box.id='vt-common';box.className='vt-board';
+    box.innerHTML='<h3>Gemeinsamen Nenner erkennen</h3><p id="vt-common-sources" role="status" aria-live="polite" aria-atomic="true"></p><p id="vt-common-answer" role="status" aria-live="polite" aria-atomic="true"></p><p class="vt-caption">Diese Prüfung betrifft das Gleichnamigmachen der beiden Ausgangsbrüche, nicht den Nenner eines gekürzten Endergebnisses. Sie zählt nicht als Versuch.</p>';
+    root.insertAdjacentElement('afterend',box);
+  }
+  var sources=vtEnsureSources(t),status=vtCommonDenominatorStatus(t,sources),e=vtEl('common-sources');
+  e.dataset.kind=status.kind;e.className='vt-feedback '+(status.kind==='smallest'||status.kind==='common'?'ok':'info');
+  var text;
+  if(status.kind==='pending')text='Noch nicht gleichnamig: Der erste Bruch hat '+sources[0].d+' Teile, der zweite '+sources[1].d+'. Forme beide auf dieselbe Teilzahl um.';
+  else if(status.kind==='smallest')text='Richtig erkannt! Beide Bilder haben den kleinsten gemeinsamen Nenner '+status.d+'. Die Stücke sind jetzt gleich groß.';
+  else text='Richtig: '+status.d+' ist ein gültiger gemeinsamer Nenner. Eine kleinere gemeinsame Einteilung ist möglich: '+status.minimum+' (gegebenenfalls zuerst kürzen).';
+  if(e.textContent!==text)e.textContent=text;
+  e=vtEl('common-answer');
+  if(!vtS.denominatorTouched){e.textContent='';e.className='';e.removeAttribute('data-kind');return;}
+  status=vtCheckCommonDenominator(t,vtS.d);e.dataset.kind=status.kind;
+  e.className='vt-feedback '+(status.kind==='smallest'||status.kind==='common'?'ok':status.kind==='invalid'?'info':'bad');
+  if(status.kind==='invalid')text='Für die Nennerprüfung wähle eine ganze Zahl von 1 bis 36.';
+  else if(status.kind==='unsuitable')text='Für das Gleichnamigmachen passt '+status.d+' noch nicht: Mindestens ein Ausgangsbruch lässt sich damit nicht in eine ganze Anzahl gleich großer Teile umformen.';
+  else if(status.kind==='smallest')text='Deine Nennerwahl '+status.d+' ist richtig: der kleinste gemeinsame Nenner. Baue die Antwort weiterhin selbst.';
+  else text='Deine Nennerwahl '+status.d+' ist ebenfalls richtig. Der kleinere gemeinsame Nenner '+status.minimum+' würde auch genügen (gegebenenfalls zuerst kürzen).';
+  if(e.textContent!==text)e.textContent=text;
+}
+function vtTransformSource(index,mode) {
+  if(vtS.mode!=='training'||vtS.done||!vtS.task)return;
+  var sources=vtEnsureSources(vtS.task),s=sources[index];if(!s)return;
+  if(mode==='reset'){
+    s.n=index===0?vtS.task.a:vtS.task.c;s.d=index===0?vtS.task.b:vtS.task.d;s.group=1;s.message='Ausgangsbruch wiederhergestellt.';
+  }else{
+    var factor=/^\d+$/.test(s.factor)?Number(s.factor):NaN;
+    var res=transformFraction(s.n,s.d,mode,factor);
+    if(res.ok&&res.d>36)res={ok:false,message:'Höchstens 36 Teile pro Ganzem. Wähle einen kleineren Faktor oder kürze zuerst.'};
+    if(!res.ok)s.message=res.message;
+    else{
+      var oldD=s.d;s.n=res.n;s.d=res.d;s.group=mode==='expand'?factor:1;
+      s.message=mode==='expand'?'Aus '+oldD+' Teilen werden '+s.d+' Teile: jedes alte Teil wird in '+factor+' kleinere Teile geteilt.':
+        'Aus '+oldD+' Teilen werden '+s.d+' Teile: je '+factor+' alte Teile werden zusammengelegt.';
+    }
+  }
+  vtPaintSources();
 }
 function vtButton(action,label,primary,disabled){return '<button type="button" class="btn'+(primary?' p':'')+'" id="vt-'+action+'" data-vt="'+action+'"'+(disabled?' disabled':'')+'>'+label+'</button>';}
 function vtStats(){
@@ -1469,7 +1563,7 @@ function vtRender(focusId){
   }else if(vtS.mode==='check'&&!r){
     h='<h3>Lerncheck · 8 Aufgaben</h3><p>'+(vtS.type==='mixed'?'Alle sechs Aufgabentypen plus zwei zufällige Zusatzaufgaben.':'Acht Aufgaben zum Typ „'+VT_NAMES[vtS.type]+'“.')+' Ohne Tipps oder Lösungen vor der Abgabe. Pro Aufgabe zählt nur eine Antwort. Erst danach kannst du die richtige Antwort aufdecken. Die Einstellungen bleiben bis zum Ende gesperrt.</p>'+vtButton('start','Lerncheck starten',true);
   }else if(t){
-    h=(active?'<div class="vt-progress">Aufgabe '+(r.index+1)+' von 8 · '+VT_NAMES[r.type]+' · Schwierigkeit '+r.lvl+'</div>':'')+'<h3>'+VT_NAMES[t.type]+'</h3><p id="vt-instruction">'+t.instruction+'</p><div class="eq vt-equation">'+vtEquation(t)+'</div><div class="vt-board">'+vtUnit(t.a,t.b,'Ausgangsbruch '+fr(t.a,t.b),false)+(t.c!==undefined?vtUnit(t.c,t.d,'Zweiter Bruch '+fr(t.c,t.d),false):'')+'</div><div class="vt-answer" aria-describedby="vt-instruction vt-access"><h3>Deine Antwort</h3><div class="vt-controls"><label for="vt-denominator">Nenner (1–36)<input type="number" id="vt-denominator" data-vt="denominator" min="1" max="36" step="1" inputmode="numeric" autocomplete="off" value="'+vtS.d+'"'+(vtS.done?' disabled':'')+'></label><div><label for="vt-numerator">Zähler (markierte Stücke)</label><div class="vt-counter">'+vtButton('minus','−',false,vtS.done)+'<input type="number" id="vt-numerator" data-vt="numerator" min="0" step="1" inputmode="numeric" autocomplete="off" value="'+vtS.n+'"'+(vtS.done?' disabled':'')+'>'+vtButton('plus','+',false,vtS.done)+'</div></div></div><p id="vt-access" class="vt-caption">Jedes Stück lässt sich einzeln an- und ausschalten. Der Nenner bestimmt die Stückgröße. Bei kleinen Stücken nutze −/+ oder das Zählerfeld. Pfeiltasten wechseln das Stück; Enter oder Leertaste schalten es um. Ein weiteres Ganzes erscheint, sobald das vorherige voll ist.</p><div id="vt-readout" class="vt-readout"></div><div id="vt-graph" class="vt-board"></div></div><div class="vt-actions">';
+    h=(active?'<div class="vt-progress">Aufgabe '+(r.index+1)+' von 8 · '+VT_NAMES[r.type]+' · Schwierigkeit '+r.lvl+'</div>':'')+'<h3>'+VT_NAMES[t.type]+'</h3><p id="vt-instruction">'+t.instruction+'</p><div class="eq vt-equation">'+vtEquation(t)+'</div>'+(vtS.mode==='training'?'<p class="vt-caption">Forme jeden Ausgangsbruch einzeln um. Das Bild zeigt sofort die neue Teilzahl. Baue danach deine Antwort selbst.</p>':'')+'<div id="vt-sources" class="vt-board"></div><div class="vt-answer" aria-describedby="vt-instruction vt-access"><h3>Deine Antwort</h3><div class="vt-controls"><label for="vt-denominator">Nenner (1–36)<input type="number" id="vt-denominator" data-vt="denominator" min="1" max="36" step="1" inputmode="numeric" autocomplete="off" value="'+vtS.d+'"'+(vtS.done?' disabled':'')+'></label><div><label for="vt-numerator">Zähler (markierte Stücke)</label><div class="vt-counter">'+vtButton('minus','−',false,vtS.done)+'<input type="number" id="vt-numerator" data-vt="numerator" min="0" step="1" inputmode="numeric" autocomplete="off" value="'+vtS.n+'"'+(vtS.done?' disabled':'')+'>'+vtButton('plus','+',false,vtS.done)+'</div></div></div><p id="vt-access" class="vt-caption">Jedes Stück lässt sich einzeln an- und ausschalten. Der Nenner bestimmt die Stückgröße. Bei kleinen Stücken nutze −/+ oder das Zählerfeld. Pfeiltasten wechseln das Stück; Enter oder Leertaste schalten es um. Ein weiteres Ganzes erscheint, sobald das vorherige voll ist.</p><div id="vt-readout" class="vt-readout"></div><div id="vt-graph" class="vt-board"></div></div><div class="vt-actions">';
     if(!vtS.done)h+=vtButton('submit',active?'Antwort abgeben':'Prüfen',true);
     if(!active){h+=vtButton('tip','Tipp',false,vtS.done)+vtButton('show','Lösung ansehen',false,vtS.done)+vtButton('new',vtS.done?'Nächste Aufgabe':'Neue Aufgabe',vtS.done);}
     else{if(vtS.done)h+=vtButton('next',!r.review?'Antwort auswerten':r.index===7?'Ergebnis ansehen':'Nächste Aufgabe',true);h+=vtButton('abort','Lerncheck abbrechen',false);}
@@ -1477,7 +1571,7 @@ function vtRender(focusId){
     if(active&&r.review||!active&&vtS.done)h+=vtReview(t);
   }
   vtEl('body').innerHTML=h;vtStats();
-  if(t&&!(r&&r.finished)){vtPaintAnswer();var minus=vtEl('minus'),plus=vtEl('plus');if(minus)minus.setAttribute('aria-label','Ein Stück weniger markieren');if(plus)plus.setAttribute('aria-label','Ein Stück mehr markieren');}
+  if(t&&!(r&&r.finished)){vtPaintSources();vtPaintAnswer();var minus=vtEl('minus'),plus=vtEl('plus');if(minus)minus.setAttribute('aria-label','Ein Stück weniger markieren');if(plus)plus.setAttribute('aria-label','Ein Stück mehr markieren');}
   if(focusId){var target=document.getElementById(focusId);if(!target||target.disabled)target=vtEl('next')||vtEl('new')||vtEl('start')||vtEl('denominator');if(target&&!target.disabled)target.focus({preventScroll:true});}
 }
 function vtReview(t){
@@ -1493,6 +1587,7 @@ function vtPaintAnswer(){
   spRenderPictures(graph,valid?h:'<p>Wähle einen Nenner, um jedes Ganze in gleich große Stücke zu teilen.</p>');
   var good=vtAnswer();vtEl('readout').textContent=good.error?'Noch keine gültige Antwort.':good.n+' markierte Stücke · '+good.n+'/'+good.d;
   var input=vtEl('numerator');if(input){if(valid)input.max=t.wholes*d;else input.removeAttribute('max');}
+  vtPaintCommonDenominator();
 }
 function vtSetNumerator(n,focusId){
   if(vtS.done||!vtS.task)return;
@@ -1530,6 +1625,10 @@ document.addEventListener('click',function(e){
   var t=e.target.closest&&e.target.closest('[data-vt]');if(!t||t.disabled||!t.closest('#vt-root'))return;
   var act=t.getAttribute('data-vt'),n=vtValidInt(vtS.n,0,144)?Number(vtS.n):0;
   if(act==='view'){workshopView=t.getAttribute('data-view');vtRender();}
+  else if(act==='source-expand'||act==='source-reduce'||act==='source-reset'){
+    vtTransformSource(Number(t.getAttribute('data-source')),act==='source-expand'?'expand':act==='source-reduce'?'reduce':'reset');
+    var replacement=document.getElementById(t.id);if(replacement&&!replacement.disabled)replacement.focus({preventScroll:true});
+  }
   else if(act==='piece'&&!vtS.done){var i=Number(t.getAttribute('data-vt-i')),d=Number(vtS.d);vtS.n=String(spToggle(vtS,n,d,vtS.task.wholes*d,i,1,0));vtEl('numerator').value=vtS.n;vtPaintAnswer();var p=document.getElementById(t.id);if(p)p.focus({preventScroll:true});}
   else if(act==='plus'||act==='minus')vtSetNumerator(n+(act==='plus'?1:-1));
   else if(act==='submit')vtSubmitAnswer();
@@ -1542,7 +1641,11 @@ document.addEventListener('click',function(e){
 });
 document.addEventListener('input',function(e){
   if(!e.target.closest||!e.target.closest('#vt-root')||vtS.done)return;
-  if(e.target.id==='vt-denominator'){vtS.d=e.target.value;vtS.picture=null;}
+  if(e.target.getAttribute('data-vt')==='source-factor'){
+    if(vtS.mode==='training'){var source=vtEnsureSources(vtS.task)[Number(e.target.getAttribute('data-source'))];if(source)source.factor=e.target.value;}
+    return;
+  }
+  if(e.target.id==='vt-denominator'){vtS.d=e.target.value;vtS.picture=null;vtS.denominatorTouched=true;}
   else if(e.target.id==='vt-numerator'){vtS.n=e.target.value;vtS.picture=null;}else return;
   vtPaintAnswer();
 });
