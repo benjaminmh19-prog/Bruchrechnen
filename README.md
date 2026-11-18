@@ -38,6 +38,10 @@ Faktor beziehungsweise **Teiler** über wenige Vorschläge oder ein Zahlenfeld a
 
 ## Grafisch üben und Lerncheck
 
+**Kompakte Oberfläche:** Modus, Aufgabenauswahl und Schwierigkeit stehen unter „Übung einstellen“, standardmäßig eingeklappt und mit kurzer Zusammenfassung sichtbar. „Mein Fortschritt“ zeigt die lokalen Übungszahlen auf Wunsch. Aufgabe und Bruchbilder stehen im Mittelpunkt; die Bedienhilfe sowie Tipp und weitere Möglichkeiten sind einklappbar.
+
+**Optionaler Lernweg:** Additions-/Subtraktionsaufgaben im Training starten mit „Brüche gleichnamig machen → Antwort markieren → Ergebnis prüfen“. „Weiter zur Antwort“ wechselt von den Quellenbildern zum Antwortbild; die selbst umgeformten Brüche bleiben als kurze Referenz sichtbar. „Weiter zum Prüfen“ prüft nur, ob Zähler/Nenner gültig ausgefüllt sind, und zählt keinen Versuch. Erst „Antwort prüfen“ wertet. „Zurück“ und die direkt anwählbaren Schritte ermöglichen Korrekturen. „Frei arbeiten“ zeigt alle Arbeitsbereiche zugleich und bleibt für weitere Aufgaben gewählt. Die Schrittwahl verändert weder Brüche noch Antworten; kein gemeinsamer Nenner wird automatisch eingesetzt oder als Pflichtweg erzwungen. Korrekt gekürzte Endergebnisse werden weiterhin akzeptiert. Neue Aufgaben beginnen im geführten Lernweg wieder mit Schritt 1; Ansichts-/Reiterwechsel erhalten den aktuellen Schritt und die Eingaben. Im Lerncheck und bei anderen Rechenarten fehlt die zusätzliche Schrittführung. Pro Zustand gibt es eine sichtbare hervorgehobene Hauptaktion, nach Abschluss „Nächste Aufgabe“.
+
 Im Reiter **„Grafisch üben“** werden zufällige Aufgaben zu den vier Rechenarten sowie zum Erweitern und Kürzen erzeugt. Es gibt zwei Schwierigkeitsstufen und eine gemischte Auswahl. Die Antwort wird selbst gebaut: Der Nenner des Ausgangsbruchs ist zunächst eingestellt, der Antwortzähler bleibt leer und wird erst durch eine eigene Eingabe oder Stückwahl gesetzt. Der Nenner kann zwischen 1 und 36 verändert werden. Stücke im Balken oder Kreis einzeln markieren oder die großen Plus-/Minus-Tasten und das Zählerfeld nutzen. Jedes Bild ist ein Ganzes; weitere Ganze erscheinen beim Füllen des vorherigen und bleiben sichtbar, solange dort markierte Stücke oder der Tastaturfokus liegen. Bei Division können bis zu vier Ganze dargestellt werden. Pfeiltasten bewegen den Fokus, Enter/Leertaste schalten das fokussierte Stück.
 
 Im **Training** lassen sich schon die einzelnen Ausgangsbrüche direkt am Bild erweitern oder kürzen: Faktor beziehungsweise Teiler einstellen und „Erweitern“ oder „Kürzen“ drücken. Der Balken/Kreis zeigt sofort die neue Einteilung, daneben stehen Ausgangsbruch und wertgleicher neuer Bruch. Unter jedem Bild steht beispielsweise **„20 Teile insgesamt · 4 gefärbt“**. So lassen sich 1/5 mit Faktor 4 zu 4/20 und der zweite Bruch 1/4 mit Faktor 5 zu 5/20 umformen, bevor die Antwort gebaut wird. „Zurück zum Ausgangsbruch“ setzt nur dieses Bild zurück. Ungültige Kürzungen verändern das Bild nicht; je Ganzem sind bis zu 36 Teile möglich. Die gefärbte Menge und die Aufgabe selbst bleiben unverändert. Die Umformung füllt keine Antwort aus und zählt keinen Versuch. Darstellung und Umformungen bleiben beim Reiter- und Balken/Kreiswechsel erhalten; eine neue Aufgabe setzt sie zurück.
@@ -103,7 +107,7 @@ Das Repository verwendet GitHub Pages mit **Deploy from a branch**, Branch **mai
 
 ## Neue Version ausliefern
 
-In `sw.js` den Versionsnamen bei `CACHE` erhöhen, damit der alte Offline-Cache dieser App ersetzt wird. Die Version mit sofort sichtbaren Teilzahlen und einzeln umformbaren Trainingsbrüchen verwendet `bruchrechnen-v7`. Caches anderer Apps derselben Domain bleiben unangetastet.
+In `sw.js` den Versionsnamen bei `CACHE` erhöhen, damit der alte Offline-Cache dieser App ersetzt wird. Die Version mit optionalem Lernweg und kompakter Übungsoberfläche verwendet `bruchrechnen-v8`. Caches anderer Apps derselben Domain bleiben unangetastet.
 
 ## Schriften
 
