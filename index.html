@@ -1425,7 +1425,7 @@ function vtMessage(kind,text){
   if(e){e.className='vt-feedback '+kind;e.textContent=text;}
 }
 function vtCount(k){vtTotals[k]=Math.min(1000000000,vtTotals[k]+1);}
-function vtLoadTask(t){vtS.task=t;vtS.n='';vtS.d=String(t.b);vtS.done=false;vtS.seen=[];vtS.picture=null;vtS.sourceTask=null;vtS.sources=null;}
+function vtLoadTask(t){vtS.task=t;vtS.n='';vtS.d=String(t.b);vtS.done=false;vtS.seen=[];vtS.picture=null;vtS.sourceTask=null;vtS.sources=null;vtS.denominatorTouched=false;}
 function vtValidInt(s,min,max){return /^\d+$/.test(String(s))&&Number.isSafeInteger(Number(s))&&Number(s)>=min&&Number(s)<=max;}
 function vtAnswer(){
   var t=vtS.task;
@@ -1478,6 +1478,47 @@ function vtSourceUnit(t,index) {
 function vtPaintSources() {
   var root=vtEl('sources'),t=vtS.task;if(!root||!t)return;
   spRenderPictures(root,vtSourceUnit(t,0)+(t.c!==undefined?vtSourceUnit(t,1):''));
+  vtPaintCommonDenominator();
+}
+/* Prüfung der Zwischeneinteilung, nicht des eventuell gekürzten Endergebnisses. */
+function vtMinimumCommonDenominator(t) {
+  return lcm(t.b/gcd(t.a,t.b),t.d/gcd(t.c,t.d));
+}
+function vtCheckCommonDenominator(t,value) {
+  var minimum=vtMinimumCommonDenominator(t),d=Number(value);
+  if(!vtValidInt(value,1,36))return {kind:'invalid',d:d,minimum:minimum};
+  if((t.a*d)%t.b!==0||(t.c*d)%t.d!==0)return {kind:'unsuitable',d:d,minimum:minimum};
+  return {kind:d===minimum?'smallest':'common',d:d,minimum:minimum};
+}
+function vtCommonDenominatorStatus(t,sources) {
+  var minimum=vtMinimumCommonDenominator(t);
+  if(!sources||sources.length<2||sources[0].d!==sources[1].d)return {kind:'pending',d:null,minimum:minimum};
+  return vtCheckCommonDenominator(t,sources[0].d);
+}
+function vtPaintCommonDenominator() {
+  var t=vtS.task,box=vtEl('common'),root=vtEl('sources');
+  if(!root||!t||vtS.mode!=='training'||(t.type!=='add'&&t.type!=='sub')){if(box)box.remove();return;}
+  if(!box){
+    box=document.createElement('section');box.id='vt-common';box.className='vt-board';
+    box.innerHTML='<h3>Gemeinsamen Nenner erkennen</h3><p id="vt-common-sources" role="status" aria-live="polite" aria-atomic="true"></p><p id="vt-common-answer" role="status" aria-live="polite" aria-atomic="true"></p><p class="vt-caption">Diese Prüfung betrifft das Gleichnamigmachen der beiden Ausgangsbrüche, nicht den Nenner eines gekürzten Endergebnisses. Sie zählt nicht als Versuch.</p>';
+    root.insertAdjacentElement('afterend',box);
+  }
+  var sources=vtEnsureSources(t),status=vtCommonDenominatorStatus(t,sources),e=vtEl('common-sources');
+  e.dataset.kind=status.kind;e.className='vt-feedback '+(status.kind==='smallest'||status.kind==='common'?'ok':'info');
+  var text;
+  if(status.kind==='pending')text='Noch nicht gleichnamig: Der erste Bruch hat '+sources[0].d+' Teile, der zweite '+sources[1].d+'. Forme beide auf dieselbe Teilzahl um.';
+  else if(status.kind==='smallest')text='Richtig erkannt! Beide Bilder haben den kleinsten gemeinsamen Nenner '+status.d+'. Die Stücke sind jetzt gleich groß.';
+  else text='Richtig: '+status.d+' ist ein gültiger gemeinsamer Nenner. Eine kleinere gemeinsame Einteilung ist möglich: '+status.minimum+' (gegebenenfalls zuerst kürzen).';
+  if(e.textContent!==text)e.textContent=text;
+  e=vtEl('common-answer');
+  if(!vtS.denominatorTouched){e.textContent='';e.className='';e.removeAttribute('data-kind');return;}
+  status=vtCheckCommonDenominator(t,vtS.d);e.dataset.kind=status.kind;
+  e.className='vt-feedback '+(status.kind==='smallest'||status.kind==='common'?'ok':status.kind==='invalid'?'info':'bad');
+  if(status.kind==='invalid')text='Für die Nennerprüfung wähle eine ganze Zahl von 1 bis 36.';
+  else if(status.kind==='unsuitable')text='Für das Gleichnamigmachen passt '+status.d+' noch nicht: Mindestens ein Ausgangsbruch lässt sich damit nicht in eine ganze Anzahl gleich großer Teile umformen.';
+  else if(status.kind==='smallest')text='Deine Nennerwahl '+status.d+' ist richtig: der kleinste gemeinsame Nenner. Baue die Antwort weiterhin selbst.';
+  else text='Deine Nennerwahl '+status.d+' ist ebenfalls richtig. Der kleinere gemeinsame Nenner '+status.minimum+' würde auch genügen (gegebenenfalls zuerst kürzen).';
+  if(e.textContent!==text)e.textContent=text;
 }
 function vtTransformSource(index,mode) {
   if(vtS.mode!=='training'||vtS.done||!vtS.task)return;
@@ -1546,6 +1587,7 @@ function vtPaintAnswer(){
   spRenderPictures(graph,valid?h:'<p>Wähle einen Nenner, um jedes Ganze in gleich große Stücke zu teilen.</p>');
   var good=vtAnswer();vtEl('readout').textContent=good.error?'Noch keine gültige Antwort.':good.n+' markierte Stücke · '+good.n+'/'+good.d;
   var input=vtEl('numerator');if(input){if(valid)input.max=t.wholes*d;else input.removeAttribute('max');}
+  vtPaintCommonDenominator();
 }
 function vtSetNumerator(n,focusId){
   if(vtS.done||!vtS.task)return;
@@ -1603,7 +1645,7 @@ document.addEventListener('input',function(e){
     if(vtS.mode==='training'){var source=vtEnsureSources(vtS.task)[Number(e.target.getAttribute('data-source'))];if(source)source.factor=e.target.value;}
     return;
   }
-  if(e.target.id==='vt-denominator'){vtS.d=e.target.value;vtS.picture=null;}
+  if(e.target.id==='vt-denominator'){vtS.d=e.target.value;vtS.picture=null;vtS.denominatorTouched=true;}
   else if(e.target.id==='vt-numerator'){vtS.n=e.target.value;vtS.picture=null;}else return;
   vtPaintAnswer();
 });
