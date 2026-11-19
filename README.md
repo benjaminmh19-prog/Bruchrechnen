@@ -45,6 +45,8 @@ Faktor beziehungsweise **Teiler** über wenige Vorschläge oder ein Zahlenfeld a
 
 Gleichnamig machen wird nur bei **Addieren und Subtrahieren** verlangt und geprüft. Beim **Multiplizieren** steht „ein Teil von einem Teil“ im Mittelpunkt (Zähler mal Zähler, Nenner mal Nenner, früh kürzen, Rechteckbild). Beim **Dividieren** geht es darum, wie oft der zweite Bruch in den ersten passt, und um den Kehrwert. In „Grafisch üben“ erscheint dafür im Training ein eigener Hinweiskasten; die Tasten zum Umformen der Ausgangsbrüche sind dort nur noch freiwillig und eingeklappt. Das Abmessen in der Werkstatt unterteilt die Balken nur zur Anschauung gleich fein.
 
+**Zwischenschritt vor dem Ergebnis (Multiplizieren und Dividieren):** In „Grafisch üben“ (Training) und in der Werkstatt muss zuerst der Zwischenwert eingetragen werden, bevor das Ergebnis eingegeben oder weitergegangen werden kann. Beim Multiplizieren sind das Zähler·Zähler und Nenner·Nenner, beim Dividieren der Kehrwert des zweiten Bruchs. Falsche Eingaben bekommen einen Hinweis (z. B. „Nicht addieren!“). Der Lerncheck bleibt davon unberührt.
+
 ## Grafisch üben und Lerncheck
 
 **Kompakte Oberfläche:** Modus, Aufgabenauswahl und Schwierigkeit stehen unter „Übung einstellen“, standardmäßig eingeklappt und mit kurzer Zusammenfassung sichtbar. „Mein Fortschritt“ zeigt die lokalen Übungszahlen auf Wunsch. Aufgabe und Bruchbilder stehen im Mittelpunkt; die Bedienhilfe sowie Tipp und weitere Möglichkeiten sind einklappbar.

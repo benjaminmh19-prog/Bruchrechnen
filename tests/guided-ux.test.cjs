@@ -478,6 +478,21 @@ test('Multiplikation, Division, Erweitern und Kürzen: keine Guided-UI, vollstä
   for (const next of tasks) {
     load(a, next);
     noGuidance(a);
+    if (next.type === 'mul' || next.type === 'div') {
+      // Zwischenschritt zuerst: Antwortbereich gesperrt, Abgabe deaktiviert.
+      assert(visible(a.el('#vt-pre')), `${next.type}: Zwischenschritt ist sichtbar`);
+      assert(a.el('#vt-answer-stage').hidden, `${next.type}: Antwort ist vor dem Zwischenschritt gesperrt`);
+      assert(a.el('#vt-submit').disabled, `${next.type}: Abgabe ist vor dem Zwischenschritt gesperrt`);
+      const attemptsBefore = a.api.vtTotals.attempts;
+      a.fill('#vt-pre-x', 99); a.fill('#vt-pre-y', 99); a.click('#vt-precheck');
+      assert(a.el('#vt-answer-stage').hidden, `${next.type}: falscher Zwischenschritt schaltet nicht frei`);
+      assert.equal(a.api.vtTotals.attempts, attemptsBefore, 'Zwischenschritt zählt nicht als Versuch');
+      const tk = a.api.vtS.task;
+      if (next.type === 'mul') { a.fill('#vt-pre-x', tk.a * tk.c); a.fill('#vt-pre-y', tk.b * tk.d); }
+      else { a.fill('#vt-pre-x', tk.d); a.fill('#vt-pre-y', tk.c); }
+      a.click('#vt-precheck');
+      assert.equal(a.el('#vt-answer-stage').hidden, false, `${next.type}: richtiger Zwischenschritt schaltet die Antwort frei`);
+    }
     for (const selector of ['#vt-sources', '#vt-numerator', '#vt-denominator', '#vt-graph']) {
       assert(visible(a.el(selector)), `${next.type}: vollständige Antwortoberfläche ist direkt sichtbar`);
     }

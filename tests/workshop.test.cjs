@@ -24,7 +24,15 @@ function set(k,v){
 }
 function operands(a,b,c,dd){set('b',b);set('d',dd);set('a',a);set('c',c);}
 function board(){return $('#wk-board').textContent.replace(/\s+/g,' ');}
-function advance(){click('[data-wk="advance"]');}
+function fillPre(x,y){for(const [id,v] of [['#wk-pre-x',x],['#wk-pre-y',y]]){const el=$(id);el.value=String(v);el.dispatchEvent(new w.Event('input',{bubbles:true}));}}
+/* Multiplikation/Division: Der Zwischenschritt (Zähler·Zähler / Nenner·Nenner bzw. Kehrwert) muss vor dem Aufdecken stimmen. */
+function solvePre(){
+  const px=d.querySelector('#wk-pre-x');if(!px||px.disabled)return;
+  const op=$('[data-act="tab"][aria-selected="true"]').getAttribute('data-op'),a=value('a'),b=value('b'),c=value('c'),dd=value('d');
+  if(op==='mul')fillPre(a*c,b*dd);else fillPre(dd,c);
+  click('[data-wk="precheck"]');
+}
+function advance(){solvePre();click('[data-wk="advance"]');}
 function eqFrac(n,dd){const fracs=[...$('#wk-board').querySelectorAll('.wk-result .fr')];assert(fracs.some(f=>f.querySelector('.n').textContent===String(n)&&f.querySelector('.d').textContent===String(dd)),`Expected fraction ${n}/${dd}: ${board()}`);}
 let count=0;function test(name,fn){fn();count++;console.log('PASS',name);}
 test('Initialisierung ohne Fehler',()=>{assert.equal(errors.length,0);assert.equal(d.querySelectorAll('.tab').length,8);assert.equal(d.querySelectorAll('#wk-edit-a .wk-piece').length,2);});
@@ -74,6 +82,26 @@ test('Multiplikation und Division: Nenner ändern lässt den Zähler unabhängig
     click('[data-act="dec"][data-key="b"]');assert.equal(value('b'),2,op);assert.equal(value('a'),1,op);
     assert(!/Gleicher Wert/.test($('#wk-source')?$('#wk-source').textContent:''),op);
   }
+});
+test('Multiplikation: Ergebnis erst nach richtigem Zwischenschritt aufdecken',()=>{
+  tab('mul');operands(2,3,3,4);
+  assert($('#wk-pre-x'));assert($('[data-wk="advance"]').disabled);
+  fillPre(5,7);click('[data-wk="precheck"]');assert(/Nicht addieren/.test($('.wk-pre-msg').textContent));assert($('[data-wk="advance"]').disabled);
+  fillPre(6,8);click('[data-wk="precheck"]');assert(/Nenner stimmt noch nicht/.test($('.wk-pre-msg').textContent));assert($('[data-wk="advance"]').disabled);
+  fillPre(6,12);click('[data-wk="precheck"]');assert($('#wk-pre-x').disabled);assert(!$('[data-wk="advance"]').disabled);
+  advance();eqFrac(6,12);
+});
+test('Division: Kehrwert vor dem Ergebnis, Tausch von Zähler und Nenner erkannt',()=>{
+  tab('div');operands(2,3,1,6);click('[data-wk="advance"]');
+  for(let i=0;i<4;i++)click('[data-wk="portion"]');
+  assert($('[data-wk="advance"]').disabled,'Ohne Kehrwert kein Ergebnis');
+  fillPre(1,6);click('[data-wk="precheck"]');assert(/zweite Bruch selbst/.test($('.wk-pre-msg').textContent));assert($('[data-wk="advance"]').disabled);
+  fillPre(6,1);click('[data-wk="precheck"]');assert(!$('[data-wk="advance"]').disabled);
+  click('[data-wk="advance"]');assert(board().includes('4 volle Portionen'));
+});
+test('Zwischenschritt wird beim Zurücksetzen und bei neuen Brüchen wieder verlangt',()=>{
+  tab('mul');operands(1,2,1,3);solvePre();assert($('#wk-pre-x').disabled);
+  operands(1,2,1,4);assert(!$('#wk-pre-x').disabled);assert($('[data-wk="advance"]').disabled);
 });
 test('Keine Laufzeitfehler',()=>{assert.equal(errors.length,0,errors.map(e=>e.stack).join('\n'));});
 console.log(`\n${count} Funktionstests erfolgreich.`);
