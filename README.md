@@ -2,7 +2,7 @@
 
 Interaktive Lern-App zum Rechnen mit Brüchen für Schülerinnen und Schüler der 6. Klasse.
 
-- **Übersichtliche Startseite:** Die Reiter sind in „Rechenarten“ und „Verstehen, üben & spielen“ gruppiert und passen auch auf dem Handy in zwei Zeilen. Jede Rechenart beginnt mit dem Merksatz und einer Sprungleiste (Ausprobieren · Erklärung · Üben · Sachaufgabe); ein schwebender „↑ Menü“-Knopf bringt beim Scrollen zurück zur Auswahl
+- **Übersichtliche Startseite:** Die Reiter sind in „Rechenarten“ und „Verstehen, üben & spielen“ gruppiert und passen auch auf dem Handy in zwei Zeilen. Jede Rechenart beginnt mit dem Merksatz und einer Sprungleiste (Ausprobieren · Erklärung · Üben · Sachaufgabe); ein kleiner schwebender „↑“-Knopf bringt beim Scrollen zurück zur Auswahl
 - Vier Reiter für Addieren, Subtrahieren, Multiplizieren und Dividieren, jeweils mit Merksatz, Alltagsbeispiel, Rechenweg und Übungsaufgaben in drei Stufen
 - **Grafische Bruch-Werkstatt:** Brüche durch Antippen von Balken- oder Kreisstücken einstellen und die Rechnung Schritt für Schritt mit Bildern bearbeiten
 - Zufällige Sachaufgaben mit Tipp-Funktion bei jeder Rechenart
@@ -23,11 +23,15 @@ Der Einstieg zeigt sofort die beiden anklickbaren Bruchbilder. Ausführliche Erk
 
 Mit **„Mit Bild lösen“** unter einer Übungsaufgabe werden deren Brüche in die Werkstatt übernommen. Das Ergebnis wird danach wie gewohnt bei „Du bist dran“ eingegeben; die Übernahme zählt nicht als Versuch und füllt keine Antwort automatisch aus.
 
+**Nenner ändern = Erweitern/Kürzen (nur Addieren und Subtrahieren):** Mit „Teile pro Ganzes“ in der Werkstatt ändern sich Zähler und Nenner gemeinsam, sodass der Wert gleich bleibt (1/2 → 2/4 → 3/6, rückwärts wieder gekürzt). Bild und Bruch folgen sofort, und ein Hinweis nennt die gleichwertigen Brüche. Gibt es in der Richtung keinen Nenner mit gleichem Wert, wird um 1 geändert und der Zähler angepasst; der Hinweis sagt das. Mit Zähler 0 geht jeder Nenner. Beim Multiplizieren und Dividieren bleibt der Zähler beim Ändern des Nenners unverändert (er wird nur auf den Nenner begrenzt), weil dort kein Gleichnamigmachen gebraucht wird.
+
 Die Werkstatt unterstützt Brüche von 0 bis 1 mit Nennern von 2 bis 12 sowie Ergebnisse über 1. Negative Differenzen werden im Klasse-6-Grundmodus mit einem Hinweis abgefangen; die Brüche können dann getauscht werden. Alle Aktionen funktionieren ohne Ziehen, per Antippen oder Tastatur. Pfeiltasten wechseln das fokussierte Stück, Enter/Leertaste markieren oder entfernen es. Sehr feine Subtraktionsbalken und breite Multiplikationsraster lassen sich seitlich scrollen.
 
 ### Rückmeldung beim Anklicken
 
 Kreis- und Balkenstücke wechseln ihre Farbe sanft in 140 ms und bestätigen eine Auswahländerung mit einem kurzen Helligkeitsimpuls von 180 ms. Form, Fläche und Position der Stücke bleiben unverändert. Bei gleich bleibender Einteilung werden die Bildstücke im DOM erhalten, statt das ganze Bild neu aufzubauen. Dadurch bleiben Tastaturfokus und Farbwechsel auch bei schnellen Klicks erhalten. Beim Kürzen reagieren alle Stücke der Gruppe, ebenso die zugehörige Vorschau. Wiederholte Klicks ersetzen den vorherigen Impuls, statt Animationen aufzustauen; Bruchzahlen und Auswahl werden sofort aktualisiert.
+
+Beim Erweitern, Kürzen und Zurücksetzen der Ausgangsbrüche in „Grafisch üben“ wachsen bzw. schrumpfen die Stücke bei allen Aufgabentypen (auch Addieren und Subtrahieren) in 380 ms auf ihre neue Größe; die neue Einteilung steht sofort fest.
 
 Die Systemeinstellung **„Bewegung reduzieren“** schaltet Farbwechsel und Impulse ab. Ein Wechsel zu dieser Einstellung beendet auch laufende Impulse und bereits gestartete Farbtransitions. Ohne Web-Animations-Unterstützung funktioniert die Auswahl weiterhin. Bereits abgegebene oder aufgelöste Antworten bleiben gesperrt und verändern weder Auswahl noch Wertung.
 
@@ -36,6 +40,12 @@ Die Systemeinstellung **„Bewegung reduzieren“** schaltet Farbwechsel und Imp
 Der Reiter **„Erweitern & Kürzen“** zeigt den Ausgangsbruch und die neue Einteilung direkt **nebeneinander**, wahlweise als gleich große Balken oder Kreise. Die Bruchzahlen stehen unmittelbar an den Bildern. Beim Erweitern entstehen kleinere Stücke; beim Kürzen werden kleine Stücke zu größeren Gruppen zusammengefasst. Die gefärbte Menge bleibt sichtbar gleich groß. Zähler und Nenner werden immer mit derselben ganzen Zahl verändert.
 
 Faktor beziehungsweise **Teiler** über wenige Vorschläge oder ein Zahlenfeld auswählen. Beim Erweitern wird jedes alte Stück in genau so viele neue Stücke geteilt; dicke Linien zeigen die alten Grenzen. Beim Kürzen markieren dicke Linien Gruppen dieser Größe, die im Ergebnis je ein großes Stück bilden. In einer gültigen Kürzung schaltet das Antippen eine ganze Gruppe, sonst ein einzelnes Stück. Zum Gruppieren werden bei Bedarf gefärbte Stücke nebeneinandergelegt. Nach dem Anwenden bleibt das ausgeführte Vorher-/Nachher-Bild stehen; erst „Weiter umformen“ startet den nächsten Schritt. Ungültige Kürzungen werden mit einer Erklärung gesperrt. Gemeinsame Teiler, „Ganz kürzen“ und der Entdeckerweg sind unter „Weitere Möglichkeiten“ eingeklappt; „Zurück“ macht einen Schritt rückgängig. Auch 0/6 → 0/1 und 6/6 → 1/1 sind möglich. Für gut lesbare Bilder ist die Darstellung auf höchstens 72 Teile eines Ganzen begrenzt.
+
+### Nur Addieren und Subtrahieren brauchen gleiche Nenner
+
+Gleichnamig machen wird nur bei **Addieren und Subtrahieren** verlangt und geprüft. Beim **Multiplizieren** steht „ein Teil von einem Teil“ im Mittelpunkt (Zähler mal Zähler, Nenner mal Nenner, früh kürzen, Rechteckbild). Beim **Dividieren** geht es darum, wie oft der zweite Bruch in den ersten passt, und um den Kehrwert. In „Grafisch üben“ erscheint dafür im Training ein eigener Hinweiskasten; die Tasten zum Umformen der Ausgangsbrüche sind dort nur noch freiwillig und eingeklappt. Das Abmessen in der Werkstatt unterteilt die Balken nur zur Anschauung gleich fein.
+
+**Zwischenschritt vor dem Ergebnis (Multiplizieren und Dividieren):** In „Grafisch üben“ (Training) und in der Werkstatt muss zuerst der Zwischenwert eingetragen werden, bevor das Ergebnis eingegeben oder weitergegangen werden kann. Beim Multiplizieren sind das Zähler·Zähler und Nenner·Nenner, beim Dividieren der Kehrwert des zweiten Bruchs. Falsche Eingaben bekommen einen Hinweis (z. B. „Nicht addieren!“). Der Lerncheck bleibt davon unberührt.
 
 ## Grafisch üben und Lerncheck
 

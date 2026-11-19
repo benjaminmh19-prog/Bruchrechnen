@@ -475,8 +475,30 @@ details.pre.lookup>summary{font-size:1rem}
 }
 .foot{margin-top:18px;text-align:center;font-size:.82rem;color:var(--muted)}
 
+.vt-opguide{margin:14px 0;padding:14px 16px;border-radius:14px;background:color-mix(in srgb,var(--op) 9%,var(--surface));border:1px solid color-mix(in srgb,var(--op) 32%,var(--line))}
+.vt-opguide-title{font-family:var(--f-display);font-weight:800;font-size:1.1rem;margin-bottom:6px}
+.vt-opsteps{margin:8px 0;padding-left:22px;display:flex;flex-direction:column;gap:4px;font-weight:600}
+.vt-opguide .vt-caption{margin-top:8px}
+.vt-source-optional{margin-top:8px}
+.vt-source-optional>summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:800;color:var(--op)}
+.vt-opguide .areawrap{margin-top:10px}
+@media print{.vt-opguide{break-inside:avoid}}
+.vt-answer[hidden]{display:none}
+.vt-pre,.wk-pre{margin:14px 0;padding:14px 16px;border-radius:14px;background:color-mix(in srgb,var(--op) 9%,var(--surface));border:2px solid color-mix(in srgb,var(--op) 45%,var(--line))}
+.vt-pre.done,.wk-pre.done{border-color:var(--line);background:var(--surface)}
+.vt-pre h3,.wk-pre h3{margin:0 0 6px}
+.vt-pre-row,.wk-pre-row{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:flex-end;margin:10px 0}
+.vt-pre-row label,.wk-pre-row label{display:flex;flex-direction:column;gap:4px;font-weight:700;min-width:130px}
+.vt-pre-row input,.wk-pre-row input{width:100%;min-height:46px;font:inherit;font-size:1.15rem;font-weight:800;text-align:center;border:2px solid var(--ink);border-radius:12px;background:var(--surface);color:var(--ink)}
+.vt-pre-row .ans input,.wk-pre-row .ans input{width:84px}
+.vt-pre-label,.wk-pre-label{font-weight:800}
+.vt-pre-actions{margin-top:8px}
+.wk-pre-msg{margin:8px 0 0;font-weight:700}
+.wk-pre-msg.bad{color:var(--bad,#a3261d)}
+.wk-pre-msg.ok{color:var(--ok,#1c6b3a)}
+
 /* Schwebender Knopf: zurück zum Menü */
-.to-menu{position:fixed;right:max(14px,env(safe-area-inset-right,0px));bottom:max(14px,env(safe-area-inset-bottom,0px));z-index:20;min-height:46px;padding:0 18px;border-radius:999px;border:2px solid var(--ink);background:var(--surface);color:var(--ink);font:inherit;font-weight:800;box-shadow:0 4px 14px color-mix(in srgb,var(--ink) 22%,transparent);cursor:pointer}
+.to-menu{position:fixed;right:max(10px,env(safe-area-inset-right,0px));bottom:max(10px,env(safe-area-inset-bottom,0px));z-index:20;width:44px;height:44px;min-height:44px;padding:0;font-size:1.3rem;line-height:1;opacity:.9;border-radius:999px;border:2px solid var(--ink);background:var(--surface);color:var(--ink);font:inherit;font-weight:800;box-shadow:0 4px 14px color-mix(in srgb,var(--ink) 22%,transparent);cursor:pointer}
 .to-menu[hidden]{display:none}
 @media print{.to-menu,.jump,.tabs{display:none}}
 
@@ -501,7 +523,7 @@ details.pre.lookup>summary{font-size:1rem}
   </details>
   <footer class="foot">Deine Ergebnisse bleiben nur in diesem Browser gespeichert.</footer>
 </div>
-<button type="button" class="to-menu" id="to-menu" hidden>↑ Menü</button>
+<button type="button" class="to-menu" id="to-menu" hidden aria-label="Zurück zum Menü" title="Zurück zum Menü">↑</button>
 
 <script>
 (function(){
@@ -676,8 +698,8 @@ function visFor(op,a,b,c,d){
       var A=a*fa,B=c*fc;
       if(op==='add')vis='<div class="vis">'+vrow(fr(A,L),bars(A,L))+vrow(fr(B,L),bars(B,L))+vrow(fr(A+B,L),bars(A+B,L))+'</div>';
       else if(op==='sub')vis='<div class="vis">'+vrow(fr(A,L),bars(A,L,B))+vrow(fr(A-B,L),bars(A-B,L))+'</div><p class="hint" style="margin:-4px 0 14px">Die gestreiften Stücke werden weggenommen.</p>';
-      else vis='<div class="vis">'+vrow(fr(A,L),bars(A,L))+vrow(fr(B,L),bars(B,L))+'</div><p class="hint" style="margin:-4px 0 14px">Zähle, wie oft das kleine Stück '+fr(c,d)+' in das große Stück '+fr(a,b)+' passt.</p>';
-    }else vis='<p class="hint" style="margin:0 0 14px">Der Hauptnenner ist so groß, dass sich das Bild nicht lohnt. Der Rechenweg funktioniert trotzdem.</p>';
+      else vis='<div class="vis">'+vrow(fr(A,L),bars(A,L))+vrow(fr(B,L),bars(B,L))+'</div><p class="hint" style="margin:-4px 0 14px">Zähle, wie oft die Portion '+fr(c,d)+' in den Vorrat '+fr(a,b)+' passt. Zum Zählen sind beide Bilder gleich fein unterteilt; beim Rechnen brauchst du keinen gemeinsamen Nenner.</p>';
+    }else vis='<p class="hint" style="margin:0 0 14px">'+(op==='div'?'Das Abmessen wird hier zu fein für ein Bild. Die Rechnung mit dem Kehrwert funktioniert trotzdem.':'Der Hauptnenner ist so groß, dass sich das Bild nicht lohnt. Der Rechenweg funktioniert trotzdem.')+'</p>';
   }else vis=areaHtml(a,b,c,d);
   return vis;
 }
@@ -1177,7 +1199,7 @@ function spHandleKey(e,ns) {
 var workshopView='bar';
 var workshopStates={};
 var workshopSource='';
-function freshWorkshop(){return {stage:0,removed:[],groups:0,history:[]};}
+function freshWorkshop(){return {stage:0,removed:[],groups:0,history:[],pre:{done:false,x:'',y:'',msg:'',kind:'info'}};}
 function ws(){return workshopStates[cur]||(workshopStates[cur]=freshWorkshop());}
 function resetWorkshop(){workshopStates[cur]=freshWorkshop();}
 function rememberWorkshop(){var s=ws();s.history.push({stage:s.stage,removed:s.removed.slice(),groups:s.groups});}
@@ -1229,6 +1251,34 @@ function multiplicationGrid(dm){
   }
   return h+'</div></div><p class="wk-caption">Das gesamte Rechteck ist <strong>1 Ganzes</strong>. Tippe auf Spalten- und Zeilennummern oder direkt ins Raster. Bei vielen Spalten kannst du seitlich wischen.</p>';
 }
+/* Multiplikation: Zähler·Zähler und Nenner·Nenner; Division: Kehrwert des zweiten Bruchs.
+   Erst wenn der Zwischenschritt stimmt, lässt sich das Ergebnis aufdecken. */
+function wkPreHtml(dm,s){
+  var mul=cur==='mul',p=s.pre,open=!p.done,dis=open?'':' disabled',x=p.x,y=p.y;
+  if(!open){x=String(mul?dm.a*dm.c:dm.d);y=String(mul?dm.b*dm.d:dm.c);}
+  return '<div class="wk-pre'+(open?'':' done')+'" id="wk-pre"><h3>'+(open?'Erst du: ':'Geschafft: ')+(mul?'Zähler und Nenner multiplizieren':'Kehrwert des zweiten Bruchs')+'</h3>'+
+    (mul?'<div class="wk-pre-row"><label for="wk-pre-x">'+dm.a+' · '+dm.c+' (Zähler)<input type="text" id="wk-pre-x" inputmode="numeric" autocomplete="off" maxlength="6" value="'+x+'"'+dis+'></label>'+
+      '<label for="wk-pre-y">'+dm.b+' · '+dm.d+' (Nenner)<input type="text" id="wk-pre-y" inputmode="numeric" autocomplete="off" maxlength="6" value="'+y+'"'+dis+'></label></div>'
+     :'<div class="wk-pre-row"><span class="wk-pre-label">Kehrwert von '+fr(dm.c,dm.d)+'</span><span class="ans"><input type="text" id="wk-pre-x" inputmode="numeric" autocomplete="off" maxlength="6" aria-label="Zähler des Kehrwerts" placeholder="Zähler" value="'+x+'"'+dis+'><hr><input type="text" id="wk-pre-y" inputmode="numeric" autocomplete="off" maxlength="6" aria-label="Nenner des Kehrwerts" placeholder="Nenner" value="'+y+'"'+dis+'></span></div>')+
+    (open?'<div class="wk-actions">'+wkButton('precheck','Zwischenschritt prüfen',false,true)+'</div>':'')+
+    '<p class="wk-pre-msg '+(p.kind||'info')+'" role="status" aria-live="polite">'+(p.msg||(open?'Erst wenn das stimmt, kannst du das Ergebnis aufdecken.':''))+'</p></div>';
+}
+function wkCheckPre(){
+  var dm=demo[cur],s=ws(),p=s.pre,mul=cur==='mul';
+  if(p.done)return;
+  if(!/^\d+$/.test(p.x)||!/^\d+$/.test(p.y)||+p.y<1){p.msg='Trage in beide Felder eine ganze Zahl ein.';p.kind='info';return;}
+  var x=+p.x,y=+p.y;
+  if(mul?(x===dm.a*dm.c&&y===dm.b*dm.d):(x===dm.d&&y===dm.c)){p.done=true;p.kind='ok';p.msg='';return;}
+  p.kind='bad';
+  if(mul){
+    if(x===dm.a+dm.c||y===dm.b+dm.d)p.msg='Nicht addieren! Beim Malnehmen rechnest du Zähler mal Zähler und Nenner mal Nenner.';
+    else if(x!==dm.a*dm.c&&y!==dm.b*dm.d)p.msg='Beide Werte stimmen noch nicht. Rechne '+dm.a+' · '+dm.c+' und '+dm.b+' · '+dm.d+'.';
+    else p.msg=x!==dm.a*dm.c?'Der Zähler stimmt noch nicht. Rechne '+dm.a+' · '+dm.c+'.':'Der Nenner stimmt noch nicht. Rechne '+dm.b+' · '+dm.d+'.';
+  }else{
+    if(x===dm.c&&y===dm.d)p.msg='Das ist noch der zweite Bruch selbst. Beim Kehrwert tauschen Zähler und Nenner den Platz.';
+    else p.msg='Das ist noch nicht der Kehrwert. Vertausche Zähler und Nenner von '+dm.c+'/'+dm.d+'.';
+  }
+}
 function renderWorkshop(){
   var dm=demo[cur],s=ws(),out=document.getElementById('wk-board');if(!out)return;
   renderOperandEditors();
@@ -1244,16 +1294,16 @@ function renderWorkshop(){
     h+='<h3>Ein Teil von einem Teil</h3>'+multiplicationGrid(dm);
     h+='<div class="legend"><span><b style="background:var(--op)"></b>1. Bruch: Spalten</span><span><b style="background:var(--ink)"></b>2. Bruch: Zeilen</span><span><b style="background:var(--op)"></b>×: Überschneidung</span></div>';
     N=dm.a*dm.c;D=dm.b*dm.d;
-    if(s.stage===0){caption='Wie viele Zellen sind doppelt markiert? Zähle die Kreuze. Nicht die Nenner addieren: Das Raster hat '+dm.b+' · '+dm.d+' Zellen.';actions=wkButton('advance','Markierte Zellen zählen',false,true);}
+    if(s.stage===0){caption='Wie viele Zellen sind doppelt markiert? Zähle die Kreuze. Nicht die Nenner addieren: Das Raster hat '+dm.b+' · '+dm.d+' Zellen.';h+=wkPreHtml(dm,s);actions=wkButton('advance','Markierte Zellen zählen',!s.pre.done,true);}
     else{
       h+='<div class="wk-result"><div class="eq">'+dm.a+' · '+dm.c+o('=')+N+' markierte Zellen</div><p>Von insgesamt '+dm.b+' · '+dm.d+' = '+D+' gleich großen Zellen: '+fr(N,D)+'.</p></div>';
       caption='Die Überschneidung ist das Produkt. '+N+' von '+D+' Zellen sind doppelt markiert.';
       if(s.stage===1)actions=wkButton('advance','Ergebnis kürzen',false,true);
     }
   }else if(s.stage===0){
-    h+='<h3>Beide Bilder zeigen dasselbe Ganze</h3>'+wkRow('1. Bruch',dm.a,dm.b,'first')+wkRow('2. Bruch',dm.c,dm.d,'second');
-    caption=cur==='div'?'Wie oft passt die zweite Menge in die erste? Unterteile beide Balken zunächst gleich fein.':'Zum Zusammenlegen oder Wegnehmen müssen die Stücke gleich groß sein. Der Wert der Brüche bleibt beim Unterteilen gleich.';
-    actions=wkButton('advance',dm.b===dm.d?'Mit den Stücken rechnen':'Gleich große Stücke machen',false,true);
+    h+='<h3>'+(cur==='div'?'Vorrat und Portion':'Beide Bilder zeigen dasselbe Ganze')+'</h3>'+wkRow(cur==='div'?'Vorrat (1. Bruch)':'1. Bruch',dm.a,dm.b,'first')+wkRow(cur==='div'?'Portion (2. Bruch)':'2. Bruch',dm.c,dm.d,'second');
+    caption=cur==='div'?'Wie oft passt eine Portion in den Vorrat? Zum Abmessen werden beide Balken gleich fein unterteilt. Beim Rechnen brauchst du das nicht: Du teilst durch einen Bruch, indem du mit dem Kehrwert malnimmst.':'Zum Zusammenlegen oder Wegnehmen müssen die Stücke gleich groß sein. Der Wert der Brüche bleibt beim Unterteilen gleich.';
+    actions=wkButton('advance',cur==='div'?'Portionen abmessen':dm.b===dm.d?'Mit den Stücken rechnen':'Gleich große Stücke machen',false,true);
   }else if(cur==='add'){
     if(s.stage===1){
       h+='<h3>Gleiche Stückgröße: '+fr(1,L)+'</h3>'+wkRow('1. Bruch',A,L,'first')+wkRow('2. Bruch',B,L,'second');
@@ -1294,7 +1344,8 @@ function renderWorkshop(){
       '<p class="wk-caption" style="margin-top:12px">Eine Portion: '+fr(dm.c,dm.d)+' = '+fr(B,L)+' des Ganzen. Der gestrichelte Rahmen ist genauso lang wie eine Portion.</p><div class="wk-portion" style="--fraction:'+B+'/'+L+'" role="img" aria-label="Eine Portion umfasst '+B+' von '+L+' Stücken"></div>';
     if(s.stage===1){
       caption='Abgemessen: '+s.groups+' volle Portionen. Noch im Vorrat: '+(A-used)+' von '+L+' Stücken.';
-      actions=wkButton('portion','Eine Portion abmessen',s.groups>=full,true)+wkButton('advance',rest?'Rest als Teilportion ansehen':'Ergebnis ansehen',s.groups<full,s.groups>=full);
+      h+=wkPreHtml(dm,s);
+      actions=wkButton('portion','Eine Portion abmessen',s.groups>=full,true)+wkButton('advance',rest?'Rest als Teilportion ansehen':'Ergebnis ansehen',s.groups<full||!s.pre.done,s.groups>=full&&s.pre.done);
     }else{
       N=A;D=B;caption=full+' volle Portionen'+(rest?' und '+rest+' von '+B+' Stücken einer weiteren Portion.':'; es bleibt nichts übrig.');
       if(rest){
@@ -1321,6 +1372,25 @@ function renderWorkshop(){
   var status=document.getElementById('wk-status');if(status)status.textContent=caption;
 }
 function updateWorkspace(){renderWorkshop();updateDemo();var e=document.getElementById('wk-simple-equation');if(e){var dm=demo[cur];e.innerHTML=fr(dm.a,dm.b)+o(OPS[cur].sy)+fr(dm.c,dm.d)+o('=')+'?';}}
+/* Nur beim Addieren und Subtrahieren: Nenner ändern = Erweitern bzw. Kürzen: Der Zähler wächst oder schrumpft so mit, dass der Wert gleich bleibt
+   (1/2 → 2/4 → 3/6, rückwärts 3/6 → 2/4 → 1/2). Gibt es in dieser Richtung keinen Nenner mit gleichem Wert,
+   wird um 1 geändert und der Zähler auf den nächstliegenden Wert gesetzt. Gibt eine Erklärung zurück. */
+function stepDenominator(dm,k,dl){
+  var nk=k==='b'?'a':'c',d=dm[k],n=dm[nk],minN=cur==='div'&&nk==='c'?1:0,cand,nn;
+  for(cand=d+dl;cand>=2&&cand<=12;cand+=dl){
+    if((n*cand)%d===0){
+      nn=n*cand/d;
+      if(nn>=minN&&nn<=cand){
+        dm[k]=cand;dm[nk]=nn;
+        return n===0?'':'Gleicher Wert: '+n+'/'+d+' = '+nn+'/'+cand+(cand>d?' (erweitert)':' (gekürzt)')+'. Zähler und Nenner ändern sich gemeinsam.';
+      }
+    }
+  }
+  var nd=Math.min(12,Math.max(2,d+dl));if(nd===d)return '';
+  nn=Math.max(minN,Math.min(nd,Math.round(n*nd/d)));
+  dm[k]=nd;dm[nk]=nn;
+  return n===0?'':'Mit '+nd+' Teilen geht '+n+'/'+d+' nicht genau auf. Der Zähler wurde auf '+nn+' gesetzt: '+nn+'/'+nd+'.';
+}
 function applyPiece(key,index,prefix){
   var dm=demo[cur],d=dm[key==='a'?'b':'d'],state=spOperand(key),min=cur==='div'&&key==='c'?1:0;
   if(prefix){dm[key]=Math.max(min,pieceAction(key,index,dm[key]));state.picture=null;}
@@ -1344,6 +1414,7 @@ function handleWorkshopAction(t){
   if(action==='swap'){var a=dm.a,b=dm.b;dm.a=dm.c;dm.b=dm.d;dm.c=a;dm.d=b;resetWorkshop();updateWorkspace();return;}
   if(action==='reset'){resetWorkshop();renderWorkshop();return;}
   if(action==='undo'){workshopUndo();renderWorkshop();return;}
+  if(action==='precheck'){wkCheckPre();renderWorkshop();var nx=ws().pre.done?document.querySelector('[data-wk="advance"]'):document.getElementById('wk-pre-x');if(nx&&!nx.disabled)nx.focus({preventScroll:true});return;}
   var L=lcm(dm.b,dm.d),A=dm.a*L/dm.b,B=dm.c*L/dm.d;
   if(action==='remove'){
     var pos=s.removed.indexOf(idx);if(idx<0||idx>=A||pos<0&&s.removed.length>=B)return;
@@ -1360,6 +1431,15 @@ function handleWorkshopAction(t){
   }
   renderWorkshop();
 }
+document.addEventListener('input',function(e){
+  var id=e.target&&e.target.id;if(id!=='wk-pre-x'&&id!=='wk-pre-y')return;
+  var v=e.target.value.replace(/\D/g,'').slice(0,6);if(v!==e.target.value)e.target.value=v;
+  ws().pre[id==='wk-pre-x'?'x':'y']=v;
+});
+document.addEventListener('keydown',function(e){
+  var id=e.target&&e.target.id;if(e.key!=='Enter'||id!=='wk-pre-x'&&id!=='wk-pre-y')return;
+  e.preventDefault();wkCheckPre();renderWorkshop();var nx=ws().pre.done?document.querySelector('[data-wk="advance"]'):document.getElementById('wk-pre-x');if(nx&&!nx.disabled)nx.focus({preventScroll:true});
+});
 document.addEventListener('click',function(e){
   var t=e.target.closest('[data-wk]');if(!t||t.disabled)return;
   /* Redraws preserve keyboard focus on the corresponding control. */
@@ -1532,7 +1612,7 @@ function vtMessage(kind,text){
   if(e){e.className='vt-feedback '+kind;e.textContent=text;}
 }
 function vtCount(k){vtTotals[k]=Math.min(1000000000,vtTotals[k]+1);}
-function vtLoadTask(t){vtS.task=t;vtS.n='';vtS.d=String(t.b);vtS.done=false;vtS.seen=[];vtS.picture=null;vtS.sourceTask=null;vtS.sources=null;vtS.denominatorTouched=false;vtS.step=1;vtS.inputHint=false;}
+function vtLoadTask(t){vtS.task=t;vtS.n='';vtS.d=String(t.b);vtS.done=false;vtS.seen=[];vtS.picture=null;vtS.sourceTask=null;vtS.sources=null;vtS.denominatorTouched=false;vtS.step=1;vtS.inputHint=false;vtS.preDone=false;vtS.preX='';vtS.preY='';vtS.preMsg='';vtS.preKind='info';}
 function vtValidInt(s,min,max){return /^\d+$/.test(String(s))&&Number.isSafeInteger(Number(s))&&Number(s)>=min&&Number(s)<=max;}
 function vtAnswer(){
   var t=vtS.task;
@@ -1578,9 +1658,9 @@ function vtSourceUnit(t,index) {
   var label=title+' '+fr(n,d)+(changed?o('=')+fr(s.n,s.d):'');
   var locked=vtS.done?' disabled':'';
   return '<section class="vt-source" id="vt-source-'+index+'">'+vtUnit(s.n,s.d,label,false,0,s.d,{group:s.group})+
-    '<div class="vt-source-controls"><label for="vt-source-factor-'+index+'">Faktor / Teiler<input id="vt-source-factor-'+index+'" data-vt="source-factor" data-source="'+index+'" type="number" min="2" max="36" step="1" inputmode="numeric" value="'+escapeText(s.factor)+'"'+locked+'></label>'+
+    (t.type==='mul'||t.type==='div'?'<details class="vt-source-optional"><summary>Bruch umformen (freiwillig)</summary>':'')+'<div class="vt-source-controls"><label for="vt-source-factor-'+index+'">Faktor / Teiler<input id="vt-source-factor-'+index+'" data-vt="source-factor" data-source="'+index+'" type="number" min="2" max="36" step="1" inputmode="numeric" value="'+escapeText(s.factor)+'"'+locked+'></label>'+
     ['expand','reduce','reset'].map(function(action){return '<button type="button" class="btn" id="vt-source-'+action+'-'+index+'" data-vt="source-'+action+'" data-source="'+index+'"'+locked+'>'+{expand:'Erweitern',reduce:'Kürzen',reset:'Zurück zum Ausgangsbruch'}[action]+'</button>';}).join('')+'</div>'+
-    '<p class="vt-source-status" id="vt-source-status-'+index+'" role="status" aria-live="polite">'+escapeText(s.message)+'</p></section>';
+    '<p class="vt-source-status" id="vt-source-status-'+index+'" role="status" aria-live="polite">'+escapeText(s.message)+'</p>'+(t.type==='mul'||t.type==='div'?'</details>':'')+'</section>';
 }
 function vtPaintSources() {
   var root=vtEl('sources'),t=vtS.task;if(!root||!t)return;
@@ -1635,6 +1715,7 @@ function vtPaintCommonDenominator() {
 function vtTransformSource(index,mode) {
   if(vtS.mode!=='training'||vtS.done||!vtS.task)return;
   var sources=vtEnsureSources(vtS.task),s=sources[index];if(!s)return;
+  var beforeD=s.d;
   if(mode==='reset'){
     s.n=index===0?vtS.task.a:vtS.task.c;s.d=index===0?vtS.task.b:vtS.task.d;s.group=1;s.message='Ausgangsbruch wiederhergestellt.';
   }else{
@@ -1649,10 +1730,66 @@ function vtTransformSource(index,mode) {
     }
   }
   vtPaintSources();
+  vtAnimateResize(index,beforeD,s.d);
+}
+/* Beim Erweitern, Kürzen und Zurücksetzen wachsen bzw. schrumpfen die Stücke sichtbar auf ihre neue Größe
+   (bei allen Aufgabentypen gleich). Nur Größe und Deckkraft werden kurz animiert; die Einteilung selbst ist sofort korrekt. */
+function vtAnimateResize(index,oldD,newD){
+  if(!oldD||!newD||oldD===newD)return;
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  var pic=document.querySelector('#vt-source-'+index+' .sp-picture');if(!pic)return;
+  var circle=pic.getAttribute('data-view')==='circle',r=Math.max(.25,Math.min(4,newD/oldD));
+  var from=circle?'scale('+Math.max(.7,Math.min(1.35,Math.sqrt(r)))+')':'scaleX('+r+')';
+  Array.prototype.forEach.call(pic.querySelectorAll('.sp-piece,.sp-wedge'),function(el){
+    if(!el.animate)return;
+    if(circle){el.style.transformBox='fill-box';el.style.transformOrigin='center';}
+    try{el.animate([{transform:from,opacity:.55},{transform:'none',opacity:1}],{duration:380,easing:'ease-out'});}catch(e){}
+  });
 }
 function vtButton(action,label,primary,disabled){return '<button type="button" class="btn'+(primary?' p':'')+'" id="vt-'+action+'" data-vt="'+action+'"'+(disabled?' disabled':'')+'>'+label+'</button>';}
 function vtStats(){
   var e=vtEl('stats');if(e)e.textContent='Training: '+vtTotals.correct+' richtige von '+vtTotals.attempts+' gewerteten Antworten · Lernchecks: '+vtTotals.checks+' · Bester Lerncheck: '+vtTotals.best+'/8 (alle Einstellungen)'+(vtS.storage?' · Nur in diesem Browser gespeichert.':' · Lokale Speicherung nicht verfügbar; neue Werte gelten nur hier.');
+}
+/* Multiplikation und Division (nur Training): Erst der Zwischenschritt, dann die Antwort.
+   Mal: Zähler·Zähler und Nenner·Nenner. Geteilt: der Kehrwert des zweiten Bruchs. */
+function vtNeedsPre(){var t=vtS.task;return !!(vtS.mode==='training'&&t&&(t.type==='mul'||t.type==='div'));}
+function vtPreOpen(){return vtNeedsPre()&&!vtS.preDone&&!vtS.done;}
+function vtPreHtml(t){
+  if(!vtNeedsPre())return '';
+  var mul=t.type==='mul',open=!vtS.preDone,dis=open?'':' disabled',x=vtS.preX,y=vtS.preY;
+  if(!open){x=String(mul?t.a*t.c:t.d);y=String(mul?t.b*t.d:t.c);}
+  return '<section id="vt-pre" class="vt-pre'+(open?'':' done')+'" aria-labelledby="vt-pre-title"><h3 id="vt-pre-title">'+(open?'Zwischenschritt: ':'Zwischenschritt geschafft: ')+(mul?'Zähler und Nenner multiplizieren':'Kehrwert des zweiten Bruchs')+'</h3>'+
+    (mul?'<p class="vt-caption">Rechne zuerst Zähler mal Zähler und Nenner mal Nenner. Erst danach kannst du das Ergebnis markieren.</p>'+
+      '<div class="vt-pre-row"><label for="vt-pre-x">'+t.a+' · '+t.c+' (Zähler)<input type="text" id="vt-pre-x" inputmode="numeric" autocomplete="off" maxlength="6" value="'+x+'"'+dis+'></label>'+
+      '<label for="vt-pre-y">'+t.b+' · '+t.d+' (Nenner)<input type="text" id="vt-pre-y" inputmode="numeric" autocomplete="off" maxlength="6" value="'+y+'"'+dis+'></label></div>'
+     :'<p class="vt-caption">Beim Teilen drehst du den zweiten Bruch '+fr(t.c,t.d)+' um: Zähler und Nenner tauschen den Platz. Erst danach kannst du das Ergebnis markieren.</p>'+
+      '<div class="vt-pre-row"><span class="vt-pre-label">Kehrwert von '+fr(t.c,t.d)+'</span><span class="ans"><input type="text" id="vt-pre-x" inputmode="numeric" autocomplete="off" maxlength="6" aria-label="Zähler des Kehrwerts" placeholder="Zähler" value="'+x+'"'+dis+'><hr><input type="text" id="vt-pre-y" inputmode="numeric" autocomplete="off" maxlength="6" aria-label="Nenner des Kehrwerts" placeholder="Nenner" value="'+y+'"'+dis+'></span></div>')+
+    (open?'<div class="vt-pre-actions">'+vtButton('precheck','Zwischenschritt prüfen',true)+'</div>':'')+
+    '<p id="vt-pre-feedback" class="vt-feedback '+(vtS.preKind||'info')+'" role="status" aria-live="polite">'+escapeText(vtS.preMsg||'')+'</p></section>';
+}
+function vtSetPreMessage(kind,text){vtS.preKind=kind;vtS.preMsg=text;var e=vtEl('pre-feedback');if(e){e.className='vt-feedback '+kind;e.textContent=text;}}
+function vtCheckPre(){
+  if(!vtPreOpen())return;
+  var t=vtS.task,mul=t.type==='mul',x=vtS.preX,y=vtS.preY;
+  if(!vtValidInt(x,0,100000)||!vtValidInt(y,1,100000)){vtSetPreMessage('info','Trage in beide Felder eine ganze Zahl ein (der Nenner ist mindestens 1).');vtEl(vtValidInt(x,0,100000)?'pre-y':'pre-x').focus();return;}
+  x=Number(x);y=Number(y);
+  var ok=mul?(x===t.a*t.c&&y===t.b*t.d):(x===t.d&&y===t.c);
+  if(ok){
+    vtS.preDone=true;vtSetPreMessage('ok','');
+    vtMessage('ok',mul?'Richtig: '+t.a+' · '+t.c+' = '+(t.a*t.c)+' und '+t.b+' · '+t.d+' = '+(t.b*t.d)+'. Markiere jetzt das Ergebnis '+(t.a*t.c)+'/'+(t.b*t.d)+' oder einen gleichwertigen Bruch.':'Richtig: Der Kehrwert von '+t.c+'/'+t.d+' ist '+t.d+'/'+t.c+'. Jetzt kannst du das Ergebnis markieren.');
+    vtRender('vt-denominator');return;
+  }
+  var msg;
+  if(mul){
+    if(x===t.a+t.c||y===t.b+t.d)msg='Nicht addieren! Beim Malnehmen rechnest du Zähler mal Zähler und Nenner mal Nenner.';
+    else if(x!==t.a*t.c&&y!==t.b*t.d)msg='Beide Werte stimmen noch nicht. Rechne '+t.a+' · '+t.c+' für den Zähler und '+t.b+' · '+t.d+' für den Nenner.';
+    else msg=x!==t.a*t.c?'Der Zähler stimmt noch nicht. Rechne '+t.a+' · '+t.c+'.':'Der Nenner stimmt noch nicht. Rechne '+t.b+' · '+t.d+'.';
+  }else{
+    if(x===t.c&&y===t.d)msg='Das ist noch der zweite Bruch selbst. Beim Kehrwert tauschen Zähler und Nenner den Platz.';
+    else if(x===t.d||y===t.c)msg='Fast: Der Kehrwert von '+t.c+'/'+t.d+' hat den Zähler '+t.d+' und den Nenner '+t.c+'.';
+    else msg='Das ist noch nicht der Kehrwert. Vertausche Zähler und Nenner von '+t.c+'/'+t.d+'.';
+  }
+  vtSetPreMessage('bad',msg);
 }
 function vtCanGuide(){return vtS.mode==='training'&&vtS.task&&(vtS.task.type==='add'||vtS.task.type==='sub');}
 function vtGuided(){return !!(vtCanGuide()&&vtS.guided);}
@@ -1661,7 +1798,7 @@ function vtSyncFlow(){
   var guided=vtGuided(),step=vtFlowStep(),t=vtS.task,root=vtEl('root');if(!root||!t)return;
   root.dataset.flow=guided?'guided':'free';root.dataset.step=String(step);
   var e=vtEl('source-stage');if(e)e.hidden=guided&&step>1;
-  e=vtEl('answer-stage');if(e)e.hidden=guided&&step===1;
+  e=vtEl('answer-stage');if(e)e.hidden=guided&&step===1||vtPreOpen();
   e=vtEl('source-summary');
   if(e){
     e.hidden=!guided||step===1;
@@ -1713,6 +1850,7 @@ function renderVisualTraining(){
 }
 function vtRender(focusId){
   if(!vtEl('root'))return;
+  if(vtPreOpen()&&(!focusId||focusId==='vt-denominator'||focusId==='vt-numerator'))focusId='vt-pre-x';
   var previous=document.activeElement;focusId=focusId||(previous&&vtEl('root').contains(previous)?previous.id:'');
   vtS.settingsOpen=vtEl('settings').open;vtS.progressOpen=vtEl('progress').open;
   var active=vtS.mode==='check'&&vtS.run&&!vtS.run.finished,locked=active?' disabled':'';
@@ -1728,20 +1866,20 @@ function vtRender(focusId){
     h='<h3>Lerncheck · 8 Aufgaben</h3><p>'+(vtS.type==='mixed'?'Alle sechs Aufgabentypen plus zwei zufällige Zusatzaufgaben.':'Acht Aufgaben zum Typ „'+VT_NAMES[vtS.type]+'“.')+' Ohne Tipps oder Lösungen vor der Abgabe. Pro Aufgabe zählt nur eine Antwort. Erst danach kannst du die richtige Antwort aufdecken. Die Einstellungen bleiben bis zum Ende gesperrt.</p>'+vtButton('start','Lerncheck starten',true);
   }else if(t){
     h=(active?'<div class="vt-progress">Aufgabe '+(r.index+1)+' von 8 · '+VT_NAMES[r.type]+' · Schwierigkeit '+r.lvl+'</div>':'')+
-      '<h3>'+VT_NAMES[t.type]+'</h3><p id="vt-instruction">'+t.instruction+'</p><div class="eq vt-equation">'+vtEquation(t)+'</div>';
+      '<h3>'+VT_NAMES[t.type]+'</h3><p id="vt-instruction">'+t.instruction+'</p><div class="eq vt-equation">'+vtEquation(t)+'</div>'+(vtS.mode==='training'?vtOpGuide(t):'');
     if(canGuide){
       h+='<div class="vt-flow-controls"><span>Lernweg:</span>'+vtButton('guide','Schrittweise',false)+vtButton('free','Frei arbeiten',false)+'</div><nav id="vt-steps" aria-label="Dein Lernweg"><ol class="vt-steps">'+
         ['Brüche gleichnamig machen','Antwort markieren','Ergebnis prüfen'].map(function(label,i){return '<li><button type="button" class="btn" id="vt-step-'+(i+1)+'" data-vt="step" data-step="'+(i+1)+'"><span class="vt-step-number">'+(i+1)+'</span><span>'+label+'</span></button></li>';}).join('')+'</ol></nav><p id="vt-step-title" class="vt-current-step" tabindex="-1"></p>';
     }
-    h+='<section id="vt-source-stage" class="vt-source-stage">'+(vtS.mode==='training'?'<p class="vt-caption">Hier kannst du die Ausgangsbrüche erweitern oder kürzen. Die gefärbte Menge bleibt gleich.</p>':'')+'<div id="vt-sources" class="vt-board"></div></section>'+
-      (canGuide?'<div id="vt-source-summary" class="vt-source-summary" aria-label="Deine umgeformten Ausgangsbrüche"></div>':'')+
-      '<section id="vt-answer-stage" class="vt-answer" aria-describedby="vt-instruction vt-access"><h3 id="vt-answer-title">Deine Antwort</h3><p id="vt-access" class="vt-caption">Tippe die passenden Stücke an. Jeder Balken oder Kreis zeigt ein Ganzes.</p>'+
+    h+='<section id="vt-source-stage" class="vt-source-stage">'+(vtS.mode==='training'?'<p class="vt-caption">'+(t&&(t.type==='mul'||t.type==='div')?'Hier siehst du die beiden Ausgangsbrüche. Gleich große Stücke sind hier nicht nötig.':'Hier kannst du die Ausgangsbrüche erweitern oder kürzen. Die gefärbte Menge bleibt gleich.')+'</p>':'')+'<div id="vt-sources" class="vt-board"></div></section>'+
+      (canGuide?'<div id="vt-source-summary" class="vt-source-summary" aria-label="Deine umgeformten Ausgangsbrüche"></div>':'')+vtPreHtml(t)+
+      '<section id="vt-answer-stage" class="vt-answer"'+(vtPreOpen()?' hidden':'')+' aria-describedby="vt-instruction vt-access"><h3 id="vt-answer-title">Deine Antwort</h3><p id="vt-access" class="vt-caption">Tippe die passenden Stücke an. Jeder Balken oder Kreis zeigt ein Ganzes.</p>'+
       '<div class="vt-controls"><label for="vt-denominator">Nenner · Teile pro Ganzem<input type="number" id="vt-denominator" data-vt="denominator" min="1" max="36" step="1" inputmode="numeric" autocomplete="off" value="'+vtS.d+'"'+(vtS.done?' disabled':'')+'></label>'+
       '<div><label for="vt-numerator">Zähler · gefärbte Stücke</label><div class="vt-counter">'+vtButton('minus','−',false,vtS.done)+'<input type="number" id="vt-numerator" data-vt="numerator" min="0" step="1" inputmode="numeric" autocomplete="off" value="'+vtS.n+'"'+(vtS.done?' disabled':'')+'>'+vtButton('plus','+',false,vtS.done)+'</div></div></div>'+
       '<div id="vt-answer-common"></div><div id="vt-readout" class="vt-readout"></div><div id="vt-graph" class="vt-board"></div>'+
       '<details class="vt-help"><summary>Bedienhilfe</summary><p class="vt-caption">Der Nenner bestimmt die Stückgröße: 1 bis 36 Teile. Bei kleinen Stücken nutze −/+ oder das Zählerfeld. Pfeiltasten wechseln das Stück; Enter oder Leertaste schalten es um. Ein weiteres Ganzes erscheint, sobald das vorherige voll ist.</p></details></section><div class="vt-actions" id="vt-actions">';
     if(canGuide&&!vtS.done)h+=vtButton('back','Zurück',false)+vtButton('continue','Weiter zur Antwort',true);
-    if(!vtS.done)h+=vtButton('submit',active?'Antwort abgeben':'Antwort prüfen',true);
+    if(!vtS.done)h+=vtButton('submit',active?'Antwort abgeben':'Antwort prüfen',true,vtPreOpen());
     if(!active&&vtS.done)h+=vtButton('new','Nächste Aufgabe',true);
     if(active){if(vtS.done)h+=vtButton('next',!r.review?'Antwort auswerten':r.index===7?'Ergebnis ansehen':'Nächste Aufgabe',true);h+=vtButton('abort','Lerncheck abbrechen',false);}
     h+='</div>';
@@ -1754,6 +1892,22 @@ function vtRender(focusId){
     var minus=vtEl('minus'),plus=vtEl('plus');if(minus)minus.setAttribute('aria-label','Ein Stück weniger markieren');if(plus)plus.setAttribute('aria-label','Ein Stück mehr markieren');
   }
   if(focusId)vtFocusVisible(focusId);
+}
+/* Multiplikation und Division: kein Gleichnamigmachen, sondern die jeweils wichtigen Gedanken. */
+function vtOpGuide(t){
+  if(!t||(t.type!=='mul'&&t.type!=='div'))return '';
+  var mul=t.type==='mul';
+  var steps=mul?['Zähler mal Zähler rechnen.','Nenner mal Nenner rechnen.','Das Ergebnis kürzen. Das geht auch schon vor dem Rechnen, wenn ein Zähler und ein Nenner einen gemeinsamen Teiler haben.']
+                :['Den ersten Bruch unverändert lassen.','Den zweiten Bruch umdrehen (Kehrwert).','Mit dem Kehrwert malnehmen: Zähler mal Zähler, Nenner mal Nenner.','Das Ergebnis kürzen.'];
+  var check=mul?'Probe: Sind beide Brüche kleiner als 1, wird das Ergebnis kleiner als jeder der beiden. Du nimmst nur einen Teil von einem Teil.'
+                :'Probe: Wie oft passt der zweite Bruch in den ersten? Ist der zweite Bruch kleiner als 1, wird das Ergebnis größer als der erste Bruch.';
+  return '<section class="vt-opguide" id="vt-opguide" data-type="'+t.type+'" aria-label="'+(mul?'So gehst du beim Multiplizieren vor':'So gehst du beim Dividieren vor')+'">'+
+    '<p class="vt-opguide-title">'+(mul?'Multiplizieren: ein Teil von einem Teil':'Dividieren: Wie oft passt der zweite Bruch in den ersten?')+'</p>'+
+    '<p>Hier brauchst du <strong>keinen gemeinsamen Nenner</strong>. Wichtig ist dies:</p>'+
+    '<ol class="vt-opsteps">'+steps.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ol>'+
+    '<p class="vt-caption">'+check+'</p>'+
+    (mul?'<details class="vt-help"><summary>Bild dazu: Rechteck</summary>'+areaHtml(t.a,t.b,t.c,t.d)+'<p class="vt-caption">Die Spalten zeigen den ersten, die Zeilen den zweiten Bruch. Die Überschneidung ist das Produkt.</p></details>':'')+
+    '</section>';
 }
 function vtReview(t){
   var h='<div class="vt-review"><h3>Richtige Antwort</h3><div class="eq">'+fr(t.answer[0],t.answer[1])+'</div><div class="vt-board">';
@@ -1784,6 +1938,7 @@ function vtSetNumerator(n,focusId){
 }
 function vtSubmitAnswer(){
   if(!vtS.task||vtS.done)return;
+  if(vtPreOpen()){vtSetPreMessage('info','Trage zuerst den Zwischenschritt ein. Danach kannst du das Ergebnis markieren.');var px=vtEl('pre-x');if(px)px.focus();return;}
   if(vtGuided()){vtS.step=3;vtSyncFlow();}
   var x=vtAnswer();
   if(x.error){vtMessage('info',x.error);vtS.inputHint=true;vtEl(vtValidInt(vtS.d,1,36)?'numerator':'denominator').focus();return;}
@@ -1826,6 +1981,7 @@ document.addEventListener('click',function(e){
   }
   else if(act==='piece'&&!vtS.done){vtMakeAnswerVisible();var i=Number(t.getAttribute('data-vt-i')),d=Number(vtS.d);vtS.n=String(spToggle(vtS,n,d,vtS.task.wholes*d,i,1,0));vtEl('numerator').value=vtS.n;vtPaintAnswer();var p=document.getElementById(t.id);if(p)p.focus({preventScroll:true});}
   else if(act==='plus'||act==='minus')vtSetNumerator(n+(act==='plus'?1:-1));
+  else if(act==='precheck')vtCheckPre();
   else if(act==='submit')vtSubmitAnswer();
   else if(act==='tip'&&vtS.mode==='training'&&!vtS.done)vtMessage('info',visualTrainingTip(vtS.task));
   else if(act==='show'&&vtS.mode==='training'&&!vtS.done){vtS.done=true;vtMessage('info','Lösung aufgedeckt. Für diese Aufgabe werden keine weiteren Antworten gewertet.');vtRender('vt-new');}
@@ -1836,6 +1992,7 @@ document.addEventListener('click',function(e){
 });
 document.addEventListener('input',function(e){
   if(!e.target.closest||!e.target.closest('#vt-root')||vtS.done)return;
+  if(e.target.id==='vt-pre-x'||e.target.id==='vt-pre-y'){var pv=e.target.value.replace(/\D/g,'').slice(0,6);if(pv!==e.target.value)e.target.value=pv;if(e.target.id==='vt-pre-x')vtS.preX=pv;else vtS.preY=pv;return;}
   if(e.target.getAttribute('data-vt')==='source-factor'){
     if(vtS.mode==='training'){var source=vtEnsureSources(vtS.task)[Number(e.target.getAttribute('data-source'))];if(source)source.factor=e.target.value;}
     return;
@@ -1859,6 +2016,7 @@ document.addEventListener('change',function(e){
 document.addEventListener('keydown',function(e){
   var t=e.target;if(!t.closest||!t.closest('#vt-root'))return;
   if(spHandleKey(e,'vt'))return;
+  if(e.key==='Enter'&&(t.id==='vt-pre-x'||t.id==='vt-pre-y')){e.preventDefault();vtCheckPre();return;}
   if(e.key==='Enter'&&(t.id==='vt-numerator'||t.id==='vt-denominator')){e.preventDefault();if(vtGuided()&&vtFlowStep()<3)vtContinue();else vtSubmitAnswer();}
 });
 
@@ -1979,9 +2137,11 @@ document.addEventListener('click',function(e){
   if(act==='tab'){cur=t.getAttribute('data-op');try{history.replaceState(null,'','#'+cur);}catch(x){}save();renderTabs();renderPanel();}
   else if(act==='inc'||act==='dec'){
     var k=t.getAttribute('data-key'),dm=demo[cur],dl=act==='inc'?1:-1;
-    if(k==='b'||k==='d'){dm[k]=Math.min(12,Math.max(2,dm[k]+dl));var nk=k==='b'?'a':'c';if(dm[nk]>dm[k])dm[nk]=dm[k];}
+    var wkNote='';
+    if((k==='b'||k==='d')&&(cur==='add'||cur==='sub'))wkNote=stepDenominator(dm,k,dl);
+    else if(k==='b'||k==='d'){var nk0=k==='b'?'a':'c';dm[k]=Math.min(12,Math.max(2,dm[k]+dl));if(dm[nk0]>dm[k])dm[nk0]=dm[k];}
     else{var dk=k==='a'?'b':'d',min=cur==='div'&&k==='c'?1:0;dm[k]=Math.min(dm[dk],Math.max(min,dm[k]+dl));}
-    spOperand(k==='b'?'a':k==='d'?'c':k).picture=null;resetWorkshop();workshopSource='';updateWorkspace();
+    spOperand(k==='b'?'a':k==='d'?'c':k).picture=null;resetWorkshop();workshopSource=wkNote;updateWorkspace();
   }
   else if(act==='lvl'){level=parseInt(t.getAttribute('data-l'),10);save();document.querySelectorAll('[data-act="lvl"]').forEach(function(b){b.setAttribute('aria-pressed',String(parseInt(b.getAttribute('data-l'),10)===level));});newTask();}
   else if(act==='jump'){

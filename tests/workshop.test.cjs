@@ -9,10 +9,30 @@ function $ (s) {const e=d.querySelector(s); assert(e,`Missing ${s}`); return e;}
 function click(s){const e=$(s);assert(!e.disabled,`Disabled ${s}`);e.click();}
 function tab(op){click(`[data-act="tab"][data-op="${op}"]`);}
 function value(k){return +$(`#v-${k}`).textContent;}
-function set(k,v){while(value(k)<v)click(`[data-act="inc"][data-key="${k}"]`);while(value(k)>v)click(`[data-act="dec"][data-key="${k}"]`);}
+function set(k,v){
+  if(k==='b'||k==='d'){
+    /* Der Nenner erweitert/kürzt jetzt mit: Zähler erst auf Minimum, dann Nenner schrittweise einstellen. */
+    const nk=k==='b'?'a':'c',inc=`[data-act="inc"][data-key="${k}"]`,dec=`[data-act="dec"][data-key="${k}"]`;
+    while(!$(`[data-act="dec"][data-key="${nk}"]`).disabled)click(`[data-act="dec"][data-key="${nk}"]`);
+    for(let guard=0;value(k)!==v&&guard<60;guard++){
+      if(value(k)<v){click(inc);if(value(k)>v){while(!$(inc).disabled)click(inc);}}
+      else click(dec);
+    }
+    return;
+  }
+  while(value(k)<v)click(`[data-act="inc"][data-key="${k}"]`);while(value(k)>v)click(`[data-act="dec"][data-key="${k}"]`);
+}
 function operands(a,b,c,dd){set('b',b);set('d',dd);set('a',a);set('c',c);}
 function board(){return $('#wk-board').textContent.replace(/\s+/g,' ');}
-function advance(){click('[data-wk="advance"]');}
+function fillPre(x,y){for(const [id,v] of [['#wk-pre-x',x],['#wk-pre-y',y]]){const el=$(id);el.value=String(v);el.dispatchEvent(new w.Event('input',{bubbles:true}));}}
+/* Multiplikation/Division: Der Zwischenschritt (Zähler·Zähler / Nenner·Nenner bzw. Kehrwert) muss vor dem Aufdecken stimmen. */
+function solvePre(){
+  const px=d.querySelector('#wk-pre-x');if(!px||px.disabled)return;
+  const op=$('[data-act="tab"][aria-selected="true"]').getAttribute('data-op'),a=value('a'),b=value('b'),c=value('c'),dd=value('d');
+  if(op==='mul')fillPre(a*c,b*dd);else fillPre(dd,c);
+  click('[data-wk="precheck"]');
+}
+function advance(){solvePre();click('[data-wk="advance"]');}
 function eqFrac(n,dd){const fracs=[...$('#wk-board').querySelectorAll('.wk-result .fr')];assert(fracs.some(f=>f.querySelector('.n').textContent===String(n)&&f.querySelector('.d').textContent===String(dd)),`Expected fraction ${n}/${dd}: ${board()}`);}
 let count=0;function test(name,fn){fn();count++;console.log('PASS',name);}
 test('Initialisierung ohne Fehler',()=>{assert.equal(errors.length,0);assert.equal(d.querySelectorAll('.tab').length,8);assert.equal(d.querySelectorAll('#wk-edit-a .wk-piece').length,2);});
@@ -33,6 +53,56 @@ test('Großer Hauptnenner bleibt darstellbar',()=>{tab('add');operands(10,11,11,
 test('Übungsaufgabe grafisch übernehmen ohne Antwort vorzugeben',()=>{tab('sub');const nums=[...$('#prac .task').querySelectorAll('.fr')].map(f=>[+f.querySelector('.n').textContent,+f.querySelector('.d').textContent]);click('[data-wk="loadtask"]');assert.equal(value('a'),nums[0][0]);assert.equal(value('b'),nums[0][1]);assert.equal(value('c'),nums[1][0]);assert.equal(value('d'),nums[1][1]);assert.equal($('#ans-n').value,'');assert(!$('#wk-source').hidden);assert($('#fb').textContent==='');});
 test('Bestehende Übungsprüfung und Sachaufgabe',()=>{const ns=[...$('#prac .task').querySelectorAll('.fr')].map(f=>[+f.querySelector('.n').textContent,+f.querySelector('.d').textContent]);const [a,b]=ns[0],[c,dd]=ns[1];$('#ans-n').value=String(a*dd-c*b);$('#ans-d').value=String(b*dd);click('[data-act="check"]');assert(d.querySelector('#fb .ok'));click('[data-act="wnew"]');assert(d.querySelector('#word .q'));});
 test('Alle vier bestehenden Spiele starten',()=>{tab('games');for(const id of ['memory','cmp','rush','fill']){click(`[data-g="sel"][data-id="${id}"]`);assert($('#garea').textContent.trim().length>0);}tab('add');});
+test('Nenner erweitern/kürzen: Zähler wächst und schrumpft mit, Bild folgt',()=>{
+  tab('add');operands(1,2,1,3);
+  const inc=k=>click(`[data-act="inc"][data-key="${k}"]`),dec=k=>click(`[data-act="dec"][data-key="${k}"]`);
+  const sel=id=>d.querySelectorAll(`#${id} .sp-piece.selected, #${id} .sp-wedge.selected`).length;
+  const parts=id=>d.querySelectorAll(`#${id} .sp-piece, #${id} .sp-wedge`).length;
+  inc('b');assert.equal(value('b'),4);assert.equal(value('a'),2);assert.equal(parts('wk-edit-a'),4);assert.equal(sel('wk-edit-a'),2);
+  assert(/Gleicher Wert: 1\/2 = 2\/4/.test($('#wk-source').textContent));
+  inc('b');assert.equal(value('b'),6);assert.equal(value('a'),3);assert.equal(sel('wk-edit-a'),3);
+  dec('b');assert.equal(value('b'),4);assert.equal(value('a'),2);
+  dec('b');assert.equal(value('b'),2);assert.equal(value('a'),1);assert.equal(parts('wk-edit-a'),2);assert.equal(sel('wk-edit-a'),1);
+  assert.equal(value('d'),3);assert.equal(value('c'),1);
+  inc('d');assert.equal(value('d'),6);assert.equal(value('c'),2);assert.equal(sel('wk-edit-c'),2);
+});
+test('Nenner ohne gleichwertigen Schritt: ±1 mit angepasstem Zähler und Hinweis',()=>{
+  tab('add');operands(1,2,1,2);
+  // 1/4 hat nach unten keinen gleichwertigen Nenner (2 und 3 gehen nicht auf): Fallback auf 3 Teile
+  click('[data-act="inc"][data-key="b"]');assert.equal(value('b'),4);assert.equal(value('a'),2);
+  click('[data-act="dec"][data-key="a"]');assert.equal(value('a'),1);
+  click('[data-act="dec"][data-key="b"]');assert.equal(value('b'),3);assert.equal(value('a'),1);
+  assert(/geht 1\/4 nicht genau auf/.test($('#wk-source').textContent));
+});
+test('Multiplikation und Division: Nenner ändern lässt den Zähler unabhängig (kein Erweitern)',()=>{
+  for(const op of ['mul','div']){
+    tab(op);operands(1,2,1,3);
+    click('[data-act="inc"][data-key="b"]');assert.equal(value('b'),3,op);assert.equal(value('a'),1,op);
+    click('[data-act="inc"][data-key="d"]');assert.equal(value('d'),4,op);assert.equal(value('c'),1,op);
+    click('[data-act="dec"][data-key="b"]');assert.equal(value('b'),2,op);assert.equal(value('a'),1,op);
+    assert(!/Gleicher Wert/.test($('#wk-source')?$('#wk-source').textContent:''),op);
+  }
+});
+test('Multiplikation: Ergebnis erst nach richtigem Zwischenschritt aufdecken',()=>{
+  tab('mul');operands(2,3,3,4);
+  assert($('#wk-pre-x'));assert($('[data-wk="advance"]').disabled);
+  fillPre(5,7);click('[data-wk="precheck"]');assert(/Nicht addieren/.test($('.wk-pre-msg').textContent));assert($('[data-wk="advance"]').disabled);
+  fillPre(6,8);click('[data-wk="precheck"]');assert(/Nenner stimmt noch nicht/.test($('.wk-pre-msg').textContent));assert($('[data-wk="advance"]').disabled);
+  fillPre(6,12);click('[data-wk="precheck"]');assert($('#wk-pre-x').disabled);assert(!$('[data-wk="advance"]').disabled);
+  advance();eqFrac(6,12);
+});
+test('Division: Kehrwert vor dem Ergebnis, Tausch von Zähler und Nenner erkannt',()=>{
+  tab('div');operands(2,3,1,6);click('[data-wk="advance"]');
+  for(let i=0;i<4;i++)click('[data-wk="portion"]');
+  assert($('[data-wk="advance"]').disabled,'Ohne Kehrwert kein Ergebnis');
+  fillPre(1,6);click('[data-wk="precheck"]');assert(/zweite Bruch selbst/.test($('.wk-pre-msg').textContent));assert($('[data-wk="advance"]').disabled);
+  fillPre(6,1);click('[data-wk="precheck"]');assert(!$('[data-wk="advance"]').disabled);
+  click('[data-wk="advance"]');assert(board().includes('4 volle Portionen'));
+});
+test('Zwischenschritt wird beim Zurücksetzen und bei neuen Brüchen wieder verlangt',()=>{
+  tab('mul');operands(1,2,1,3);solvePre();assert($('#wk-pre-x').disabled);
+  operands(1,2,1,4);assert(!$('#wk-pre-x').disabled);assert($('[data-wk="advance"]').disabled);
+});
 test('Keine Laufzeitfehler',()=>{assert.equal(errors.length,0,errors.map(e=>e.stack).join('\n'));});
 console.log(`\n${count} Funktionstests erfolgreich.`);
 dom.window.close();
